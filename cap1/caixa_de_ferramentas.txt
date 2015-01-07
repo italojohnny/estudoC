@@ -1,0 +1,21 @@
+CAIXA DE FERRAMENTAS C
+
+Você já tem o Capítulo 1 no seu repertório e, agora, acrescentou o básico do C à sua caixa de ferramentas.
+
+* Declarações simples de comandos.
+* Declarações em bloco são cercadas por { e } (chaves).
+* #include inclui código externo para coisas como input e output.
+* Declarações if executam o código apenas se uma certa coisa for verdadeira.
+* Você pode usar && e || para juntar condições.
+* gcc é o compilador mais popular.
+* count++ significa somar 1 a count.
+* count-- significa subtrair 1 de count.
+
+* Declarações switch verificam eficientemente múltiplos valores em uma variável.
+* Todo programa precisa de uma função main().
+* Você pode usar o operador && na linha de comando para executar o seu programa apenas se ele compilar.
+* Você precisa compilar seu programa em C antes de executá-lo.
+* -o especifica o arquivo de output.
+* while repete o código enquanto a condição for verdadeira.
+* Loops do-while executam o código pelo menos uma vez.
+* Loops for são um jeito mais compacto de escrever loops.
