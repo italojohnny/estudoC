@@ -28,7 +28,13 @@ int main (void)
 		val = atoi(card_name);
 	}
 
-	printf("The card value is: %i\n", val);
+	//Check is the value is 3 to 6
+	if (val >=3 && val <= 6)
+		puts("Count has gone up");
+	else if (val == 10)
+		puts("Count has gone down");
+
+	//printf("The card value is: %i\n", val);
 
 	return 0;
 }
