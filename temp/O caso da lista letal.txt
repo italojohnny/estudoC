@@ -1,0 +1,33 @@
+O caso da lista letal
+
+A mansao tinha todas as coisas com as quais ele tinha sonhado: jardins
+paisagísticos, candelabros, seu próprio banheiro. O dono, com 94 anos de
+idade, Amory Mumford III, tinha sido encontrado morto no jardim,
+aparentemente de um ataque cardiaco. Causas naturais? O medico achou
+que tivesse sido uma overdose de medicamento cardiaco. Algo nao estava
+certo aquim e nao era apenas o cara morto debaixo do gazebo. Ignorado
+os policiais na sala, ele se aproximou da agora viuva de Mumford, uma
+mulher de 27 anos chamada Bubbles.
+
+"Eu nao entendo. Ele sempre foi tao cuidadoso com seu
+medicamento. Aqui esta a lista de remedio."
+
+int dose[] = {1, 3, 2, 1000};
+
+"A policia diz que eu reprogramei o administrador. Mas eu nao me dou bem
+com tecnologia. Dizem que eu escrevi este codigo, mas eu nem sei se ele vai
+compilar. Ele vai?"
+
+Seus dedos com unhas feitas por manicure sumiram por uns instantes
+dentro de sua bolsa e ela entregou a ele um copia do programa que a
+policia tinha encontrado perto da cama do milionario. Realmete nao
+parecia que ia compilar...
+
+printf("Issue dose %i", 3[doses]);
+
+O que a expressao 3[doses] significa? 3 nao era um array. Bubbles assou
+o nariz. "Eu nunca poderia ter escrito isso. E, alem do mais, uma dose de 3
+nao e tao ruim assim, e?"
+
+Uma dose de tamanho 3 nao teria matado o velho. Mas talvez ha mais nesse
+codigo do que ele aparenta ter.
