@@ -16,16 +16,17 @@ int main (void)
 	
 	int val = 0;
 	
-	if (card_name[0] == 'K') {
-		val = 10;
-	} else if (card_name[0] == 'Q') {
-		val = 10;
-	} else if (card_name[0] == 'J') {
-		val = 10;
-	} else if (card_name[0] == 'A') {
-		val = 11;
-	} else {
-		val = atoi(card_name);
+	switch (card_name[0]) {
+		case 'K':
+		case 'Q':
+		case 'J':
+			val = 10;
+		break;
+		case 'A':
+			val = 11;
+		break;
+		default:
+			val = atoi(card_name);
 	}
 
 	//Check is the value is 3 to 6
