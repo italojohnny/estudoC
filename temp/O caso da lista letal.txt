@@ -31,3 +31,39 @@ nao e tao ruim assim, e?"
 
 Uma dose de tamanho 3 nao teria matado o velho. Mas talvez ha mais nesse
 codigo do que ele aparenta ter.
+
+----------------------------------------------------------------------------
+
+O caso da lista letal
+
+No ultimo episodio, deixamos nosso heroi entrevistando Bubbles Mumford, cujo
+marido recebey uma overdose de medicamento devido a um codigo suspeito. Sera
+que Bubbles e a programadorra culpada ou apenas uma ingenua? Para descobrir,
+continue lendo...
+
+Ele guardou o codigo no bolso. "Foi um prazer, Mrs. Mumford. Nao acho
+que preciso incomoda-la mais." Ele apertou a mao dela. "Obrigada", ela
+disse, limpando as lagrimas do olhos azuis, "voce foi muito gentil".
+
+"Nao acabamos, querida." Bubbles mal teve tempo para entender o que
+estava acontecendo antes dele colocar as algemas. "Eu percebo pelo
+seu manicure hacker que sabe mais do que diz sobre esse crime". Ninguem
+fica com calo na ponta dos dedos, como ela, sem passar muito tempo no
+teclado.
+
+"Bubbles, voce sabe muito mais sobre C do que deixa a entender". Olhe
+este codigo de novo.
+
+int dose[] = {1, 3, 2, 1000};
+printf("Issue dose %i", 3[doses]);
+
+"Eu sabia que algo estava errado quando vi a expressao 3[dose]. Voce
+sabia que poderia usar uma variavel de array como doses como ponteiro. A
+dose fatal 1000 poderia ser escrita assim..." Ele rabiscou algumas opcoes de
+codigo em um lenco de papel:
+
+dose[3] == *(dose + 3) == *(3 + dose) == 3[dose]
+
+"Seu codigo entregou o jogo, querida. Ele emitiu uma dose de 1000 para o
+coroa. E, agora, voce vai para um lugar onde nunca mais vai poder fazer nak
+a alguem com a sintaxe de C..."
