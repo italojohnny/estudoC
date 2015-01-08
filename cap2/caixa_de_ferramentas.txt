@@ -1,0 +1,15 @@
+CAIXA DE FERRAMENTAS C
+
+Você já tem o Capítulo 2 no seu repertório e, agora, acrescentou ponteiros e memoria a sua caixa de ferramentas.
+
+* scanf("%i", &x); permite que o usuario atribua um numero a x diretamente.
+* ints tem tamanhos diferentes em maquinas diferentes.
+* Uma variavel ponteiro char x e declarada com char *x;.
+* Strings literais sao armazenadas na memoria somente para leitura.
+* Inicialize um novo array com uma string, ele vai copia-la.
+* &x retorna o endereco de x.
+* &x se chama um ponteiro a x.
+* Variaveis locais sao armazenadas no stack.
+* Variaveis array podem ser usadas como ponteiros.
+* Leia o conteudo de um endereco x com *x.
+* fgets(buf, size, stdin) e uma maneira mais simples para a entrada de texto.

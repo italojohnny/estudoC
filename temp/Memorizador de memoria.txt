@@ -1,0 +1,30 @@
+Memorizador de memoria
+
+STACK
+Esta e a secao da memoria usada para armazenar variaveis locais. Cada vez que chamar
+uma funcao, todas as variaveis locais da funcao sao criadas no stack. Chama-se stack
+porque e como uma pilha (stack) de pratos: variaveis sao acrescentadas ao stack
+quando entram em uma funcao e sao retiradas do stack quando saem da funcao. O 
+esquisito e que, na realidade, o stack funciona de cabeca para baixo. Ele comeca no
+topo da memoria e cresce para baixo.
+
+HEAP
+Esta e uma secao da memoria que nao usamos muito ainda. O heap e usada para memoria
+dinamica: pedacos de dados que sao criados durante a execucao do programa e duram
+por um bom tempo. Voce vera depois como usar o heap.
+
+GLOBAIS
+Uma variavel global e uma variavel que vive fora de todas as funcoes e e visivel para
+todas elas. Globais sao criadas quando o programa e executado pela primeira vez, e 
+voce pode atualizar-las livremente. Mas isso e diferente de...
+
+CONSTANTES
+Constantes tambem sao criadas quando o programa e executado pela primeira vez, mas sao
+armazenadas na memoria somente de leitura. Constantes sao coisas como strings literais,
+que voce vais precisar quando o programa estiver sendo executado, mas nunca vai querer
+modifica-las.
+
+CODIGO
+Finalmente, a secao de codigo. Muitos dos sistemas operacionais colocam o codigo logo
+nos enderecos mais baixos. A secao de codigo tambem e apenas de leitura. Esta e a
+parte da memoria onde o codigo montado e carregado.
