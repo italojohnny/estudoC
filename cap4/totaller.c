@@ -1,25 +1,20 @@
 #include <stdio.h>
+#include "totaller.h"
 
 float total = 0.0;
 short count = 0;
+/* This is 6%. which is a lot less than my agent takes...*/
 short tax_percent = 6;
 
-float add__with_tax(float f)
-{
-    float tax_rate = 1 + tax_percent / 100.0;
-    total = total + (f * tax_rate);
-    count = count + 1;
-
-    return total;
-}
 
 int main (void)
 {
+    /* Hey - I was up for a movie with Val Kilmer */
     float val;
     printf("Price of item: ");
 
     while (scanf("%f", &val) == 1) {
-        printf("Total so far: %.2f\n", add__with_tax(val));
+        printf("Total so far: %.2f\n", add_with_tax(val));
         printf("Prince of item: ");
     }
     printf("\nFinal total: %.2f\n", total);
@@ -27,3 +22,14 @@ int main (void)
 
     return 0;
 }
+
+float add_with_tax(float f)
+{
+    float tax_rate = 1 + tax_percent / 100.0;
+    /* And what about the tip? Voice lessons ain't free */
+    total = total + (f * tax_rate);
+    count = count + 1;
+
+    return total;
+}
+
