@@ -1,7 +1,18 @@
 #include <stdio.h>
+
+struct exercise {
+    const char *description;
+    float duration;
+};
+
+struct meal {
+    const char *ingredients;
+    float weigth;
+};
+
 struct preferences {
-    const char *food;
-    float exercise_hours;
+   struct meal food;
+   struct exercise exercise;
 };
 struct fish {
     const char *name;
@@ -10,12 +21,6 @@ struct fish {
     int age;
     struct preferences care;
 };
-void preferences (struct fish f)
-{
-    printf("%s like to eat %s\n", f.name, f.care.food);
-    printf("%s like to exercise for %f hours\n", f.name,
-    f.care.exercise_hours);
-}
 
 void catalog (struct fish f)
 {
@@ -26,14 +31,16 @@ void catalog (struct fish f)
 void label (struct fish f) 
 {
     printf("Name: %s\nSpecies: %s\n%i years old, %i teeth\n", f.name, f.species,
-    f.teeth, f.age); 
+    f.teeth, f.age);
+    printf("Feed with %f lbs of %s and allow to %s for %f hours\n",
+    f.care.food.weigth, f.care.food.ingredients, f.care.exercise.duration,
+    f.care.exercise.description);
 }
 
 int main ()
 {
-    struct fish snappy = {"Snappy", "Piranha", 69, 4, {"Meat", 7.5}};
+    struct fish snappy = {"Snappy", "Piranha", 69, 4, {{"meat", 0.2}, {"swim in the jacuzzi", 7.5}}};
     catalog(snappy);
     label(snappy);
-    preferences(snappy);
     return 0;    
 }
