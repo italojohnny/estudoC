@@ -1,3 +1,10 @@
+/*
+    o atual codigo tem um problema, quando é passado a struct para a funcao,
+    uma copia dela e criada. Os valores alterados nessa copia nao afetam a
+    original.
+
+    Para resolver esse problema é precisso usar ponteioros.
+*/
 #include <stdio.h>
 
 typedef struct {
