@@ -1,6 +1,6 @@
 CAIXA DE FERRAMENTAS C
 
-Voce ja tem o capitulo 3 no seu repertorio e, agora, acrescentou tipos de dados
+Voce ja tem o capitulo 4 no seu repertorio e, agora, acrescentou tipos de dados
 e arquivos heard a sua caixa de ferramentas.
 
 * chars sao numeros.
