@@ -93,3 +93,109 @@ island skull = {"Skull", "09:00", "17:00", NULL};
 isla_nublar.next = &skull;
 skull.next = &shutter;
 
+
+"Hmmm... Até agora usamos uma variável separada para cada item na lista. Mas,
+se não soubermos o tamanho do arquivo, como vamos saber quantas variáveis são
+necessárias? Será que existe uma maneira de gerar novo espaço de armazenamento
+à medida que houver  necessidade?"
+
+SIM, VOCÊ PRECISA, DE ALGUMA MANEIRA, CRIAR ARMAZENAMENTO DINÂMICO.
+Todos os programas que você criou até agora usaram armazenamento estático. Cada
+vez que precisou armazenar algo, adicionou uma variável ao código. Aquelas
+variáveis geralmente têm sido armazenadas no stack. Lembre-se: o stack é o
+espaço na memória reservado para o armazenamento de variáveis locais.
+Quando você criou as primeiras ilhas, você fez isso:
+
+island amity = {"Amity", "09:00", "17:00", NULL};
+island craggy = {"Craggy", "09:00", "17:00", NULL};
+
+Cada struct island precisou de uma variável própria. Esse trecho de código
+sempre vai criar exatamente duas islands, você precisaria de outra variável
+local. Isso é ótimo, se você souber quantos dados, precisa armazenar ao
+desenvolvero programa, mas muitas vezes os programas não sabem quanto será
+necessário armazenar até o tempo de execução. Se estiver criando um navegador
+web, por exemplo, você não vai saber quantos dados vai precisar para armazenar
+uma página web até carregá-la. Então, programas em C precisam de alguma maneira
+de dizer ao sistema operacional que eles precisam de mais espaço de
+armazenamento à medida que houver necessidade.
+Programas precisam de armazenamento dinâmico.
+
+USE O HEAP PARA ARMAZENAMENTO DINÂMICO.
+Em geral, a seção de memória que você tem usado até agora é o stack. O stack é
+a seção da memória utilizada para variáveis locais. Cada dado é armazenado em
+uma variável, e cada variável desaparece assim que você sair da função.
+O problema é que é difícil conseguir mais espaço de armazenamento no stack
+durante o tempo de execução, e é aí que o heap entra em jogo. O heap é a seção
+da memória onde o programa armazena os dados que devem estar disponíveis por um
+tempo maior. Não vai se esvaziar automaticamente, então é o lugar perfeito
+para armazenar estruturas de dados como nossa lista encadeada. Você pode
+comparar o armazenamento no heapa a um armário reservado no vestiário.
+
+PRIMEIRO, PEGUE SUA MEMÓRIA COM MALLOC()
+Imagine que seu programa de repente precise armazenar grandes quantidades de
+dados em tempo de execução. Isso é semelhante a reservar um grande armário para
+armazenar os dados, e, em C, você faz isso com uma função chamada malloc().
+Você diz para a função malloc() exatamente de quanta memória você precisa, e
+ela pede ao sistema operacional para reservar aquela quantidade de memória no
+heap. Depois disso a função malloc() retornar um ponteiro para o novo espaço no
+vestiário. Isso te deixa acessar a memória e também pode ser usado para manter
+o controle do armário de armazenamento que foi alocado.
+
+DEVOLVA A MEMÓRIA QUANDO TERMINAR
+A vantagem de memória heap é que você pode ficar com ela por bastante tempo. A
+desvantagem é que... você pode ficar com ela por bastante tempo.
+Quando você apenas estava usando o stack, não precisava se preocupar sobre
+devolver a memória; tudo acontecia automaticamente. Cada vez que sair de uma
+função, o armazenamento local é liberado no stack.
+O heap é diferente. Após reservar espaço no heap, tal espaço nunca estará
+disponível, a não ser que você avise para a Biblioteca Padrão C que você terminou
+de usá-lo. A memória heap disponível é limitada. Então, se o seu código
+continuar pedindo mais espaço no heap, seu programa vai começar a ter vazamento
+de memória.
+Um vazamento de memória ocorre quando um programa pede mais e mais memória sem
+liberar aquela que não está mais usando. Vazamentos de memória são um dos bugs
+mais comuns em programas em C e podem ser muito difíceis de detectar.
+
+LIBERE A MEMÓRIA USANDO A FUNÇÃO FREE()
+A função malloc() aloca espaço e retorna um ponteiro para o espaço reservado.
+Você vai precisar deste ponteiro para acessar os dados e, depois de terminado
+de usá-los, precisa liberar a memória usando a função free(). É semelhante a
+devolver sua chave do guarda-volumes para seu armário poder ser reutilizado.
+Cada vez que alguma parte do seu código pedir armazenamento no heap com função
+malloc(), deve haver uma parte do código que devolve o espaço de armazenamento
+com a função free(). Quando seu programa terminar de ser executado, todo o
+armazenamento no heap será liberado automaticamente, mas é uma boa pratica
+chamar explicitamente a função free() para cada espaço de memória dinâmica que
+criar.
+Vamos ver como malloc() e free() funcionam.
+
+PEÇA MEMÓRIA COM MALLOC()...
+A função que pede memória se chama malloc(), abreviação de memory allocation
+(alocação de memória). malloc() recebe um único parâmetro: o número de bytes
+que você precisa. A maioria das vezes você não sabe exatamente quanta memória
+você precisa em byte, então malloc() quase sempre é usado com um operador
+chamado sizeof, assim:
+
+#include <stdlib.h>
+malloc(sizeof(island));
+
+sizeof retorna a quantidade de byte que um tipo de dado ocupa no seu sistema.
+Pode ser um struct ou tipo básico de dados, como int ou double.
+A função malloc separa um pedaço da memória para você, depois retorna um
+ponteiro contendo o endereço do início. Mas que tipo de ponteiro vai ser?
+malloc na verdade retorna um ponteiro para uso geral, com tipo void*.
+
+island *p = malloc(sizeof(island));
+
+...E LIBERE A MEMÓRIA COM FREE()
+Após criar a memória no heap, você pode usá-la o quanto quiser. Mas, quando
+tiver terminado, você precisa liberar a memória usando a função free().
+free() precisa do endereço de memória que a função malloc() criou. Contanto que
+a biblioteca saiba onde o pedaço de memória começa, será possível verificar os
+registros para ver quanta memória deve ser liberada. Então, se quisesse liberar
+a memória alocada acima, poderia fazer assim:
+
+free(p);
+
+Ok, agora que sabemos mais sobre memória dinâmica, podemos começar a escrever
+código.

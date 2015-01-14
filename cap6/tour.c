@@ -2,6 +2,7 @@
     warning: assignment from incompatible pointer type [enabled by default]
 */
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
     const char *name;
@@ -11,6 +12,7 @@ typedef struct {
 } island;
 
 void display (island*);
+island* create (char*);
 
 int main (void)
 {
@@ -31,6 +33,7 @@ int main (void)
     display(&amity);
     return 0;
 }
+
 void display (island *start)
 {
     island *i = start;
@@ -39,4 +42,12 @@ void display (island *start)
     }
 }
 
-
+island* create (char *name)
+{
+    island *i = malloc(sizeof(island));
+    i->name = name;
+    i->opens = "09:00";
+    i->closes ="17:00";
+    i->next = NULL;
+    return i;
+}
