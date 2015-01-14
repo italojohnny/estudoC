@@ -16,21 +16,15 @@ island* create (char*);
 
 int main (void)
 {
-    island amity = {"Amity", "09:00", "17:00", NULL};
-    island craggy = {"Craggy", "09:00", "17:00", NULL};
-    island isla_nublar = {"Isla Nubla", "09:00", "17:00", NULL};
-    island shutter = {"Shutter", "09:00", "17:00", NULL};
-    
-    amity.next = &craggy;
-    craggy.next = &isla_nublar;
-    isla_nublar.next = &shutter;
+    char name[80];
+    fgets(name, 80, stdin);
+    island *p0 = create(name);
 
-    island skull = {"Skull", "09:00", "17:00", NULL};
+    fgets(name, 80, stdin);
+    island *p1 = create(name);
+    p0->next = p1;
+    display(p0);
 
-    isla_nublar.next = &skull;
-    skull.next = & shutter;
-
-    display(&amity);
     return 0;
 }
 
@@ -38,7 +32,7 @@ void display (island *start)
 {
     island *i = start;
     for (; i != NULL; i = i->next) {
-        printf("Name: %s\nOpen: %s-%s\n", i->name, i->opens, i->closes);
+        printf("Name: %sOpen: %s-%s\n", i->name, i->opens, i->closes);
     }
 }
 
