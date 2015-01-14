@@ -1,0 +1,95 @@
+VOCÊ PRECISA DE ARMAZENAMENTO FLEXÍVEL?
+
+Você viu diferentes tipos de dados que podem ser armazenados em C e também viu
+como armazenar múltiplos dados em uma array. Mas, às vezes, você precisa ser um
+pouco mais flexível.
+
+Imagine que é o diretor de uma agência de turismo que organiza passeios
+turísticos de avião pelas ilha. Cada passeio contém uma sequência de voos
+curtos de uma ilha para a outra. Para cada uma das ilhas, você vai precidar
+registrar algumas informações, como o nome dela e o horário de funcionamento do
+seu aeroporto. Então, como poderia registrar esses dados?
+
+Você poderia criar uma struct para representar uma ilha:
+
+typedef struct {
+    const char *name;
+    const char *opens;
+    const char *closes;
+    struct island *next;
+} island;
+
+Agora, como o passeio passa por uma sequênciade ilhas, você vai precisar
+registrar uma lista delas utilizando uma array de islands:
+
+island tour[4];
+
+Mas temos um problema. Array têm um tamanho fixo, ou seja, não são muito
+flexívis. Você pode usar uma array se souber exatamente quantas ilhas serão
+visitadas no passeio. Mas, e se precisar alterar o passeio? E se quiser
+acrescentar um destino a mais no meio do camilho?
+
+Para armazenar uma quantidade flexível de dados, você precisa de algo mais
+extensível que uma array. Você precis de uma lista encadeada.
+
+LISTAS ENCADEADAS SÃO COMO CORRENTES DE DADOS
+
+Uma lista encadeada é um exemplo de uma estrutura de dados abstrata, porque uma
+lista encadeada é geral: pode ser usada para armazenar muitos tipos diferentes
+de dados.
+Para entender como uma lista encadeada funciona, pense na nossa agência de
+turismo. Uma lista encadeada armazena um dado, em um elo para um outro dado.
+
+LISTAS ENCADEADAS PERMITEM INSERÇÕES
+
+Como apenas poucas modificações, você pôde acrescentar uma nova etapa ao
+passeio. Essa é uma vantagem que as listas encadeadas têm sobre arrays: a
+inserção de dados é muito rápida. Se quisesse inserir um valor no meio de uma
+array, teria de deslocar todos os dados seguintes um por um.
+Então listas encadeadas possibilitam o armazenamento de quantidades variáveis
+de dados e facilitam a inserção de dados adicionais.
+Mas como se cria uma lista encadeada em C?
+
+CRIE UMA ESTRUTURA RECURSIVA
+Cada um dos structs na lista precisará se conectar ao struct seguinte. Uma
+struct que contém um elo para outro struct do mesmo tipo se chama uma
+estrutura recursiva.
+Estruturas recursivas contêm ponteiros para outras estruturas do mesmo tipo.
+Então, se tiver um horário de voos para a lista de ilhas que vai visitar, você
+pode usar uma estrutura recursiva para cada ilha. Vamos ver como isso funciona
+em maiores detalhes.
+Como você armazena um elo de struct para o outro? Com um ponteiro. Assim os
+dados d island irão conter o endereço da próxima ilha a ser visitada. Então,
+quando nosso código estiver em umm island, sempre poderá pular para o island
+seguinte.
+Vamos escrever códido para começar a passear pelas ilhas.
+
+ESTRUTURAS RECURSIVAS PRECISAM DE NOMES?
+Se usar o comando typedef, você normalmente pode pular a parte de dar um nome
+próprio ao struct. Mas, em uma estrutura recursiva, você precisa incluir um
+ponteiro para o mesmo tipo. A sintaxe de C não permite a utilização do
+pseudônimo typedef, então você precisa dar ao struct um nome próprio. Por isso
+o struct aqui se chama struct island.
+
+CRIE ILHAS EM C:
+island amity = {"Amity", "09:00", "17:00", NULL};
+island craggy = {"Craggy", "09:00", "17:00", NULL};
+
+...e ligue-as para formar UM PASSEIO:
+amity.next = &craggy;
+craggy.next = &isla_nublar;
+
+você precisa ter cuidado pata atribuiro endereço da próxima ilha ao atributo
+next de cada struct island. Você vai usar variáveis struct para cada uma das
+ilhas.
+então agora você criou um passeio completo pelas ilhas em C. Mas e se quiser
+inseriruma visita a skull island entre Isla Nubla e Shuller Island?
+
+INSERINDO VALORES NA LISTA
+Você pode inserir island, como fez antes, mudando o valos dos ponteiros entre
+ilhas:
+
+island skull = {"Skull", "09:00", "17:00", NULL};
+isla_nublar.next = &skull;
+skull.next = &shutter;
+
