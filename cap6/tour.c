@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
     const char *name;
@@ -39,7 +40,7 @@ void display (island *start)
 island* create (char *name)
 {
     island *i = malloc(sizeof(island));
-    i->name = name;
+    i->name = strdup(name);
     i->opens = "09:00";
     i->closes ="17:00";
     i->next = NULL;
