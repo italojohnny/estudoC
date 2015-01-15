@@ -1,0 +1,27 @@
+CONFIDENCIAL
+
+Federal Bureau of Investigations United States Department of Justice,
+Washington, D.C
+
+De: J. Edgar Hoover, Diretor.
+
+Assunto: SUSPEITA DE VAZAMENTO EM SISTEMA DO GOVERNO
+
+Nossa filial em Cambridge, MA, informou que há uma suspeita de vazamento em
+algum lugar do novo Sistma de Identificação de Pessoas Suspeitas (SIPS). Nossas
+fontes e informantes que tratam de assunto d software sugerem que o suposto
+vazamento é fruto de código mal escrito de alguma pessoa ou pessoas.
+Um informante que já contribuiu com informações confiáveis no passado e que
+afirma estar próximo aos suspeitos envolvidos disse que o armazenamento é o
+resultado do gerenciamento negligente de dados na região de memória que a
+sociedade hacker chama de "O Heap".
+A você foi concedido acesso ao código-fonte do sistema e, por ordem minha, foi
+dado acesso a todos os recursos do laboratório de engenharia de software do
+FBI. Considere a evidênciae analise os detalhes do caso cuidadosamente. Quero
+que encontre esse vazamento e conserte-o.
+
+Fracassar não é uma opção;
+
+Atenciosamente,
+
+[Assinatura]
