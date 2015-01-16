@@ -166,3 +166,7 @@ outra variável. Você pode atribuir valores a ela, pode acrescentá-la a array 
 também pode enviá-la como parâmetro para funções...
 ...O que nos traz de volta ao código da função find()...
 
+
+
+TIPO DE RETORNO (*VARIAVEL_PONTEIRO)(TIPOS DE PARAMETROS)
+char** (*name_fn)(char*, int)
