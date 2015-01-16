@@ -23,7 +23,7 @@ int yes_no (char *question)
 node* create (char *question)
 {
     node *n = malloc(sizeof(node));
-    n->question = strdup(question);
+    n->question = strdup(question);//vazamento aqui
     n->no = NULL;
     n->yes = NULL;
     return n;
