@@ -43,4 +43,113 @@ int checksum (char *message)
 int checksum (char *message);
 //---------------------------
 
+MAIOR E MENOR SÃO PARA HEADERS PADRAO
+Se você usar os caracteres de maior e menor em uma declaração #include, o
+compilador não vai procurar pelos headers no diretório atual; ao invés disso,
+vai procurá-los nos diretórios de header padrão.
+Para fazer com que o programa seja compilado com os arquivos header locais,
+você precisa substituir o menor e maior por duas aspas duplas (" ");
+
+mas e se quiser compartilhar código?
+Às vezes, você quer escrever código que estará diponível para vários programas,
+m pastas diferentes, distribuídos pelo seu computador. O que vocÇe pode fazer?
+
+"Pois é, eu preciso aumentar a segurança de todos esses programas diferentes.
+Não quero fazer uma cópia separada no código de segurança para cada um..."
+
+Há dois conjuntos de arquivos que você quer compartilhar entre os programas: os
+arquivos headers .h e os arquivos objeto .o. Vamos ver como podemos
+compartilhar cada um.
+
+COMPARTILHANDO ARQUIVOS HEADER.H
+há algumas maneiras de compartilhar arquivos header entre programas em C:
+
+(1) Amazene-os em um diretório padrão.
+Se você copiar seus arquivos header em um dos diretórios padrão, como
+/usr/local/include, você pode incluí-los em seu código-fonte, usando os
+caracteres de menor e maior.
+
+#include <encrypt.h>
+
+(2) Coloque o pathname completo na sua declaração de include.
+Se quiser armazenar seus arquivos header em algum outro lugar, como
+/my_header_files, você pode adicionar o nome do diretório à declaração de
+include:
+
+#include "/my_header_files/encrypt.h"
+
+(3) Você pode dizer ao compilador onde encontrar os headers.
+A opção final é dizer ao compilador onde ele pode encontrar seus arquivos
+header. Você faz isso com a opção -I no gcc:
+
+gcc -I/my_header_files test_code.c ... -o test_code
+
+A opção -I diz ao compilado gcc que há um outro lugar onde ele pode encontrar
+arquivos header. O compilador ainda vai procurar em todos os outros lugares
+padrões, mas primeiro ele vai verificar os nomes de diretório no opção -I
+
+COMPARTILHANDO ARQUIVOS DE OBJETOS.O USANDO O PATHNAME COMPLETO
+Agora você pode sempre colocar seus arquivos objeto .o em algum diretório
+compartilhado. Quando tiver feito isso, você apenas precisa acrescentar o
+caminho completo para os arquivos objeto quando estiver compilando um programa
+que usa:
+
+gcc -I/my_header_files test_code.c /my_object_files/encrypt.o /my_object_files/checksum.o -o test_code
+
+Se compilar o seu código com o pathname completo para os arquivos objeto que
+for usar, todos os seus programas em C podem compartilhar os mesmos arquivos
+encrypt.o e checksum.o.
+
+"Hmmm... Isso funciona se eu tiver apenas um ou dois arquivos objetos para
+compartilhar. Mas e se eu tiver vários arquivos objetos? Será que existe alguma
+maneira melhor de falar ao compilador sobre muitos arquivos objeto?"
+
+Sim, se você criar um depósito de arquivos objeto, você pode falar para o
+compilador sobre todos eles de uma vez.
+Um depósito é apenas um monte de arquivos objeto embrulhado em um único
+arquivo. Ao criar um único arquivo de depósito com todo seu código de
+segurança, você facilita o compartilhamento de código entre projetos.
+
+UM DEPÓSITO CONTÉM ARQUIVOS .O
+Já usou um arquivo .zip ou .rar? Então você sabe como é fácil criar um arquivo
+que contém outros arquivos. Isso é exatamente o que é um depósito de arquivo
+.a: um arquivo contendo outros arquivos.
+
+Abara um terminal ou um prompt de comando e entre em um dos diretórios library
+(biblioteca). São diretórios, como /usr/lib ou C:\MinGW\lib, que contêm o
+código de biblioteca. Em um diretório de biblioteca, você encontrará muitos
+depósitos de arquivos .a. E existe um comando chamado nm que você pode usar
+para dar uma olhada neles:
+
+nm libl.a
+
+O comando nm lista os nomes que estão armazenados no depósito. O depósito
+libl.a exibido acima contém dois arquivos objeto: libmain.o e libyywarp.o. Para
+que esses dois arquivos objetos servem realmente não importa; o ponto é que
+você pode pegar um conjunto inteiro de arquivos objeto e transformá-lo em um
+conjunto inteiro de arquivos objetos e transformá-lo em um único arquivo
+depósito que pode usar com gcc.
+Antes de ver como compilar programas usando .a, vamos ver como armazenar nossos
+arquivos encrypt.o e checksum.o em um depósito.
+
+CRIE UM ARQUIVO COM O COMANDO AR...
+O comando de depósito (ar) vai armazenar um conjunto de arquivos objeto em um
+arquivo objeto.
+       //esse é o nome do arquivo .a que será criado 
+ar -rcs libhfsecurity.a encrypt.o checksum.o
+                      //esses são os arquivos que serão armazenados no depósito
+//O r significa: arquivo .a será atualizado se ele já existe
+//O c significa que o depósito será criado sem feedback
+//O s diz: manda o "ar" criar um índice no início do arquivo .a.
+
+Você percebeu que todos os arquivos .a têm nomes como lib<alguma coisa>.a? Esse
+é o tipo de nome padrão para depósitos. O nome começa com lib, porque são
+bibliotecas estáticas. Você vai aprender o que isso significa mais tarde.
+
+...depois, armazenar o .a em um diretório de biblioteca.
+Quando tiver criado um depósito, pode armazená-lo em um outro diretório de
+biblioteca. Em qual diretório de biblioteca você deve colocá-lo? Você que
+decide, e há algumas opções:
+
+(*)
 
