@@ -1,0 +1,46 @@
+CÓDIGO QUE VOCÊ PODE LEVAR AO BANCO
+Você lembra da função encrypt() que criou há algum tempo que criptografava o
+conteúdo de uma string? A função estava em um arquivo de código-fonte separado
+que poderia ser usada por diversos programas:
+
+//--------------------------        encrypt.c
+#include "encrypt.h"
+
+void encrypt (char *message)
+{
+    while (*message) {
+        *message = *message ^ 31;
+        message++;
+    }
+}
+//----------------------------
+
+//----------------------------      encrypt.h
+void encryt (char *message);
+//----------------------------
+
+Alguém escreveu uma função, chamada checksum(), que pode ser usada para
+verificar se o conteúdo de uma string foi modificado. Criptografar dados e
+verificar se foram modificado é importante para a segurança. Separadamente, as
+duas funções são úteis, mas juntas podem formar a base de uma biblioteca de
+segurança;
+
+//----------------------------      checksum.c
+#include "checksum.h"
+
+int checksum (char *message)
+{
+    int c = 0;
+    while (*message) {
+        c += c ^(int)(*message);
+        message++;
+    }
+    return c;
+}
+//----------------------------
+
+//----------------------------      checksum.h
+int checksum (char *message);
+//---------------------------
+
+
