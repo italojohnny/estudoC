@@ -44,4 +44,51 @@ void marriage (response r)
 Então, agora que você sabe como os dados são e tem as funções para gerar as
 respostas, vamos ver quão complexo será o código para gerar um conjunto de
 resposta de um array.
+Bem, que bom que funcionou, mas ainda tem código demais ai só para chamar uma
+função para cada dado do array response.
+E o que acontce se você acrescentar um outro tipo de responta? Você teráde
+mudar cada trecho do programa que for assim. Logo, você terá muito código para
+manter, e talvez, algo possa dar errado.
+Felizmente, há um macete que você pode usar em C, ele envolve arrays.
+
+CRIE UM ARRAY DE PONTEIROS PARA FUNÇÕES
+O macete é criar um array de ponteiros para funções que combinam com os
+diferentes tipos de respostas. Antes de ver xomo isso funciona, vamos ver como
+criar um array de ponteiros para funções. Se tivesse uma variável array que
+pudesse armazenar um monte de nomes de funções, você poderia usá-las assim:
+
+replies[] = {dump, second_chance, marriage};
+
+Mas essa sintaxe não funciona muito bem em C. Você precisa dizer ao compilador
+exatamente como serão as funções que você vai armazenar no array: quais são
+seus tipos de retorno e quais parâmetros eles aceitarão. Isso significa que
+você tem de usar uma sintaxe muito mais complexa:
+
+//cada função no array será uma função void.
+        //a variável será chamada de replies
+    void (*replies[])(response) = {dump, second_chance, marriage};//apenas parâmetros do tipo response
+                //e não é apenas um ponteiro para função, é um array deles.
+
+TIPO DE RETORNO (*VARIÁVELPONTEIRO)(TIPOS DE PARÂMETROS)//Agora você terminou de nomear a variável e está na hora de dizer quais parâmetros serão aceitos por cada função
+//declara um ponteiro para função(array)
+
+Mas comoo uma array ajuda?
+Olhe aquele array. Ele contém um conjunto de nomes de função que estão
+exatamente na mesma ordem que os tipos no enum:
+
+enum response_type {DUMP, SECOND_CHANCE, MARRIAGE};
+
+Isso é muito importante, porque quando C criar um enum, ele dá um número a
+partir de 0 para cada um dos símbolos. Então DUMP == 0, SECOND_CHANCE == 1,
+MARRIAGE == 2. Então isso é muito legal, porque significa que você pode pegar
+um ponteiro para um dos seus conjuntos de funções, usando um response_type
+(tipo de resposta):
+
+//isso é seu array de funções "replies".
+replies[SECOND_CHANCE] == second_chance//É igual ao nome da função second_chance
+      //SECOND_CHANCE tem valor 1
+
+vamos ver se você pode usar o array de funções para substituir sua antiga
+função main().
+
 
