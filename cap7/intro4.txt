@@ -40,3 +40,57 @@ price(ZOMBIE)           total(3, ZOMBIE, MONKEY_GLAND, FUZZY_NAVEL)
 
 Eles querem uma função, chamada total(), que vai aceitar uma contagem das
 bebidas e, depois, uma lista dos nomes das bebidas.
+
+Uma função que recebe um número variável de parâmetros se chama função
+variável. A Biblioteca de C contém um conjuntos de macros que podem te ajudar a
+criar suas próprias funções variáveis. Para ver como elas funcionam, você cria
+uma função que pode imprimir sequências de ints:
+
+print_ints(3, 79, 101, 32);
+//o primeiro parâmetro representa a quantidade de outros parâmetros
+
+(1)     #include <stdarg.h>
+
+(2)     void print_ints(int args, ...)
+        {
+(3)         va_list ap;
+
+(4)         va_start(ap, args);
+
+(5)         int i;
+            for (i = 0; i < args; i++) {
+                printf("argument: %i\n", va_arg(ap, int));
+            }
+
+(6)         va_end(ap);
+        }
+(1) INCLUA O HEAD STDARG.H
+Todo o código para lidar com funções variáveis está em stdarg.h, então você
+precisa se certificar de que o incluiu.
+
+(2) DIGA À SUA FUNÇÃO QUE HÁ MAIS POR VIR...
+Lembra aqueles livros onde a heroína arrasta o cara até o quarto e aí o
+capítulo termina com "..."? Bem, aquele "..." se chama reticências, e isso te
+diz que algo mais está por vir. Em C, reticências depois do parâmetro de uma
+função significa que há mais parâmetros por vir.
+
+(3) CRIE UM VA_LIST
+Um va_list será usado para armazenar os parâmetros adicionais que são enviados
+para sua função.
+
+(4) DIGA ONDE OS PARÂMETROS VARIÁVEIS COMEÇAM
+C precisa saber o nome de último argumento fixo. No caso da nossa função, isso
+será o parâmetro args.
+
+(5) DEPOIS, LEIA OS PARÂMETROS VARIÁVEIS, UM DE CADA VEZ
+Agora que todos os seus parâmetros estão armazenados no va_list, você pode
+lê-los co var_arg. va_arg recebe dois valores: o va_list e o tipo do próximo
+parâmetro. No seu caso, todos os parâmetros são ints.
+
+(6) FINALMENTE... TERMINE A LISTA.
+Depois que terminou de ler todos os parâmetros, você precisa avisar para C que
+você terminou. Você faz isso como o macro va_end.
+
+(7) AGORA VOCÊ PODE CHAMAR A SUA FUNÇÃO
+Quando a função estiver completa, você pode chamá-la:
+    print_ints(3, 79, 101, 32);
