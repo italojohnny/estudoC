@@ -91,4 +91,20 @@ replies[SECOND_CHANCE] == second_chance//É igual ao nome da função second_cha
 vamos ver se você pode usar o array de funções para substituir sua antiga
 função main().
 
+A diferença? Agora, ao invés de uma declaração inteira de switch, você só te
+isso:
 
+(replies[r[i].type])(r[i]);
+
+Se tiver de chamar as funçõe de resposta em vários lugares no programa, você
+não vai ter de copiar um monte de código. E, se decidir acrescentar um novo
+tipo e uma nova função, você pode simplesmente acrescentá-los ao array:
+
+enum response_type {DUMP, SECOND_CHANCE, MARRIAGE, LAW_SUIT};
+void (*replies[])(response) = {dump, second_chance, marriage, law_suit};
+
+Array de ponteiros para funções podem deixar o seu código muito mais fácil
+demanipular. Foram criados para deixar o seu código escalonável, ao fazê-lo
+menor e mais fácil de estender. Apesar de ser um pouco difícil d entendê-lo no
+início, array de ponteiros para funções podem realmente aumentar suas
+habilidades de programação em C.
