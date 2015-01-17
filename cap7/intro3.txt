@@ -1,0 +1,47 @@
+AUTOMATIZANDO AS CARTAS DA AGÊNCIA DE NAMORO
+Imagine que esteja criando um programa de correio para enviar diferentes tipos
+de mensagens para diferentes pessoas. Uma maneira de criar os dados para cada
+resposta é como um struct como este:
+
+enum response_type {
+    DUMP,
+    SECOND_CHANCE, //Esses são os três tipos de mensagens que serão enviadas                   
+    MARRIAGE       //para as pessoas.
+};
+
+typdef struct {
+    char *name;
+    enum response_type type; //Você vai registrar um tipo de resposta com cada
+                             //dado de resposta.
+}
+
+O enum lhe dá os nomes para cada um dos três tipos de respostas que serão
+enviadas, e este tipo de resposta pode ser resgistrado em cada resposta. Assim
+você poderá usar seu novo tipo de dados response (resposta), chamando uma
+dessas três funções para cada tipo de resposta:
+
+void dump (response r)
+{
+    printf("Dear %s,\n", r.name);
+    puts("Unfortunately your last date contacted us to");
+    puts("say that they will not be seeing you again");
+}
+
+void second_chance (response r)
+{
+    printf("Dear %s,\n", r.name);
+    puts("Good news: your last date has asked us to");
+    puts("arrange another meeting. Please call ASAP.");
+}
+
+void marriage (response r)
+{
+    printf("Dear %s,\n");
+    puts("Congratulations! Your last date has contacted");
+    puts("us with a proposal of marriage.");
+}
+
+Então, agora que você sabe como os dados são e tem as funções para gerar as
+respostas, vamos ver quão complexo será o código para gerar um conjunto de
+resposta de um array.
+
