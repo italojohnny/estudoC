@@ -151,5 +151,30 @@ Quando tiver criado um depósito, pode armazená-lo em um outro diretório de
 biblioteca. Em qual diretório de biblioteca você deve colocá-lo? Você que
 decide, e há algumas opções:
 
-(*)
+(*) Você pode colocar seu arquivo .a em um diretório padrão, como /usr/local/lib
+Alguns programadores gostam de colocar os depósitos em diretórios padrão uma
+vez que tiverem certeza de que os depósitos estão funcionando bem. Em linux,
+Mac e Cygwin, o diretório /usr/local/lib é uma boa opção, porque é o diretório
+reservado para suas bibliotecas locais customizadas.
+
+(*) Coloque o arquivo .a em algum outro diretório.
+Se ainda estivr desenvolvendo o seu código ou se não se sentir confortável
+instalando seu código em um diretório de sistema, você pode criar seu próprio
+diretório de biblioteca. Por exemplo, /my_lib.
+
+FINALMENTE, COMPILE SEUS OUTROS PROGRAMAS
+O objetivo de criar uma biblioteca de depósitos era poder usá-la com outros
+programas. Se tiver instalado seu depósito em um diretório padrão, pode
+compiçar seu códigom usando o switch -l:
+
+gcc test_code.c -lhfsecurity -o test_code
+
+Agora você entender por que é tão importanto nomear seu arquivo lib<alguma coisa>.a?
+O nome que segue a opção -l precisa combinar como parte do nome de depósito.
+Então, se o seu depósito se chama libawesome.a, você pode compilar o seu
+programa com o switch -lawesome.
+Mas, e se colocar seu depósito em outro lugar, como /my_lib? Neste caso, você
+vai precisa usar a opção -L para dizer em quais diretórios buscar:
+
+gcc test_code.c -L/my_lib -lhsecurity -o test_code
 
