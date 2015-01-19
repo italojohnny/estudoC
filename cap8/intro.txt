@@ -284,3 +284,77 @@ Infelizmente, não é simples assim. Arquivos objetos e depósitos simples não 
 informações suficientes para serem ligados umas às outras durante o tempo de
 execução. Há outras coisas que nossos arquivos de biblioteca dinâmica vão
 precisar, como os nomes dos outros arquivos aos quais precisam se ligar.
+
+BIBLIOTECAS DINÂMICAS SÃO ARQUIVOS OBJETOS QUE TOMAM BOMBA.
+Bibliotecas dinâmicas são semelhantes aos arquivos objetos .o que você tem
+criado faz um tempo, mas não são bem iguais. Como um arquivo de depósito, uma
+biblioteca dinâmica pode ser construída a partir d diversos arquivos .o, mas
+diferente de um depósito, os arquivos objetos são corretamente interligados em
+uma biblioteca dinâmica para criar um único elemento de código objeto.
+
+PRIMEIRO CRIE UM ARQUIVO OBJETO
+Se for converter o código hfcal.c em uma biblioteca dinâmica, você precisa
+começar compiçar o código em um arquivo objeto .o, assim:
+
+gcc -I/includes -fPIC -c hfcal.c -o hfcal.o
+
+Você percebeu a diferença? Você está criando o hfcal.o como fez antes, exceto
+que você está acrescentando um comando a mais: -fPIC. Isso diz ao gcc que você
+quer criar um código independente de posição. Alguns sistemas operacionais e
+processadores precisam construir bibliotecas de código independente de posição
+para que seja possível decidir, durante o tempo de execução, onde querem
+carregá-lo na memória.
+Agora, na maioria dos sistemas, você não precisa especificar esta opção. Tente
+fazer isso no seu sistema. Se não for necessário, não vai fazer mal.
+
+    Então, o que é código independente de posição?
+    Código independente de posição é um código que não liga para onde o computador
+    o carrega na memória. Imagina que tenha uma biblioteca dinâmica que esperava
+    encontrar o valor de algum dado global a 500 bytes de onde a biblioteca estava
+    carregada. Coisas ruins iriam acontecer se o sistema operacional decidisse
+    carregar a biblioteca em algum outro lugar na memória. Se o compilador receber
+    o comando para criar código independente de posição, ele vai evitar problemas
+    como esse.
+    Alguns sistemas operacionais, como Windows, usam uma técnica, chamada
+    mapeamento de memória, para carregar as bibliotecas dinâmicas, o que implica
+    que todo o código é efetivamente independente de posição. Se você compilar o
+    seu código no Windows, talvez o gcc o avise que a opção -fPIC não é
+    necessáriia. Você pode remover a opção -fPIC ou ignorar o aviso. De qualquer
+    maneira, seu código estará bem.
+
+O NOME QUE DER PARA SUA BIBLIOTECA DINÂMICA DEPENDE DA SUA PLATAFORMA
+Bibliotecas dinâmicas estão disponíveis na maioria dos sistemas operacionais, e
+todos funcionam mais ou menos do mesmo jeito. Mas, como elas são chamadas, pode
+mudar muito. No Windows, bibliotecas dinâmicas geralmente se chamam bibliotecas
+de ligação dinâmicas e elas têm a extensão .dll. No Linux e Unix, elas são
+arquivos objeto compartilhado (.so) e, no Mac, são apenas bibliotecas dinâmicas
+(.dylib). Mas apenar dos arquivos terem extensões diferentes, a forma de
+criá-los muda pouco:
+    
+    gcc -shared hfcal.o -o C:\libs\hfcal.dll        #MinGW no Windows
+    gcc -shared hfcal.o -o /libs/libhfcal.dll.a     #Cygwin no Windows
+    gcc -shared hfcal.o -o /libs/libhfcal.so        #Linux ou Unix
+    gcc -shared hfcal.o -o /libs/libhfcal.dylib     #Mac
+
+A opção -shared diz ao gcc que você quer converter um arquivo objeto .o em uma
+biblioteca dinâmica. Quando o compilador cria uma biblioteca dinâmica, ele vai
+armazenar o nome da biblioteca dentro do arquivo. Então, se você criar uma
+biblioteca chamada libhfcal.so em uma máquina Linux, o arquivo libhfcal, so vai
+lembrar que o seu nome de biblioteca é hfcal. Por que isso é importante? Isso
+significa que, se você compilar uma biblioteca com um nome, você não poderá
+renomear o arquivo depois.
+Se precisar mudar o nome de uma biblioteca, recompile-a com seu novo nome.
+
+COMPILANDO O PROGRAMA ELLIPTICAL
+Agoraa que você criou a biblioteca dinâmica, você pode usá-la como uma
+biblioteca estática. Então você pode construir o programa elliptical assim:
+
+gcc -I./include -c elliptical.c -o elliptical.o
+gcc elliptical.o -L./libs -lhfcal -o elliptical
+
+Apesar de eles serem os mesmos comandos que você usaria se hfcal fosse um
+depósito estático, a compilação vai funcionar diferentemente. Como a biblioteca
+é dinâmica, o compilador não vai incluir o código da biblioteca no arquivo
+executável. Ao invés disso, ele vai inserir um código para assegurar a posição
+e procurar a biblioteca para se ligar a ela durante o tempo de execução.
+
