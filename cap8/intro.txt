@@ -358,3 +358,12 @@ depósito estático, a compilação vai funcionar diferentemente. Como a bibliot
 executável. Ao invés disso, ele vai inserir um código para assegurar a posição
 e procurar a biblioteca para se ligar a ela durante o tempo de execução.
 
+Infelizmente, no Linux não é bem assim.
+No Linux e na maioria das versões de Unix, o compilador apenas registra o nome
+do arquivo da biblioteca libfcaf.so, sem incluir o pathname (caminho para o
+arquivo). Isso significa que, se a biblioteca estiver armazenando fora dos
+diretórios de biblioteca padrões (como /usr/lib), o programa não tem como
+encontrar a biblioteca hfcal. Para resolver este problema, Linux verifica
+diretórios adicionais que são armazenados na variável LD_LIBRARY_PATH. Se você
+se certificar de adicionar a sua biblioteca à LD_LIBRARY_PATH - e se certificar
+de exportá-la -, programa elliptical vai encontrar libhfcal.so.

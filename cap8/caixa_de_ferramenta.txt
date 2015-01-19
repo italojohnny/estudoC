@@ -1,0 +1,17 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 8 no seu repertorio e, agora, acrescentou bibliotecas
+estaticas e dinamicas a caixa de ferramentas.
+
+* #include <> procura nos diretorios padroes como /usr/include.
+* -I<nome> se conecta a um arquivo nos diretorios padroes como /usr/lib
+* -I<nome> adiciona um diretorio a lista de diretorios de include padroes.
+* -L<nome> adiciona um diretorio a lista de diretorios de biblioteca padroes.
+* O comando ar cria uma biblioteca de deposito de arquivos objetos.
+* Bibliotecas de depositos tem nomes como libalgumacoisa.a
+* Bibliotecas de depositos sao ligadas estaticamente.
+* gcc -shared converte arquivos objetos em bibliotecas dinamicas.
+* Bibliotecas dinamicas sao ligadas durante o tempo de execucao.
+* Bibliotecas dinamicas tem extensoes .so, .dylib, .dll ou .dll.a
+* Bibliotecas dinamicas tem nomes diferntes em sistemas operacionais diferentes.
+
