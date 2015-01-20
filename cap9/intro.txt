@@ -1,0 +1,18 @@
+CHAMADAS AO SISTTEMA SÃO SUA CONEXÃO AO SO
+Programas em C dependem do sistema operacional praticamente para tudo. Os
+programas fazem chamadas de sistema se quiserem conversar com o hardware.
+Chamadas de sistema são apenas funções que vivem dentro do kernel do sistema
+operacional. A maior parte do código na Biblioteca Padrão de C depende deles.
+Quando você chama printf() para exibir algo na linha de comando, em algum lugar
+nos bastidores uma chamada ao sistema será feita para o sistema operacional
+enviar a string de texto para a tela.
+Vamos ver um exemplo de uma chamada ao sistema. Vamos começar com uma chamada
+(adequadamente) system().
+system() toma um parâmetro de string simples e executa como se você tivesse
+digitado na linha de comando.:
+
+    system("gedit");//isso vai inicializar um editor de texto
+
+A função system() é uma maneira fácil de executar outros programas a partir do
+seu código - especialmente se você está criando um protótipo e prefere usar
+programas externos a escrever muito código em C:
