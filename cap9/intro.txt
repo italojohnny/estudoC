@@ -189,3 +189,19 @@ atribuir enoent à variável errno, o código acima exibira esta mensagem:
 
     No such file or diretory
 
+LEIA AS NOTÍCIAS COM RSS
+Feeds RSS são muito comuns em sites que publicam suas histórias mais recentes.
+Cada feed RSS é apenas um arquivo XML que contém um resumo das histórias e
+links. Claro que é possível escrever um programa em C que vai ler os arquivos
+RSS direto da web, mas isso envolve alguns conceitos de programação que você
+ainda não viu. Mas isso não é um problema se você encontrar um outro programa
+que pode lidar com  o processamento RSS.
+RSS Gossip é um pequeno script em Python que faz buscas em feeds RSS,
+procurando histórias contendo um certo texto. Para rodar o script, você precisa
+ter Python instalado. Quando tiver python e rssgossip.py, você pode procurar
+histórico assim:
+
+export RSS_FEED=http://rss.cnn.com/rss/edition_world.rss
+python rssgossip.py 'China'
+
+
