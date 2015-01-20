@@ -204,4 +204,44 @@ histórico assim:
 export RSS_FEED=http://rss.cnn.com/rss/edition_world.rss
 python rssgossip.py 'China'
 
+EXEC() É O FIM DA LINHA PARA O SEU PROGRAMA
+As funções exec() substituem a função atual, executando um novo programa. Mas o
+que acontece com o programa original? Ele é encerrado, e é encerrado
+imediatamente. Por isso que o programa só rodou o script rssgossip.py para o
+primeiro feed de notícias. Depois que chamou execle() na primeira vez, o
+programa newshound foi encerrado.
+Mas o que fazer se você quiser começar um outro processo e manter seu processo
+original em execução?
 
+FORK() VAI CLONAR SEU PROCESSO
+Você vai evitar esse problema usando uma chamada ao sistema que se chama
+fork().
+fork() cria uma cópia completa do processo atual. A nova cópia estará
+executando o mesmo programa, com os mesmos detalhes. Ela terá exatamenteas
+mesmas variáveis que irão  conter exatamente os mesmos valores. A única
+diferença é que o processo cópia terá um identificador de processo diferente do
+original.
+O processo original se chama processo pai, e a cópia recém-criada se chama
+processo filho.
+Mas clonar o processo atual resolve os problemas com exec()? Vejamos.
+
+Executando um processo filho com fork() + exec()
+O macete é apenas chamar uma função exec() em um processo filho. Assim, seu
+processo pai original poderá continuar sendo executado. Vamos ver o processo
+passo a passo.
+
+1. FAÇA UMA CÓPIA
+    Comece fazendo uma cópia do seu processo atual usando a chamada ao sistem
+    fork().
+    Os processos precisam saber qual deles é o processo pai e qual é o filho,
+    então a função fork() retorna 0 para o processo filho e um valor diferente
+    de zero para o processo pai.
+
+2. SE VOCÊ FOR O PROCESSO FILHO, CHAME EXEC()
+    Nesse ponto, você tem dois processos idênticos sendo executados, ambos
+    usando código idêntico. Mas agora o processo filho (aquele que recebeu 0 da
+    chamada fork()) precisa se substituir, chamando exec().:
+
+Agora você tem dois processos separados: o processo filho está executando o
+script rssgossip.py, e o processo pai original está livre para fazer outra
+coisa.

@@ -17,9 +17,16 @@ int main (int argc, char *argv[])
         char var[255];
         sprintf(var, "RSS_FEED=%s", feeds[i]);
         char *vars[] = {var, NULL};
-        if (execl("/usr/bin/python", "/usr/bin/python", "./rssgossip.py", phrase, NULL, vars) == -1) {
-            fprintf(stderr, "Can't run script: %s\n", strerror(errno));
+        pid_t pid = fork();
+        if (pid == -1) {
+            fprintf(stderr, "Can't fork process: %s\n", strerror(errno));
             return 1;
+        }
+        if (!pid) {
+            if (execl("/usr/bin/python", "/usr/bin/python", "./rssgossip.py", phrase, NULL, vars) == -1) {
+                fprintf(stderr, "Can't run script: %s\n", strerror(errno));
+                return 1;
+            }        
         }
     }
     return 0;
