@@ -120,4 +120,14 @@ sistema operacional precisa lhe dar uma maneira de esperar até o processo filho
 ficar completo.
 
 A FUNÇÃO WAITPID()
+O programa newshound2 inicializa processos separados para executar o script
+rssgossip.py. Mas, quando aquele processo filho é criado, ele é independente do
+seu pai. Você poderia executar o programa newshound2 e ainda ter um arquivo
+stories.txt vazio, porque rssgossip.py ainda não terminou. Isso significa que o
+sistema operacional precisa lhe dar uma maneira de esperar até o processo filho
+ficar completo.
 
+A FUNÇÃO WAITPID()
+A função waitpid() não vai retornar até o processo filho morrer(). Isso
+significa que você pode acrescentar um pouco de código ao seu programa, para
+ele não ser encerrado até o script rssgossip.py terminar de ser executado:

@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 
 void error (char *msg)
 {
@@ -25,6 +26,11 @@ int main (int argc, char *argv[])
             error("Can't redirect Standard Output");
         if (execle("/usr/bin/python", "/usr/bin/python", "./rssgossip.py", phrase, NULL, vars) == -1)
             error("Can't run script");
+        
+        int pid_status;
+        if (waitpid(pid, &pid_status, 0) == -1) {
+            error("Error waiting for child process");
+        }
     }
     //puts("chegou no fim");
     return 0;
