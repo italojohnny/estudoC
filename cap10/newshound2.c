@@ -20,12 +20,12 @@ int main (int argc, char *argv[])
     if (pid == -1) error("Can't fork process");
     
     if (!pid) {
-        puts("entrou na condicao principal");
+        //puts("entrou na condicao principal");
         if (dup2(fileno(f), 1) == -1) 
             error("Can't redirect Standard Output");
         if (execle("/usr/bin/python", "/usr/bin/python", "./rssgossip.py", phrase, NULL, vars) == -1)
             error("Can't run script");
     }
-    puts("chegou no fim");
+    //puts("chegou no fim");
     return 0;
 }

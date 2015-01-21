@@ -26,7 +26,7 @@ import unicodedata
 import getopt
 from xml.dom import minidom
 
-print "\n\n##ENTROU NESSA PORRA##\n\n"
+#print "\n\n##ENTROU NESSA PORRA##\n\n"
 
 def usage():
     print("Usage:\npython rssgossip.py [-uh] <search-regexp>")
