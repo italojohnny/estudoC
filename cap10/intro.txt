@@ -1,0 +1,113 @@
+COMUNICAÇÃO EMTRE PROCESSOS
+
+REDIRECIONANDO A ENTREDA E A SAÍDA
+Quando você executa programas na linha de comando, pode redirecionar a saída
+padrão usando o operado >:
+
+    python ./rssgossip.py Snooki > stories.txt
+
+A Saída Padrão é um dos três fluxos de dados padrão. Um fluxo de dados é
+exatamente o que o nome indica: um fluxo de dados que entra ou sai de um
+processo. Há fluxos de dados para a Entrada, a Saída e o Erro Padrão; e também
+há fluxos dados para outros coisas, como arquivos e conexões de redes. Quando
+você redireciona a saída de um processo, você altera o destino dos dados.
+Então, ao invés de enviar os dados para a tela, você pode fazer com que a Saída
+Padrão envie os dados para um arquivo.
+Redirecionamento é muito útil na linha de comando, mas será que existe alguma
+maneira de fazer com que o processo se redirecione?
+
+OLHANDO POR DENTRO DE UM PROCESSO TÍPICO
+Cada processo contém o programa que ele está executando, além do espaço para
+dados do stack e heap. Mas o processo também precisa de algum lugar para
+registrar onde os fluxo de dados é representado por um descritor de arquivo,
+que na realidade é apenas um número. O processo mantém o controle de tudo,
+armazenando os descritores de arquivo e seus fluxos de dados em um tabela de
+descritores.
+A tabela de descritores tem uma coluna onde se registra cada número dos
+descritores de arquivo. Apesar de estes serem chamados de descritores de
+arquicos, é possível que não estejam conectados a um arquivo real no disco
+rígido. Ao lado d cada descritor de arquivo a tabela registra o fluxo de dados
+a ele associado. O fluxo de dados pode ser um conexão ao teclado ou à tela, um
+ponteiro para um arquivo, ou uma conexão de rede.
+Os três primeiros lugares na tabela são sempre os mesmo. A posição 0 é para a
+entrada padrão, a posição 1 é para a saída padrão, e a posição 2 é para o erro
+padrão. As outras na tabela ou ficam vazias ou registram conexões a fluxos de
+dados que foram criadas pelo processo. Por exemplo, cada vez que o código abre
+um arquivo para leitura ou escrita, outra posição é preenchida na tabela de
+descritores.
+Quando o processo é criado, a entrada padrão está conectada ao teclado, e a
+saida e o erro padrao estao conectados a tela. Tudo permanecerá assim até
+alguém faça um redirecionamento.
+-----------------------------
+|#|Fluxo de dados           |
+-----------------------------
+|0|O teclado                |
+|1|A tela                   |
+|2|A tela                   |
+|3|Conexão do banco de dados|
+-----------------------------
+
+REDIRECIOMENTO SIMPLEMENTE SUBSTITUI O FLUXO DE DADOS
+A entrada, a saída e o erro padrão têm posições fixas na tabela de descritores.
+Mas os fluxos de dados para qual eles apontam podem ser modificados.
+Isso significa que, se você quiser redirecionar a saída padrão, você precisa
+apenas trocar o fluxo de dados associado ao descritor 1 na tabela.
+Todas as funções, como printf(), que enviam dados para a saída padrão,
+primeiramente, olham a tabela de descritores para saber para onde o descritor 1
+aponta. Depois elas escrevem os dados no fluxo de dados correto.
+
+PROCESSOS PODEM SE REDIRECIONAR
+Até agora, cada vez que usou redirecionamento, você o fez a partir da linha de
+comando usando os operadores > e <. Mas processo podem fazer seus próprios
+redirecionamentos reconfigurando a tabela de descritores.
+
+FILENO() TE DIZ QUAL É O DESCRITOR
+Cada vez que você abre um arquivo, o sistema operacional registra um novo item
+na tacela de descritores. Digamos que você abra um arquivo com algo assim:
+
+    FILE *my_file = fopen("guitar.mp3", "r");
+
+O sistema operacional vai abrir o arquivo guitar.mp3 e retornar um ponteiro
+para ele, mas também vai percorrer a tabela de descritores até encontrar um
+espaço vazio para registrar o novo arquivo.
+Mas, uma vez que tiver um ponteiro para o arquivo, como você o encontra na
+tabela de descritores? A resposta é chamando a função fileno().
+
+    int descriptor = fileno(my_file);//isso vai retornar o valor 4
+
+fileno() é uma das poucas funções de sistema que não retorna -1, caso ocorra
+uma falha. Se você passar um ponteiro que aponta um arquivo aberto para
+fileno(), ele sempre deve retornar o número do descritor.
+
+//o que acontece se eu passar NULL para fileno()?
+
+DUP2() CRIA UMA DUPLICATA DOS FLUXOS DE DADOS
+Abrir um arquivo vai preencher uma posição na tabela de descritores, mas e se
+você quiser modificar o fluxo de dados que já está registrado e associado a um
+descritor? E se você quiser mudar o descritor de arquivo 3 para que ele aponte
+para um fluxo de dados diferente? Você pode fazer isso com a função dup2().
+dup2() cria uma duplicata de fluxo de dados, copiando o conteúdo de uma posição
+na tabela para outra. Então, se você tiver um ponteiro de arquivo para
+guitar3.mp3 associado ao descritor 4, o seguinte código vai conectá-lo ao
+descritor de arquivo 3 também.
+
+    dup2(4, 3);
+
+-----------------------------
+|#|Fluxo de dados           |
+-----------------------------
+|0|O teclado                |
+|1|A tela                   |
+|2|A tela                   |
+| |Conexao de banco de dados|
+|3|Arquivo guitar.mp3       |
+|4|Arquivo guitar.mp3       |
+-----------------------------
+
+Ainda há apenas um arquivo guitar.mp3, e ainda há apenas um fluxo de dados
+conectado a ele. Mas o fluxo de dados (o FILE*) agora está registrado xom os
+descritores de arquivo 3 e 4;
+Agora que você sabe como encontrar e modificar coisas na tabela de descritores,
+você deveria ser capaz de redirecionar a saída padrão de um processo para
+apontar para um arquivo.
+
