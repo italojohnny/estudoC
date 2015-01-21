@@ -131,3 +131,122 @@ A FUNÇÃO WAITPID()
 A função waitpid() não vai retornar até o processo filho morrer(). Isso
 significa que você pode acrescentar um pouco de código ao seu programa, para
 ele não ser encerrado até o script rssgossip.py terminar de ser executado:
+
+waitpid() aceita três parâmetros:
+    waitpid(pid, &pid_status, option)
+
+    (*) PID
+        Esse é o ID do processo que foi dado pelo pai quando ele uso fork()
+        para criar o filho.
+    (*) PID_STATUS
+        Isso vai armazenar informações de encerramento (exit) sobre o processo;
+        waitpid() vai atualizá-lo, então isso precisa ser um  ponteiro.
+    (*) OPTIONS
+        Há diversas opções (options) que você pode passar para waitpid(), e
+        digitar man waitpid vai exibir mais informações. Se você atribuir 0 ao
+        campo options, a função espera até o processo terminar.
+
+O QUE É STATUS?
+Quando a função waitpid() termina de esperar, ela armazena um valor em
+pid_status que indica a você como o processo foi. Para achar o status exit do
+processo filho, você vai precisar passar o valor de pid_status a um macro
+chamado WEXITSTATUS (pid_status):
+
+    if (WEXITSTATUS(pid_status))
+        puts("Error status non-zero");
+
+Por que você precisa do macro? Porque o pid_status contém várias informações, e
+apenas os primeiros 8 bits representam o status exit. O macro te diz qual é o
+valor daqueles 8 bits.
+
+FIQUE EM CONTATO COM SEU FILHO
+Você viu como executar um processo separado, usando exec() e fork(), e você
+sabe como redirecionar a saída de um processo filho para um arquivo. Mas, e se
+você quiser observar um processo filho diretamente? Isso é possível? Ao invés
+de esperar um processo filho enviar todos os dados a um arquivo e depois lê-lo,
+existe alguma maneira de inicializar um processo e ler o dados gerados em tempo
+real?
+
+LENDO LINKS DE NOTÍCIAS DE RSSGOSSIP
+Como exemplo, há uma opção no script rssgossip.py que permit a exibição de URLs
+de qualquer notícia que ele encontrar.
+Você poderia executar o script e salvar a saída em um arquivo, mas isso iria
+demorar. Seria muito melhor se os processos pai e filho pudessem conversar uns
+com os outros enquanto o processo filho estiver em execução.
+
+    python rssgossip.py -u 'pajama death' | grep 'http'
+
+CONECTE SEUS PROCESSO COM PIPE
+Você já usou algo que faz conexão ao vivo entre processos: pipes.
+Pipes são usados na linha de comando para conectar a saída de um processo à
+entrada de outro processo. Neste exemplo, você está executando o script
+rssgossip.py manualmente e, depois, processando sua saída por um comando
+chamado grep. O comando grep encontra todas as linhas contendo http.
+
+comandos usando pipe são pais e filhos
+Quando você junta comandos com pipe na linha de comando, na realidade você está
+conectando-os como processo pai e processo filho. Então, no exemplo acima, o
+comando grep é o pai do rssgossip.py.
+    (1) A linha de comando cria o processo pai
+    (2) O processo pai usa fork e coloca o script rssgossip.py em um processo filho.
+    (3) O pai conecta a saída do filho com a entrada do pai, usando um pipe.
+    (4) O processo pai usa exec no comando grep.
+Pipes são usandos na linha de comando para possibilitar a conexão entre
+processos. Mas, e se você estiver apenas usando código em C? Como você liga um
+pipe ao seu processo filho para ler a saída logo que for gerada?
+
+ESTUDO DE CASO: ABRINDO HISTÓRIAS EM UM NAVEGADOR
+Digamos que você queira executar o script rssgossip.py e, depois, abrir as
+histórias que ele encontrar em um navegador web. Seu programa será executado no
+processo pai e rssgossip.py será executado no filho. Você precisa criar um
+pipe que conecta a saída de rssgossip.py à entrada do seu programa.
+Mas como se cria um pipe?
+
+PIPE() ABRE DOIS FLUXO DE DADOS
+Como o filho vai enviar dados para o pai, você precisa de um pipe que esteja
+ligado à Saída Padrão do filho e à Entrada Padrão do pai. Você vai criar o pipe
+usando a função pipe(). Lembrra-se de que dissemos que cada vez que você abre
+um fluxo de dados para algo como um arquivo, ele é acresentado à tabela de
+descritores? Bem, é exatamente isso que a função pipe() faz: cria dois fluxos
+de dados conectados e os acrescenta à tabela. O que for escrito em um fluxo de
+dados poderá ser lido no outro.
+Quando pipe() cria as duas linhas na tabela de descritores, também armazena os
+descritores de arquivo em um array de dois elementos:
+    
+    int fd[2];//os descritores serão armazenados neste array;
+    if (pipe(fd) == -1) {//você passa o nome do array à função pipe()
+        error("Can't creat the pipe");
+    }
+O comando pipe() cria um pipe e dá dois descritores: fd[1] é o descritor que
+escreve no pipe e fd[0] é o descritor que lê o que vem do pipe. Quando tiver os
+descritores, você precisará usá-los nos processo pai e filho.
+
+NO FILHO
+No processo filho, você precisa fechar a ponta fd[0] do pipe e, depois, mudar a
+Saída Padrão do processo filho para ela apontar para o mesmo fluxo de dados que
+o descritor fd[1].
+
+    //O filho não vai ler o que vier do pipe
+    close(fd[0]);//isso vai fechar a ponta final do pipe;
+    dup2(fd[1], 1);//depois o filho conecta a ponta de escrita à saída padrão
+
+Isso significa que tudo que o filho enviar para a saída padrão será escrito no
+pipe.
+
+NO PAI
+No processo pai, você precisa fechar a ponta fd[1] do pipe (porque não vai
+escrever nele) e redirecionar a entrada padrão do processo pai para ler dados
+vindos do mesmo lugar que o do descritor fd[0]:
+    
+    //O pai conecta a ponta final à saída padrão
+    dup2(fd[0], 0);//fd[0] é a ponta final do pipe
+    close(fd[1]);//isso vai fechar a ponta de escrita do pipe
+
+Tudo que o filho for escrever no pipe será lido pela entrada padrão do processo
+pai.
+
+ABRINDO UMA PÁGINA WEB EM UM NAVEGADOR
+Seu programa vai precisar abrir uma páfina web usando o navegador da máquina.
+Isso é um pouco difícil, porque diferentes sistemas operacionaid têm jeitos
+diferentes de conversar com programas como navegadores web.
+
