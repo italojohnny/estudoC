@@ -1,0 +1,14 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 5 no seu repertorio e, agora, acrescentou structs,
+unions e bitfields a sua caixa de ferramentas.
+
+* Um struct agrupa tipos de dados
+* Voce pode inicializar structs com {sintaxe, semelhante, a, array}.
+* Voce pode lear campos de struct com a notacao de pontos.
+* Notacao -> permite atualizar campos facilmente usando ponteiros de struct.
+* typedef deixa voce criar um pseudonimo para o tipo de dados.
+* Inicializadores designados deixam voce atribuir valores a campos de structs e unios por nome.
+* unions possibilitam armazenar diferentes tipos de dados em um local.
+* enums possibilitam a criacao de um conjunto de simbolos.
+* Bitfields te dao controle sobre a quantidade exata de bits armazenadas em struct.

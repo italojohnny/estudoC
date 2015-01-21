@@ -1,0 +1,369 @@
+CÓDIGO QUE VOCÊ PODE LEVAR AO BANCO
+Você lembra da função encrypt() que criou há algum tempo que criptografava o
+conteúdo de uma string? A função estava em um arquivo de código-fonte separado
+que poderia ser usada por diversos programas:
+
+//--------------------------        encrypt.c
+#include "encrypt.h"
+
+void encrypt (char *message)
+{
+    while (*message) {
+        *message = *message ^ 31;
+        message++;
+    }
+}
+//----------------------------
+
+//----------------------------      encrypt.h
+void encryt (char *message);
+//----------------------------
+
+Alguém escreveu uma função, chamada checksum(), que pode ser usada para
+verificar se o conteúdo de uma string foi modificado. Criptografar dados e
+verificar se foram modificado é importante para a segurança. Separadamente, as
+duas funções são úteis, mas juntas podem formar a base de uma biblioteca de
+segurança;
+
+//----------------------------      checksum.c
+#include "checksum.h"
+
+int checksum (char *message)
+{
+    int c = 0;
+    while (*message) {
+        c += c ^(int)(*message);
+        message++;
+    }
+    return c;
+}
+//----------------------------
+
+//----------------------------      checksum.h
+int checksum (char *message);
+//---------------------------
+
+MAIOR E MENOR SÃO PARA HEADERS PADRAO
+Se você usar os caracteres de maior e menor em uma declaração #include, o
+compilador não vai procurar pelos headers no diretório atual; ao invés disso,
+vai procurá-los nos diretórios de header padrão.
+Para fazer com que o programa seja compilado com os arquivos header locais,
+você precisa substituir o menor e maior por duas aspas duplas (" ");
+
+mas e se quiser compartilhar código?
+Às vezes, você quer escrever código que estará diponível para vários programas,
+m pastas diferentes, distribuídos pelo seu computador. O que vocÇe pode fazer?
+
+"Pois é, eu preciso aumentar a segurança de todos esses programas diferentes.
+Não quero fazer uma cópia separada no código de segurança para cada um..."
+
+Há dois conjuntos de arquivos que você quer compartilhar entre os programas: os
+arquivos headers .h e os arquivos objeto .o. Vamos ver como podemos
+compartilhar cada um.
+
+COMPARTILHANDO ARQUIVOS HEADER.H
+há algumas maneiras de compartilhar arquivos header entre programas em C:
+
+(1) Amazene-os em um diretório padrão.
+Se você copiar seus arquivos header em um dos diretórios padrão, como
+/usr/local/include, você pode incluí-los em seu código-fonte, usando os
+caracteres de menor e maior.
+
+#include <encrypt.h>
+
+(2) Coloque o pathname completo na sua declaração de include.
+Se quiser armazenar seus arquivos header em algum outro lugar, como
+/my_header_files, você pode adicionar o nome do diretório à declaração de
+include:
+
+#include "/my_header_files/encrypt.h"
+
+(3) Você pode dizer ao compilador onde encontrar os headers.
+A opção final é dizer ao compilador onde ele pode encontrar seus arquivos
+header. Você faz isso com a opção -I no gcc:
+
+gcc -I/my_header_files test_code.c ... -o test_code
+
+A opção -I diz ao compilado gcc que há um outro lugar onde ele pode encontrar
+arquivos header. O compilador ainda vai procurar em todos os outros lugares
+padrões, mas primeiro ele vai verificar os nomes de diretório no opção -I
+
+COMPARTILHANDO ARQUIVOS DE OBJETOS.O USANDO O PATHNAME COMPLETO
+Agora você pode sempre colocar seus arquivos objeto .o em algum diretório
+compartilhado. Quando tiver feito isso, você apenas precisa acrescentar o
+caminho completo para os arquivos objeto quando estiver compilando um programa
+que usa:
+
+gcc -I/my_header_files test_code.c /my_object_files/encrypt.o /my_object_files/checksum.o -o test_code
+
+Se compilar o seu código com o pathname completo para os arquivos objeto que
+for usar, todos os seus programas em C podem compartilhar os mesmos arquivos
+encrypt.o e checksum.o.
+
+"Hmmm... Isso funciona se eu tiver apenas um ou dois arquivos objetos para
+compartilhar. Mas e se eu tiver vários arquivos objetos? Será que existe alguma
+maneira melhor de falar ao compilador sobre muitos arquivos objeto?"
+
+Sim, se você criar um depósito de arquivos objeto, você pode falar para o
+compilador sobre todos eles de uma vez.
+Um depósito é apenas um monte de arquivos objeto embrulhado em um único
+arquivo. Ao criar um único arquivo de depósito com todo seu código de
+segurança, você facilita o compartilhamento de código entre projetos.
+
+UM DEPÓSITO CONTÉM ARQUIVOS .O
+Já usou um arquivo .zip ou .rar? Então você sabe como é fácil criar um arquivo
+que contém outros arquivos. Isso é exatamente o que é um depósito de arquivo
+.a: um arquivo contendo outros arquivos.
+
+Abara um terminal ou um prompt de comando e entre em um dos diretórios library
+(biblioteca). São diretórios, como /usr/lib ou C:\MinGW\lib, que contêm o
+código de biblioteca. Em um diretório de biblioteca, você encontrará muitos
+depósitos de arquivos .a. E existe um comando chamado nm que você pode usar
+para dar uma olhada neles:
+
+nm libl.a
+
+O comando nm lista os nomes que estão armazenados no depósito. O depósito
+libl.a exibido acima contém dois arquivos objeto: libmain.o e libyywarp.o. Para
+que esses dois arquivos objetos servem realmente não importa; o ponto é que
+você pode pegar um conjunto inteiro de arquivos objeto e transformá-lo em um
+conjunto inteiro de arquivos objetos e transformá-lo em um único arquivo
+depósito que pode usar com gcc.
+Antes de ver como compilar programas usando .a, vamos ver como armazenar nossos
+arquivos encrypt.o e checksum.o em um depósito.
+
+CRIE UM ARQUIVO COM O COMANDO AR...
+O comando de depósito (ar) vai armazenar um conjunto de arquivos objeto em um
+arquivo objeto.
+       //esse é o nome do arquivo .a que será criado 
+ar -rcs libhfsecurity.a encrypt.o checksum.o
+                      //esses são os arquivos que serão armazenados no depósito
+//O r significa: arquivo .a será atualizado se ele já existe
+//O c significa que o depósito será criado sem feedback
+//O s diz: manda o "ar" criar um índice no início do arquivo .a.
+
+Você percebeu que todos os arquivos .a têm nomes como lib<alguma coisa>.a? Esse
+é o tipo de nome padrão para depósitos. O nome começa com lib, porque são
+bibliotecas estáticas. Você vai aprender o que isso significa mais tarde.
+
+...depois, armazenar o .a em um diretório de biblioteca.
+Quando tiver criado um depósito, pode armazená-lo em um outro diretório de
+biblioteca. Em qual diretório de biblioteca você deve colocá-lo? Você que
+decide, e há algumas opções:
+
+(*) Você pode colocar seu arquivo .a em um diretório padrão, como /usr/local/lib
+Alguns programadores gostam de colocar os depósitos em diretórios padrão uma
+vez que tiverem certeza de que os depósitos estão funcionando bem. Em linux,
+Mac e Cygwin, o diretório /usr/local/lib é uma boa opção, porque é o diretório
+reservado para suas bibliotecas locais customizadas.
+
+(*) Coloque o arquivo .a em algum outro diretório.
+Se ainda estivr desenvolvendo o seu código ou se não se sentir confortável
+instalando seu código em um diretório de sistema, você pode criar seu próprio
+diretório de biblioteca. Por exemplo, /my_lib.
+
+FINALMENTE, COMPILE SEUS OUTROS PROGRAMAS
+O objetivo de criar uma biblioteca de depósitos era poder usá-la com outros
+programas. Se tiver instalado seu depósito em um diretório padrão, pode
+compiçar seu códigom usando o switch -l:
+
+gcc test_code.c -lhfsecurity -o test_code
+
+Agora você entender por que é tão importanto nomear seu arquivo lib<alguma coisa>.a?
+O nome que segue a opção -l precisa combinar como parte do nome de depósito.
+Então, se o seu depósito se chama libawesome.a, você pode compilar o seu
+programa com o switch -lawesome.
+Mas, e se colocar seu depósito em outro lugar, como /my_lib? Neste caso, você
+vai precisa usar a opção -L para dizer em quais diretórios buscar:
+
+gcc test_code.c -L/my_lib -lhsecurity -o test_code
+
+
+A ACADEMIA USE A CABEÇA! ESTÁ VIRANDO GLOBAL.
+A galera da Academia Use a Cabeça! vai expandir seu negócio a nível global.
+Então abrindo filiais em quatro continentes e cada uma terá o equipamento de
+marca registrada Sangue, Suor e
+Marchas™. Então a equipe está desenvolvendo software para o elípticos,
+esteiras e bicicletas ergométricas. O software vai ler dados dos sensores
+embutidos em cada dipositivo e, depois, exibir as informações em uma pequena
+tela LCD que mostra ao usuário qual a distância percorrida e quantas calorias
+foram queimadas.
+Esse é o plano, mas a galera precisa de um pouco de ajuda. Vamos dar uma olhada
+mais detalhada no código.
+
+CALCULANDO CALORIAS
+A equiipe ainda está desenvolvendo o software, mas um dos módulos-chave já
+está pronto. A biblioteca hfcal vai gerar os dados principais para o display
+LCD. Se o código receber o peso do usuário, a distância virtual percorrida e um
+coeficiente especial, vai gerar os detalhes básicos a serem exibidos na Saída
+Padrão:
+
+#include <stdio.h>
+#include <hfcal.h>
+
+void display_calories (float weight, float distance, float coeff)
+{
+    printf("Weight: %3.2f lbs\n", weight);
+    printf("Distance: %3.2f miles\n", distance);
+    printf("Calories burned: %4.2f cal\n", coeff*weight*distance);
+}
+
+A equipe ainda não escreveu o código principal para cada equipamento. Quando
+fizerem isso, haverá programas separados para os elípticos, as esteiras e as
+bicicletas ergométricas. Até então, criaram um programa de teste que vai chamar
+o código hfcal.c usando um exemplo de dados:
+
+#include <stdio.h>
+#include <hfcal.h>
+
+int main ()
+{
+    display_calories(115.2, 11.3, 0.79);
+    return 0;
+}
+
+gcc -I./includes -c hfcal.c
+gcc -I./includes -c elliptical.c
+ar -rcs libs/libhfcal.a hfcal.o
+gcc elliptical.o -L./libs -lhfcal -o elliptical
+
+MAS AS COISA SÃO UM POUCO MAIS COMPLEXAS...
+Acontece que houve um problema. A academia Use a Cabeça! está expandindo para
+todos os lugares, em países diferentes que usam linguagens diferentes e medidas
+diferentes. Por exemplo, na Inglaterra, as máquinas precisam exibir a
+informação quilogramas e quilômetros.
+As academias têm diferentes tipos de equipamentos. Se tiverem vinte máquinas
+diferentes e academias em cinquenta países, isso significa que haverá mil
+versões diferentes do software. São muitas versões diferentes.
+E há outros problemas também:
+(*) Se um engenheiro atualizar os sensores usados em uma máquina, talvez será
+necessário atualizar o código que interage com eles.
+(*) Se os displays mudarem, os engenheiros talvez tenham de mudar o código que
+gera a saída.
+(*) Além de muitas, muitas outras variações.
+
+Pensando bem, os mesmos problemas surgem quando você desenvolve qualquer tipo
+de software. Diferentes máquinas podem requerer diferentes códigos de device
+driver ou, talvez,  precisem conversar com diferentes bancos de dados ou
+interdaces gráficas do usuário. Provavelmente, não é possível escrever uma
+versão do seu código que vai funcionar em cada máquina; então, o que você deve
+fazer?
+
+PROGRAMAS SÃO COMPOSTOS DE VÁRIOS PEDAÇOS...
+Você já aprendeu que é possível construir programas usando diferentes pedaços
+de código objeto. Você criou arquivos .o e depósitos .a, e os juntou em um
+único executável.
+...MAS, UMA VEZ QUE OS TENHA JUNTADO, NÃO PODE MUDÁ-LOS
+O problema é que se construir programas assim, eles serão estáticos. Uma vez
+que tenha criado um único arquivo executável a partir daqueles pedaços
+separados de código objeto, não tem como mudar qualquer um dos ingredientes sem
+ter de reconstruir o programa inteiro.
+O programa é um grande código objeto. Não tem como separar o código do display
+do código do senso; tudo se perdeu na mistura.
+
+"Não seria ótimo se houvesse uma maneira de executar um programa podendo
+substituir trechos de código objeto? Mas sei que é apenas um sonho..."
+
+LIGAÇÕES DINÂMICAS ACONTECEM DURANTE O TEMPO DE EXECUÇÃO
+O motivo pelo qual você não pode mudar as diferentes partes de código objeto em
+um arquivo executável é que, bem, tudo está contido em um único arquivo. Tudo
+foi ligado estaticamente quando o programa foi compilado.
+Mas se o seu programa não fosse apenas um único arquivo - se o seu programa
+fosse composto de vários arquivos separados que só seriam ligados quando o
+programa fosse executado -, você evitaria esse problema.
+O macete é encontrar uma maneira de armazenar trechos de código objeto em
+arquivos objeto e, depos ligá-los dinamicamente apenas quando o programa for
+executado.
+
+DÁ PARA FAZER UMA LIGAÇÃO .A DURANTE O TEMPO DE EXECUÇÃO?
+Então você precisa ter arquivos separados, contndo trechos separados de código
+objeto. Mas você já tem arquivos separados contendo código objeto: os arquivos
+.o e depósitos .a. Isso significa que você precisa apenas pedir para o
+computador não ligar os arquivos .o até você executar o programa?
+Infelizmente, não é simples assim. Arquivos objetos e depósitos simples não têm
+informações suficientes para serem ligados umas às outras durante o tempo de
+execução. Há outras coisas que nossos arquivos de biblioteca dinâmica vão
+precisar, como os nomes dos outros arquivos aos quais precisam se ligar.
+
+BIBLIOTECAS DINÂMICAS SÃO ARQUIVOS OBJETOS QUE TOMAM BOMBA.
+Bibliotecas dinâmicas são semelhantes aos arquivos objetos .o que você tem
+criado faz um tempo, mas não são bem iguais. Como um arquivo de depósito, uma
+biblioteca dinâmica pode ser construída a partir d diversos arquivos .o, mas
+diferente de um depósito, os arquivos objetos são corretamente interligados em
+uma biblioteca dinâmica para criar um único elemento de código objeto.
+
+PRIMEIRO CRIE UM ARQUIVO OBJETO
+Se for converter o código hfcal.c em uma biblioteca dinâmica, você precisa
+começar compiçar o código em um arquivo objeto .o, assim:
+
+gcc -I/includes -fPIC -c hfcal.c -o hfcal.o
+
+Você percebeu a diferença? Você está criando o hfcal.o como fez antes, exceto
+que você está acrescentando um comando a mais: -fPIC. Isso diz ao gcc que você
+quer criar um código independente de posição. Alguns sistemas operacionais e
+processadores precisam construir bibliotecas de código independente de posição
+para que seja possível decidir, durante o tempo de execução, onde querem
+carregá-lo na memória.
+Agora, na maioria dos sistemas, você não precisa especificar esta opção. Tente
+fazer isso no seu sistema. Se não for necessário, não vai fazer mal.
+
+    Então, o que é código independente de posição?
+    Código independente de posição é um código que não liga para onde o computador
+    o carrega na memória. Imagina que tenha uma biblioteca dinâmica que esperava
+    encontrar o valor de algum dado global a 500 bytes de onde a biblioteca estava
+    carregada. Coisas ruins iriam acontecer se o sistema operacional decidisse
+    carregar a biblioteca em algum outro lugar na memória. Se o compilador receber
+    o comando para criar código independente de posição, ele vai evitar problemas
+    como esse.
+    Alguns sistemas operacionais, como Windows, usam uma técnica, chamada
+    mapeamento de memória, para carregar as bibliotecas dinâmicas, o que implica
+    que todo o código é efetivamente independente de posição. Se você compilar o
+    seu código no Windows, talvez o gcc o avise que a opção -fPIC não é
+    necessáriia. Você pode remover a opção -fPIC ou ignorar o aviso. De qualquer
+    maneira, seu código estará bem.
+
+O NOME QUE DER PARA SUA BIBLIOTECA DINÂMICA DEPENDE DA SUA PLATAFORMA
+Bibliotecas dinâmicas estão disponíveis na maioria dos sistemas operacionais, e
+todos funcionam mais ou menos do mesmo jeito. Mas, como elas são chamadas, pode
+mudar muito. No Windows, bibliotecas dinâmicas geralmente se chamam bibliotecas
+de ligação dinâmicas e elas têm a extensão .dll. No Linux e Unix, elas são
+arquivos objeto compartilhado (.so) e, no Mac, são apenas bibliotecas dinâmicas
+(.dylib). Mas apenar dos arquivos terem extensões diferentes, a forma de
+criá-los muda pouco:
+    
+    gcc -shared hfcal.o -o C:\libs\hfcal.dll        #MinGW no Windows
+    gcc -shared hfcal.o -o /libs/libhfcal.dll.a     #Cygwin no Windows
+    gcc -shared hfcal.o -o /libs/libhfcal.so        #Linux ou Unix
+    gcc -shared hfcal.o -o /libs/libhfcal.dylib     #Mac
+
+A opção -shared diz ao gcc que você quer converter um arquivo objeto .o em uma
+biblioteca dinâmica. Quando o compilador cria uma biblioteca dinâmica, ele vai
+armazenar o nome da biblioteca dentro do arquivo. Então, se você criar uma
+biblioteca chamada libhfcal.so em uma máquina Linux, o arquivo libhfcal, so vai
+lembrar que o seu nome de biblioteca é hfcal. Por que isso é importante? Isso
+significa que, se você compilar uma biblioteca com um nome, você não poderá
+renomear o arquivo depois.
+Se precisar mudar o nome de uma biblioteca, recompile-a com seu novo nome.
+
+COMPILANDO O PROGRAMA ELLIPTICAL
+Agoraa que você criou a biblioteca dinâmica, você pode usá-la como uma
+biblioteca estática. Então você pode construir o programa elliptical assim:
+
+gcc -I./include -c elliptical.c -o elliptical.o
+gcc elliptical.o -L./libs -lhfcal -o elliptical
+
+Apesar de eles serem os mesmos comandos que você usaria se hfcal fosse um
+depósito estático, a compilação vai funcionar diferentemente. Como a biblioteca
+é dinâmica, o compilador não vai incluir o código da biblioteca no arquivo
+executável. Ao invés disso, ele vai inserir um código para assegurar a posição
+e procurar a biblioteca para se ligar a ela durante o tempo de execução.
+
+Infelizmente, no Linux não é bem assim.
+No Linux e na maioria das versões de Unix, o compilador apenas registra o nome
+do arquivo da biblioteca libfcaf.so, sem incluir o pathname (caminho para o
+arquivo). Isso significa que, se a biblioteca estiver armazenando fora dos
+diretórios de biblioteca padrões (como /usr/lib), o programa não tem como
+encontrar a biblioteca hfcal. Para resolver este problema, Linux verifica
+diretórios adicionais que são armazenados na variável LD_LIBRARY_PATH. Se você
+se certificar de adicionar a sua biblioteca à LD_LIBRARY_PATH - e se certificar
+de exportá-la -, programa elliptical vai encontrar libhfcal.so.

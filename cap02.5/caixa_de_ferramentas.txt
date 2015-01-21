@@ -1,0 +1,15 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 2.5 no seu repertorio e, agora, acrescentou strings a
+sua caixa de ferramentas.
+
+* O header string.h contem funcoes uteis de string
+* strcmp() compara as duas strings.
+* strstr(a, b) retornara o endereco da string b na string a.
+* strcat() liga duas strings.
+* strcpy() copia uma string em outra.
+
+* Uma array de strings e uma array de array.
+* Voce cria um array de array usanso char string[...][...].
+* strchr() encontra a posicao de um caractere dentro de uma string.
+* strlen() encontra o tamanho de uma string.

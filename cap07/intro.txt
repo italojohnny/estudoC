@@ -1,0 +1,172 @@
+PROCURANDO O SR. CERTO...
+
+Você tem usado muitas funções em C neste livro até agora, mas ainda há algumas
+maneiras de deixar suas funções em C muito mais potentes. Se souber como
+usá-las corretamente, funções em C podem fazer com que o seu código faça ainda
+mais sem escrever muito mais código.
+Para ver como isso funciona, vamos olhar um exemplo. Imagine que você tenha uma
+array de strings que você quer filtrar, exibindo algumas strings e deixando de
+exibir outras:
+
+int NUM_ADS = 7;
+char *ADS[] = {
+    "William: SBM GSOH like sports, TV, dining",
+    "Matt: SWM NS likes art, movies, theater",
+    "Luis: SLM ND likes books, theater, art",
+    "Mike: DWM DS likes trucks, sports and bieber",
+    "Peter: SAM likes chess, working out and art",
+    "Josh:  SJM likes sports, movies and theater",
+    "Jed: DBM likes theater, books and dining"
+};
+
+E, como esperado, a função find() faz um loop, percorrendo o array, e
+encontrando as strings que tenham as características desejadas. Agora que tem o
+código básico, deveria ser fácil criar clones da função que possam realizar
+tipos diferentes de busca.
+
+"Ei, espera aí! Clone? Clonar a função??? Isso é idiota. Cada versão só teria,
+tipo, uma linha de diferença."
+
+EXATAMENTE. SE CLONAR A FUNÇÃO, TERÁ MUITO CÓDIGO REPETIDO.
+Programas em C frequentemente precisam realizar tarefas que são quase
+idênticas, exceto alguma detalhe mínimo. Atualmente, a função find() visita
+cada item no array e aplica um teste simples a cada string para ver se
+corresponde ao critério de busca. Mas o teste que realiza é fixo. A função
+sempre realiza o mesmo teste.
+Agora, você poderia passar algumas strings para a função, para que ela possa
+procurar substrings diferentes. O problema é que isso não vai permitir find()
+realize uma busca com três critérios,  como "arte", "teatro" ou "jantar fora".
+E se você precisar de algo completamente diferente?
+
+VOCÊ PRECISA DE ALGO UM POUCO MAIS SOFISTICADO...
+
+Passando código a uma função
+Você precisa de alguma maneira de passar o código do teste para a função
+find(). Se você tivesse alguma maneira de compactar um trecho de código e
+passar tal código para a função, seria como dar à função find() uma máquina de
+teste que pudesse ser aplicada a cada dado individual.
+Isso significa que a parte principal da função find() continuaria exatamente
+como antes. Ainda teria código para verificar cada elemento em um array e
+exibir o mesmo tipo de saída. Mas o teste que seria aplicado a cada elemento
+no array dependeria do código que você passa para a função.
+
+você precisa dizer para find() o nome de uma função
+Imagine que você rescreva o critério de busca original como uma função:
+
+int sports_no_bieber (char *s)
+{
+    return strstr(s, "sports") && !strstr(s, "bieber");
+}
+
+Se você tivesse alguma maneira de passar o nome da função para find() como
+parâmetro, você poderia injetar o teste:
+
+void find (function-name match)
+{
+    int i;
+    puts("Seach results:");
+    puts("--------------------------------------------");
+    for (i = 0; i <  NUM_ADS; i++) {
+        if (call-the-match-function (ADS[i])) {//Aqui você iria precisar de
+        //alguma jeito de chamar a função cujo nome foi dado pelo parâmetro
+        //match;
+            printf("%s\n", ADS[i]);
+        }
+    }
+    puts("--------------------------------------------");
+}
+
+Se você encontrasse alguma forma de passar o nome de uma função para find(),
+não teria limite aos tipos de teste que poderia realizar no futuro. Contando
+que seja capaz de escrever uma função que retorne verdadeiro ou falso para uma
+string, você pode reutilizar a mesma função find().
+
+find(sports_no_bieber);
+find(sports_or_workout);
+find(ns_theater);
+find(arts_theater_or_dining);
+
+Mas como você indica que um parâmetro contém o nome de uma função? E, se você
+tiver o nome de um função, como você o utiliza para chamar a função?
+
+TODO NOME DE FUNÇÃO É UM PONTEIRO PARA A FUNÇÃO...
+Você talvez já tenha adivinhado que ponteiros seriam úteis aqui, não é? Pense
+sobre o que o nome de uma função realmente é. É uma maneira de se referenciar
+ao trecho de código. E isso é exatamente o que um ponteiro é: uma maneira de se
+referenciar a algo na memória.
+E é por isso que, em C, nomes de funções também são variáveis ponteiros. Quando
+criar uma função chamada go_to_warp_speed(int speed) você também está criando
+uma variável ponteiro chamada go_to_warp_speed que contém o endereço da função.
+Então, se der a find() um parâmetro que tenha um ponteiro para uma função, você
+deveria poder usar o parâmetro para chamar a função para qual ela aponta.
+
+int go_to_warp_speed(int speed)
+{
+    dilithium_crystals (ENGAGE);
+    warp = speed;
+    reactor_core(c, 125000 * speed, PI);
+    clutch (ENGAGE);
+    brake (DISENGAGE);
+    return 0;
+}
+//quando cria uma função, você também cria um ponteiro para a função que tem o
+//mesmo nome.
+//O ponteiro contém o endereço da função.
+go_to_warp_speed(4);
+//quando chama a função, está usando o ponteiro para função.
+Vamos dar uma olhada na sintaxe de C que precisamos para trabalhar com
+ponteiros para funções.
+
+...Mas não existe tipos de dados function
+Geralmente é bem fácil declarar ponteiros em C. Se tiver um tipo d dados como
+int, você apenas precisa acrescentar um asterisco ao final do nome do tipo de
+dados, e você declara um ponteiro com int*. Infelizmente, C não tem um tipo de
+dados function (função), então você não pode declarar um ponteiro para função
+com algo como funtion *.
+
+int *a;//Isso declara um ponteiro para int.
+function *f;//...mas isso não vai declarar um ponteiro para função.
+
+POR QUE C NÃO TEM UM TIPO DE DADOS FUNCTION?
+C não tem um tipo de dados function porque não existe apenas um tipo de função.
+Quando cria uma função, você pode diversificar muitas coisas, como tipo de
+retorno ou a lista de parâmetros usados. Essa combinação de coisas é o que
+define o tipo da função.
+
+int go_to_warp_speed(int speed)
+{...}
+char** album_names(char *artist, int year)
+{...}
+//Há vários tipos diferentes de funções. Elas são de tipos diferente, porque
+//têm tipos de retorno e parâmetros diferentes.
+
+Então, para ponteiros para funções, você terá de usar uma notação um pouco mais
+complexa.
+
+COMO CRIAR PONTEIROS PARA FUNÇÕES
+Digamos que você queira criar uma variável ponteiro que possa armazenar o
+endereço de cada uma das funções na página anterior. Você teria de fazer o
+seguinte:
+
+int (*warp_fn)(int);
+warp_fn = go_to_warp_speed;//Isso vai criar uma variável chamada warp_fn que
+                           //armazenar o endereço da função go_to_warp_speed().
+warp_fn(4);//isso é equivalente a chamar go_to_warp_speed(4);
+
+char** (*name_fn)(char*, int);
+name_fn = album_names;//Isso vai criar uma variável chamada name_fn que pode
+                      //armazenar o endereço da função album_names(.)
+char** results = names_fn("Sacha Distel", 1972);
+
+Parece bem complexo, certo?//Na verdade, não!
+Infelizmente tem de ser assim, porque você precisa dizer para C qual é o tipo
+de retorno e os tipos d parâmetros que a função aceita. Mas, uma vez que tenha
+declarado uma variável ponteiro para uma função, você pode usá-la como qualquer
+outra variável. Você pode atribuir valores a ela, pode acrescentá-la a array e,
+também pode enviá-la como parâmetro para funções...
+...O que nos traz de volta ao código da função find()...
+
+
+
+TIPO DE RETORNO (*VARIAVEL_PONTEIRO)(TIPOS DE PARAMETROS)
+char** (*name_fn)(char*, int)
