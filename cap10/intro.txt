@@ -250,3 +250,102 @@ Seu programa vai precisar abrir uma páfina web usando o navegador da máquina.
 Isso é um pouco difícil, porque diferentes sistemas operacionaid têm jeitos
 diferentes de conversar com programas como navegadores web.
 
+A MORTE DE UM PROCESSO
+Você viu como os processos são criados, como seus ambientes são configurados e
+até como processos conversam uns com os outros. Mas como processos morrem? Por
+exemplo, se o seu programa estiver lendo dados do teclado e o usuário teclar
+Ctrl+C, o programa para de ser executado.
+Como isso acontece? Você pode perceber pela saída produzida que o programa
+nunca chegou na parte de executar o segundo printf(); então o Ctrl+C não parou
+apenas o fgets(). Ao invés disso, o programa inteiro freou bruscamente. O
+sistema operacional descarregou o programa? A função fgets() chamou exit()? O
+que aconteceu?
+
+O S/O CONTROLA O SEU PROGRAMA COM SINAIS
+A magia acontece no sistema operacional. Quando você chama a função fgets(), o
+sistema operacional lê os dados do teclado e, quando vê que o usuário teclou
+Ctrl+C, envia um sinal de interrupção ao programa.
+Um sinal é apenas uma mensagem curta: um único valor inteiro. Quando o sinal
+chega, o processo precisa para seja o que for que estiver fazendo e lidar com o
+sinal. O processo olha uma tabela de mapeamento de sinais que ligam cada sinal
+a uma função chamada de tratador de sinais (signal handler). O tratador de
+sinais defaut para o sinal de interrupção apenas chamando a função exit().
+Então por que o sistema operacional não simplesmente mata o processo? Porque a
+tabela de sinais possibilita a execução do seu próprio código quando seu
+processo recebe um sinal.
+
+PEGANDO OS SINAIS E EXECUTANDO O SEU CÓDIGO
+Às vezes, você vai querer executar o seu próprio código se alguém interromper
+seu programa. Por exemplo, se o seu código tiver arquivos ou conexão de rede
+abertas, talvez ele queira fechar tudo direitinho antes de ser encerrado. Mas
+como você manda o computador executar o seu código quando ele te enviar um
+sinal? Você faz isso com sigaction.
+
+UM SIGACTION É UM EMBRULHO PARA FUNÇÕES
+Um sigaction é um struct que contém um ponteiro para uma função. sigactions são
+ultilizados para dizer ao sistema operacional que função ele deve chamar quando
+um sinal é enviado a um processo. Então, se você tiver uma função diediedie()
+que você quer que o sistema operacional chame se alguém enviar um sinal de
+interrupção ao seu processo, você vai precisar embrulhar a função diediedie()
+em um sigaction.
+Você cria um sigaction assim:
+
+    struct sigaction action;        //cria uma nova action
+    action.sa_handler = diediedie;  //esse é o nome da função que você quer que o computador chame
+    sigemptyset(&action.sa_mask);   //a máscara (mask) é uma maneira de filtra os sinais que o signaction vai tratar. Você geralmente vai querer usar uma máscara vazia, como este caso.
+    action.sa_flags = 0;            //essas são flags adicionais. Você pode simplesmente atribuir 0 a elas.
+
+A função embrulhar em um sigaction se chama tratador (handler), porque ela será
+usada para lidar com (ou tratar) um sinal que foi enviado. Se você quiser criar
+um tratador, ele vai precisar ser escrita de uma certa forma.
+
+TODOS OS TRATADORES ACEITAM SINAIS COMO PARÂMETROS.
+Sinais são apenas valores ints e, se você criar uma função tratadora
+customizada, ela precisa aceitar um parâmetro int, assim:
+
+    void diediedie (int sig)
+    {
+        puts("Goodbye cruel world...");
+        exit(1);
+    }
+
+Como o tratador recebe o número do sinal, você pode reutilizar o mesmo tratador
+para vários sinais. Ou você pode ter um tratador separado para cada sinal.
+Cabe a você escolher como programar.
+Tratadores devem ser trechos de código curtos e rápidos. Eles devem fazer
+apenas o bastante para lidar com sinal recebido.
+
+sigactions são registrados como signaction()
+Quando tiver criado um sigaction, você vai precisar apresentá-lo ao sistema
+operacional. Você faz isso com a função sigaction():
+
+    sigaction(signal_no, &new_action, &old_action);
+
+sigaction() recebe os três parâmetros:
+    (*) O número do sinal.
+        O valor inteiro do sinal que você quer tratar. Geralmente você vai passar
+        um dos símbolos de sinais padrão, como SIGINT ou SIGOUT.
+
+    (*) A nova ação.
+        Isso é o endereço da nova sigaction que você quer registrar.
+
+    (*) A ação antiga.
+        Se você passar um ponteiro paara uma outro signaction, ele será
+        preenchido com os detalhes do tratador de sinal existente, você pode
+        atribuir NULL.
+A função sigaction() vai retornar -1 se falhar e também vai configurar a função
+errno.
+                     //o número do sinal    //um ponteito para uma função tratadora
+    int catch_signal (int sig, void (*handler)(int))
+    {
+        struct sigaction action;//cria um action (ação)
+        action.sa_handler = handler;//atribua a função handler que recebeu como parâmetro ao handler da action
+        sigemptyset(&action.sa_mask);//use uma mascara vazia
+        action.sa_flags = 0;
+        return sigaction (sig, &action, NULL);//retorne o valor de sigaction() para poder verificar os erros
+    }
+
+Essa função possibilita a configuração de um tratador de sinais chamado
+catch_signal() com um número de sinal e nome de função
+    
+    catch_signal(SIGINT, diediedie)
