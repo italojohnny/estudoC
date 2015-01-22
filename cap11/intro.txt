@@ -113,3 +113,21 @@ para transmitir uma conversa.
 
 Este novo descritor de conexão (connect_d) é o que o servidor vai usar para..
 COMEÇAR A CONVERSA.
+
+UM SOCKET NÃO É UM TÍPICO FLUXO DE DADOS
+Até agora, os fluxos de dados têm sido todos iguais. Independentemente de estar
+conectados a arquivos ou Standard Input/Output (Entradas e Saídas Padrão), você
+tem usado funções como fprintf() e fscanf() para conversar com eles. Mas
+sockets são um poucos diferentes. Um socket tem mão dupla: pode ser usado para
+entrada e saída. Isso significa que ele precisa de funções diferentes para
+conversar.
+Se quiser exportar dados em um socket, você não pde usar fprintf(). Ao invés
+disso, use a função de chamada send():
+
+    char *msg = "Internet Knock-Knock Protocol Server\r\nVersion 1.0\r\nKnock! Knock!\r\n>";//esta é a mensagem que vai enviar pela rede
+    if (send(connect_d, msgm strle(msg), 0) == -1)
+        error("send");
+
+Lembre-se: é importante sempre verificar o valor de retorno de chamadas de
+sistema como send(). Erros de rede são muito comuns, e seus servidores precisam
+lidar com eles.
