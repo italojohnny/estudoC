@@ -146,3 +146,6 @@ de vinculá-lo:
 Este código faz com que o socket reutilize a porta quando estiver vinculado.
 Isso significa que você pode parar e reiniciar o servidor e não haverá erros
 quando vincular a porta uma segunda vez.
+
+lendo dados do cliente
+você a
