@@ -1,2 +1,115 @@
 sockets e redes
+O servidor de internte knock-knock
+C é utilizado para escrever a maior parte de código de rede de baixo nível na
+internet. A maioria das aplicações precisa de dois programas separados: um
+servidor e um cliente. Você vai criar um server em C que conta piadas pela
+internt. Você também será capaz de inicializar o servidor em uma máquina assim:
 
+    ./ikkp_server
+    Waiting for connection
+
+Além de avisar que está em execução, o servidor não exibirá mais nada na tela.
+Entretanto, se abrir um segundo console, poderá se conectar ao servidor usando
+um programa cliente chamado telnet. Telnet usa dois parâmetros: o endereço do
+servidor e a porta onde o servidor está sendo executado. Se estiver executando
+telnet na mesma máquina que o servidor, você pode usar 127.0.0.1 para o
+endereço:
+
+    telnet 127.0.0.1 30000
+
+VISÃO GERAL DO SERVIDOR KNOCK-KNOCK
+O servidor será capaz de conversar com vários clientes ao mesmo tempo. O
+cliente e o servidor terão uma conversa estruturada, chamada protocolo. Há
+diferentes protocolos em uso na internet. Alguns deles são protocolos de baixo
+nível, como internet protocol (IP - protocolo da internt), que são usados para
+controlar como 1s e 0s binários são enviados pela internet. Outros protocolos
+são de alto nível, como o hypertext transfer protocol (HTTP - protocolo de
+transferência de hipertexto), que controla como navegadores web conversam com
+os servidores web. O servidor de piadas vai usar um protocolo de alto nível
+customizado, chamado internet knock-knock protocol(IKKP - protocolo de internet
+"knock-knock").
+
+O cliente e o servidore irão trocar mensagens assim:
+    Servidor        Cliente
+    Knock knock
+                    Who's there?
+    Oscar
+                    Oscar who?
+    Oscar silly question, you
+    get a silly answer
+Um protocolo sempre tem uma lista de regras rógidas. Enquando o cliente e o
+servidor seguirem as regrasm tudo estrará bem. Mas se um deles quebrar as
+regras, a conversa geralmente termina abruptamente.
+
+BLAB: COMO SERVIDORES CONVERSAM COM A INTERNET
+Quando programas em C precisam conversar com o mundo exteriror, eles usam
+fluxos de dados para ler e escrever bytes. Você usou fluxos de dados que são
+conectados aos arquivos ou Standard Input/Output (Entrada e saída padrão). Mas
+se for escrever um programa para conversar com a rede, você precisa de um novo
+tipo de fluxo d dados chamado socket.
+
+    #include <sys/socket.h>//você vai precisar deste header
+    ...
+    //listener_d é um descritor para o socket. É um socket de internet
+    int listener_d = socket(PF_INET, SOCK_STREAM, 0);//este é um número de protocolo. Você pode deixá-lo como 0
+    if (listener_d == -1) 
+        error("Can't open socket");//Esta é a função error() que você criou no último capítulo.
+
+Antes de um servidor poder usar um socket para conversar com um programa
+cliente,  ele precisa passar por quatro etapas, que podem ser lembradas com a
+sigla BLAB: Bind, Listen, Accept, Begin; (Vincular, Escutar, Aceitar, Começar).
+
+1. BIND - VINCULAR A UMA PORTA.
+Um computador precisa executar vários programas servidores ao mesmo tempo.
+Talvez esteja enviando páginas web, enviando e-mails e executando um
+servidor de chat simultaneamente. Para evitar que as conversas se misturem,
+cada servidor usa uma porta diferente. Uma porta é como um canal de TV.
+Portas diferentes são usadas para diferentes serviços de rede, da mesma
+forma que canais diferentes são usados para conteúdos diferentes.
+Quando um servidor é inicializado, ele precisa dizer ao sistema operacional
+qual porta vai usar. Isso se chama se vincular a uma porta. O servidor
+knock-knock vai usar a porta 30000 e, para descritor de socket e o nome de
+socket. Um nome de socket é apenas um struct que significa "porta de
+internet 30000".
+
+    #include <arpa/inet.h>//você vai precisar desse header para criar endereços de internet
+    ...
+    struct sockadd_in name;//essas 3 linhas criam um nome para a pporta e que significa "porta de internet 30000"
+    name.sin_family = PF_INET;
+    name.sin_port = (in_port_t)htons(30000);
+    name.sin_addr.s_addr = htonl(INADDR_ANY);
+    int c = bind (listener_d, (struct sockadd *) &name, sizeof(name));
+    if (c == -1)
+        error("Can't bind to socket'");
+
+2. LISTEN - ESCUTAR
+Se seu servidor se tornar popular, é bem provável que receva muitos
+clientes se conectando a ele ao mesmo tempo. Gostaria que os clientes
+esperassem em uma fila para fazer a conexão? A chamada ao sistema (system
+call) liste() diz ao sistema operacional qual tamanho você quer que a fila
+tenha:
+
+    if (listen(listener_d, 10) == -1)
+        error("Can't listen");
+
+Chamar liste() com uma fila de tamanho 10 significa que até dez clientes podem
+tentar se conectar ao servidor ao mesmo tempo. Nem todos receberão uma resposta
+imediata, mas podem esperar por ela. O 11º cliente será avisado que o servidor
+está muito ocupado.
+
+3. ACEITAR UMA CONEXÃO
+Uma vez que esteja vinculando a uma porta e tenha criado a fila de escuta, você
+precisa apenas... esperar. Servidores passam a maior parte da visa esperando
+clientees se conectarem a eles. A chamada ao sistema conectarem a eles. A
+chamada ao sistema accept() espera até um cliente entrar em contato com o
+servidor, depois retorna um segundo descritor de socket que pode ser utilizado
+para transmitir uma conversa.
+
+    struct sockadd_storage client_add;
+    unsigned int address_size = sizeof(client_add);
+    int connect_d = accept(listener_d, (struct sockaddr *)&client_addr, &address_size);
+    if (connect_d == -1)
+        error("Can't open secondary socket");
+
+Este novo descritor de conexão (connect_d) é o que o servidor vai usar para..
+COMEÇAR A CONVERSA.
