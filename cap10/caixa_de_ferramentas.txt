@@ -1,0 +1,17 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 10 no seu repertorio e, agora, acrescentou comunicacao
+entre processos a caixa de ferramentas.
+
+* exit()        para o programa imediatamente.
+* fileno()      encontra o descritor.
+* dup2()        faz uma duplicata de um fluxo de dados.
+* waitpid()     espera um processo terminar.
+* pipe()        cria um pipe de comunicacao.
+* signation()   deixa tratar sinais.
+* raise()       envia sinais para ele mesmo
+* alarm()       envia SIGALRM depois de alguns segundos.
+* O comando kill envia um sinal
+* Processos podem se comunicar usando pipes
+* Sinais sao mensgens do S/O.
+

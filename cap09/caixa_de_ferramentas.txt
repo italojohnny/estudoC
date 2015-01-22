@@ -1,0 +1,17 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 9 no seu repertorio e, agora, acrescentou processo e
+chamadas de sistema  a caixa de ferramentas.
+
+* system() vai retornar uma string como um comando de console.
+
+* execl () = lista de parametros.
+* execle() = lista de parametros + ambiente.
+* execlp() = lista de parametros + busca no path.
+
+* execv () = array de parametros.
+* execve() = array de parametros + ambiente.
+* execvp() = array de parametros + busca no path.
+
+* fork() cria uma duplicata do processo atual.
+* fork() + exec() criam um processo filho.
