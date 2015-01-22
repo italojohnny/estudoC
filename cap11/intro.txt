@@ -131,3 +131,18 @@ disso, use a função de chamada send():
 Lembre-se: é importante sempre verificar o valor de retorno de chamadas de
 sistema como send(). Erros de rede são muito comuns, e seus servidores precisam
 lidar com eles.
+
+portas vinculadas são pegajosas
+Quando vincular um socket a uma porta, o sistema operacional vai impedir que
+qualquer outra coisa se vincule a ela pelos próximos 30 segundos,
+aproximadamente, e  isso inclui o programa que vinculou a porta originalmente.
+Para lidar com este problema, você só precisa inserir uma opção no socket antes
+de vinculá-lo:
+
+    int reuse = 1;
+    if (setsockopt(listener_d, SOL_SOCKET, SO_REUSEADDR, (char*)&reuse, sizeof(int)) == -1)
+        error("Can't set the reuse option on the socket");
+
+Este código faz com que o socket reutilize a porta quando estiver vinculado.
+Isso significa que você pode parar e reiniciar o servidor e não haverá erros
+quando vincular a porta uma segunda vez.
