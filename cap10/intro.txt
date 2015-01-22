@@ -349,3 +349,73 @@ Essa função possibilita a configuração de um tratador de sinais chamado
 catch_signal() com um número de sinal e nome de função
     
     catch_signal(SIGINT, diediedie)
+
+USE KILL PARA ENVIAR SINAIS
+Se você tiver escrito código para tratar sinais, como você pode testá-lo?
+Felizmente, em sistemas estilo Unix, há um comando chamado kill. Ele se chama
+kill porque normalmente é usando para matar (kill) processo, mas na realidade
+kill apenas envia um sinal a um processo. Por default, o comando envia um sinal
+SIGTERM ao processo, mas você pode usá-lo para enviar qualquer sinal que
+quiser.
+Para testá-lo, abra dois terminais. Em um terminal, você pode executar o seu
+programa. Depois, no segundo terminal, você pode enviar sinais para o seu
+programa com o comando kill:
+
+$ ps -u
+$ kill 9254         /*isso envia SIGTERM ao process*/
+$ kill -INT 9254    /*isso envia SIGINT ao processo*/
+$ kill -SEGV 9254   /*isso envia SIGSGV ao processo*/
+$ kill -KILL 9254   /*isso envia SIGKILL, que não pode ser ignorado*/
+
+
+Cada um desses comandos kill enviará sinais para o processo e executará
+qualquer tratador que o processo tenha configurado. A exceção é o sinal
+SIGKILL. O sinal SIGKILL não pode ser pego pelo código não pode ser ignorado.
+Isso significa que se você tiver um bug no seu código e ele está ignorando
+todos os sinais, você pode sempre parar o processo com kill -KILL.
+
+ENVIANDO SINAIS COMO RAISE()
+Às vezes, você talvez queira um processo para enviar um sinal para ele mesmo, o
+que é possível com o comando raise().
+    
+    raise(SIGTERM);
+
+Normalmente, o comando raise() é usandoo dentro dos seus próprios tratadores
+customizados. Significa que seu código pode receber um sinal para algo de pouca
+importancia e optar por convocar um sinal de maior importância.
+Isso se chama intensificação de sinal.
+
+ENVIANDO UMA CHAMADA DE ALERTA PARA SEU CÓDIGO
+O sistema operacional envia sinais para um processo quando algo tiver
+acontecido sobre o que o processo precisa saber. Pode ser que o usuário tenha
+tentado interromper o processo, ou alguém tentou matá-lo, ou até que o processo
+tentou fazer algo que não devia, como tentar acessar uma parte restrita da
+memória.
+Mas sinais não são usados apenas quando algo dá errado. Às vezes um processo
+quer gerar seus próprios sinais. Um exemplo é o sinal de alarme, SIGALRM. O
+sinal de alarme geralmente é criado pelo temporizador de intervalo. O
+temporizador de intervalo é como um relógio: você configura o alarme para uma
+hora no futuro e, enquanto isso, o seu programa pode fazer alguma outra coisa:
+
+    alarm(120);//isso vai fazer o alarme tocar em 120 segundos
+    do_important_busy_work();//enquando isso, o seu código faz outra coisa.
+    do_more_busy_work();
+
+Mas, mesmo que o seu programa esteja ocupado fazendo outra coisa, o
+temporizador ainda está rodando. Isso significa que quando os 120 segundos
+acabarem...
+
+...O TEMPORIZADOR ENVIA UM SINAL SIGALRM
+Quando um processo recebe um sinal, ele para de fazer tudo o que está fazendo e
+trata o sinal. Mas e o que um processo faz com um sinal alarme por default? Ele
+para o processo. É pouco provável que você queira que o temporizador mate o seu
+programa, então muitas vezes você vai configurar o tratador para ele fazer
+outra coisa:
+
+    cacth_signal(SIGALARM, pour_coffe);
+    alarm(120);
+
+Sinais de alarme deixam entrar em mode multitarefa. Se precisa executar uma
+certa tarefa a cada tantos segundos ou se quiser limitar a quantidade de tempo
+que passa realizando certa tarefa, sinais de alarme são uma ótima maneira de
+fazer com que o programa se interrompa.
