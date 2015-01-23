@@ -1,0 +1,15 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 11 no seu repertorio e, agora, acrescentou sockets e
+redes a caixa de ferramentas.
+
+* Telnet e um cliente simples de rede.
+* Crie sockets com a funcao socket().
+* Servidores BLAB
+    B = blind()
+    L = listen()
+    A = accept()
+    B = begin()
+* Use fork() para lidar com mais de um cliente ao mesmo tempo.
+* DNS = Domain Name System (Sistema de Nomes de Dominios),
+* getaddrinfo() encontra enderecos pelos dominio.
