@@ -155,4 +155,30 @@ o armazena em uma variável ponteiro void. Quando ambas threads tiverem
 terminado, seu programa será encerrado sem problemas.
 Vamos ver se funciona.
 
-    
+O CÓDIGO NÃO É SEGURO PARA THREADS
+A vantagem das threads é que muitas tarefas diferentes podem ser executadas ao
+mesmo tempo e permitir acesso aos mesmo dados. A desvantagem é que todas
+aquelas threads diferente têm acesso aos mesmo dados...
+Diferentemente do primeiro programa, as threads no segundo programas estão
+todos lendo e modificando um pedaço compartilhado da memória: a variável beers.
+Para entender o que está acontecendo, vamos ver o que acontece quando as duas
+threads tentam reduzir o valor de beers usando esta linha de código:
+
+    beers = beers - 1; //imagine duas threads executando esta linha de código
+    ao mesmo tempo.
+    (1) Primeiro, ambas as threads precisam ler o valor atual da variável beers.
+            thread 1                thread 2
+beers:        =37                     =37
+    (2) Depois, cada thread vai subtrair 1 do número obtido.
+            thread 1                thread 2
+beers:        =36                     =36
+    (3) Finalmente, cada thread armazena o valor de beer-1 de volta na variável beers.
+            thread 1                thread 2
+beers:        =36                     =36
+
+Apesar de ambas as threads tentarem reduzir o valor de beers em 1, não tiveram
+sucesso. Ao invés de reduzir o valor em 2, apenas reduziram em 1. Por isso que
+a variável beers não foi reduzida a zero - as threads ficaram se atraparando.
+E por que o resultado era tão imprevisivel? Porque as threads nem sempre
+executaram a linha de código ao mesmo tempo. Às vezes as threads não entraram
+em colisão e, às vezes, houve colisão.
