@@ -1,0 +1,104 @@
+C LAB2
+OPENCV
+Este projeto de laboratório dá as especificações de um programa para você
+investigar e construir usando o conhecimento que adquiriu nos últimos
+capítulos.
+Este projeto é maior do que os que você viu até agora. Então leia tudo antes de
+começar e vá com calma. E não se preocupe se tiver dificuldade. Não há
+conceitos novos de C aqui, você pode continuar sua leitura e voltar para o
+laboratório mais tarde.
+Terminar o trabalho fica por sua conta, mas não lhe daremos o código da
+resposta.
+
+AS ESPECIFICAÇÕES: TRANFORME O SEU COMPUTADOR EM UM DETECTOR DE INTRUSOS.
+Imagine se seu computador pudesse ficar de olho na sua casa enquanto está fora
+e te dizer quem tem perambulado por ali. Bem, com uma webcam padrão e a astúcia
+de OpenCV, isso é possível, sim!
+O DETECTOR DE INTRUSO
+Seu computador vai constantemente monitorar o ambiente à sua volta usando a
+webcam. Quando ele detectar movimetento, vai registrar a imagem de webcam atual
+em um arquivo. E, se você armazenar este arquivo em um disco de rede ou usar um
+serviço de sincronização de arquivos como o Dropbox, você terá evidência
+imediatamente de qualquer intruso.
+
+OPENCV
+OpenCV é uma biblioteca de visão computacional open source. Isso possibilita o
+recolhimento de dados de entradas de câmera do seu computador, o processamento,
+a análose das imagens ao vivo e a tomada de decisões como base no que o seu
+computador tiver identificado. E mais, você pode fazer tudo isso usando código
+em C.
+OpenCV está disponível para plataformas Windows, Linux e Mac.
+
+INSTALANDO OPENCV
+Quando tiver instaladdo OpenCV, você deve ver uma pasta no seu computador
+chamada sample. Vale a pena dar uma olhada nesses exemplos. Além disso, há
+links para tutoriais no wiki OpenCV. Você vai precisar estudar um pouco sobre
+OpenCV para completar este projeto.
+
+O que seu código deve fazer
+receber entrada da câmera do seu computador
+você precisa trabalhar em tempo real com dados oriundos da câmera no seu
+computador, então a primeira coisa que você precisa fazer é a captura dos
+dados. Existe uma função em OpenCV que pode te auxiliar chamada
+cvCreateCameraCapture(0). Ela retorna um ponteiro para um CvCapture Struct.
+Esse ponteiro é a sua conexão ao dispositivo webcam e você vai usá-lo para
+obter as imagens.
+Lembre-se de verificar os erros, caso o seu computador não consiga encontrar
+uma câmera. Se você não puder entrar em contato com a webcam, você receberá um
+ponteiro NULL da função cvCreateCameraCapture(0).
+
+PEGUE UMA IMAGEM DA WEBCAM
+Você pode ler a última imagem obtida pela webcam usando a função
+cvQueryFrame(). Ela recebe o ponteiro CvCapture como parâmetro. A função
+cvQueryFrame() retorna um ponteiro para última imagem, então o seu código
+provavelmente vai começar com algo assim:
+
+CvCapture* webcam = cvCreateCameraCapture(0);
+if (!webcam)
+    /**/
+while (1) {
+    Ip1Image* image = cvQueryFrame(webcam);
+    if(image) {
+        //Se ler uma imagem, vai ter de processá-la aqui
+    }
+}
+
+Se você decidir que há um ladrão na imagem, vocÇe pode salvar a imagem em um
+arquivo assim:
+
+cvSaveImage("somefile.jpg", image, 0);
+
+DETECTE UM INTRUSO
+Agora vem a parte inteligente do código. Como você decide se há um intruso na
+imagem?
+Uma maneira é procura movimento na imagem. OpenCV tem funções para criar um
+fluxo ótico Farneback. Um fluxo ótico compara duas imagens e te diz quanto
+movimetno  houve em cada pixel.
+Esta parte você terá de pesquisar por conta própria. Talvez você queira usar a
+função cvCalcOpticalFlowFarneback() para comparar duas imagens consecutivas da
+webcam e criar o fluxo ótico. A partir daí, você vai precisar escrever código
+que mede a quantidade de movimento entre as duas imagens. Se o movimento
+estiver acima de um determinado limite, você vai saber que algo grande está se
+movendo na frente da webcam.
+
+agora fuja
+Quando iniciar o programa, você não quer que a câmera registre a sua saída,
+então talvez você queira adicionar um prazo antes de o programa entrar em
+funcionamento, para você ter tempo para sair da sala.
+
+OPCIONAL: MOSTRE A SAIDA ATUAL DA WEBCAM.
+Durante os nosso teste aqui no laboratório, descobrimos que é útil verificar as
+imagens atuais sendo vistas pelo programa. Para fazer isso, abrimos uma janela
+e exibimos a saída atual da webcam.
+você pode criar uma janela em OpenCV facilmente com:
+    cvNamedWindow("Thief", 1);
+Para exibir a imagem atual na janela, use isso:
+    cvShowImage("Thief", image);
+
+O produto final
+Você saberá que seu projeto OpenCV está completo quando seu computador for
+capaz de automaticamente tirar fotos de pessoas tentando invadir seu quarto.
+
+POR QUE PARAR POR AÍ? TEMOS CERTEZA DE QUE VOCÊ DEVER TER MUITAS IDEIAS
+INTERESSANTES SOBRE O QUE FAZER COM OPENCV. ENVIE UMA MENSAGEM PARA A HEAD
+FIRST LABS E NOS DIGA COMO ESTÁ SENDO TRABALHAR COM OPENCV.

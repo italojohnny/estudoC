@@ -1,0 +1,199 @@
+C LAB 3
+BLASTEROIDS
+
+Este projeto de laboratório dá ass especificações de um programa para você
+criar usando o conhecimento que adquiriu nos últimos capítulos.
+Este projeto é maior do que os que você tem visto até agora. Então leia tudo
+antes de começar e vá com calma. E não se preocupe se tiver dificuldade. Não há
+conceitos novos de C aqui, então você pode continuar sua leitura e voltar para
+o lab mais tarde.
+Nós incluímos alguns detalhes de design e nos cerificamos de que vocẽ possui
+todas as peças necessárias para escrever o código.
+Terminar o trabalho fica por sua conta, mas não lhe daremos o código da
+resposta.
+
+CRIE O JOGO DE ARCADE BLASTEROIDS
+É claro que a motivação real para aprender C é poder desenvolver jogos. Neste
+projeto, você fará um tributo a um dos videogames mais populares de todos. Está
+na hora de criar Blasteroids!
+
+SUA MISSÃO: EXPLODIR OS ASTEROIDES SEM SER ATINGIDO
+Bem-vindo à nave espacial Vectorize! Essa é a nave com a qual você navegará
+pela tela usando seu teclado. A nave está armada com um canhão que pode atirar
+nos asteroides que passa.
+Se um asteroide for atingido por um tiro ele imediatamente de divide em dois, e
+a pontuação do jogador aumenta em 100 pontos. Quando um asteroid for atingido
+algumas vezes, é removido da tela.
+Se a nave for atingida por um asteroide, você perde uma vida. Você tem três
+vidas, e quando você perder a última, é o fim do jogo.
+
+ALLEGRO
+Allegro é uma biblioteca para desenvolvimento se jogos open source que permite
+a criação, compilação e execução do código do jogo em diversos sistemas
+operacionais. Ele funciona com Windows, Linux, Mac OS e até telefones.
+Allegro é bastante simples de usar, mas o fato de ela ser uma biblioteca
+simples não significa que ela não seja potente. Allegro pode manipular som,
+gráficos, animações, lidar com dispositivos e até gráficos em 3D, se sua
+máquina suportar OpenGL.
+                                                OpenGL é um padrão aberto para
+                                                processamento de gráficos. Voce
+                                                descrever seus objetos 3D para
+                                                OpenGL e ele lida com a (maior
+                                                parte da) matemática no seu
+                                                lugar.
+INSTALANDO ALLEGRO
+Você pode obter a fonte para Allegro no site Allegro SourceForge:
+    http://alleg.sourceforce.net/
+A web é atualizada muito mais frequentemente do que livros, então esta URL pode
+estar diferente agora. Verifique isso no seu motor de busca favorito.
+
+VOCÊ PODE PRECISAR DO CMAKE
+Quando você constrói o código, é provável que você precise instalar ferramenta
+extra chamada CMake. CMake é uma ferramenta de build que facilita a construção
+de programas em C em diferentes sistemas operacionais. Se precisar de CMake,
+você pode encontrar tudo que você precisar em http://www.cmake.org.
+
+O QUE ALLEGRO FAZ POR VOCÊ?
+A biblioteca Allegro lida com diversas coisas:
+    
+    (*) GUIS
+    Allegro vai criar uma janela simples para conter seu jogo. Isso pode não
+    parecer muita coisa, mas diferentes sistemas operacionais têm diferents
+    formas de criar janelas e permitir a interação entre elas, o teclado e o
+    mouse.
+
+    (*) EVENTOS
+    Sempre que você pressionar uma tecla, mover o mouse, clicar em algo, seu
+    sistema irá gerar um evento. Um evento é apenas um dado que diz o que
+    aconteceu. Eventos geralmente são colocados em filas e enviados para o
+    aplicativo. Allegro simplifica a reação a eventos para você poder, por
+    exmplo, facilmente escrever código que vai rodar se um usuário atirar com
+    o seu canhão pressionando a tecla de espaço.
+
+    (*) TEMPORIZAÇÃO
+    Você já viu temporizadores a nível de sistemas. Allegro oferece uma maneira
+    direta de dar uma batida cardíaca ao seu jogo. Todos os jogos têm uma
+    espécie de batida cardíaca que roda um número de vezes por segundo para
+    garantir que o display do jogo está constantemente sendo atualizado. Usando
+    um temporizador, você pode criar um jogo que, por exemplo, exiba uma versão
+    atualizada da tela a 60 frames por segundo (FPS).
+
+    (*) BUFFERING DE GRÁFICO
+    Para fazer seu jogo correr sem problemas, Allegro usa buffering duplo.
+    Buffering duplo é uma técnica de desenvolvedores de jogos que permite a
+    coleta de todos os gráficos em um buffer fora da tela, antes de exibí-los
+    na tela. Como um frame inteiro de animação é exibido de uma vezm seu jogo
+    terá uma exibição mais contínua.
+    
+    (*) GRÁFICOS E TRANSFORMAÇÕES
+    Allegro inclui um conjunto built-in de primitivos gráficos que permitem o
+    desenho de linhas, curvas, texto, formas e imagens. Se você tiver um driver
+    OpenGL para sua placa de vídeo, você pode fazer 3D. Além de tudo isso,
+    Allegro também suporta transformações que possibilitam a rotação, tradução
+    e alteração do tamanho dos gráficos na tela, o que facilitam a criação da
+    animação da nave e dos asteróides que se movem e giram na tela.    
+
+    (*) SOM
+    Allegro tem uma biblioteca de sons completa que auxilia a implementação de
+    sons no seu jogo.
+
+CONSTRUINDO O JOGO
+Você precisa decidir como você vai estruturar seu código-fonte. A maioria dos
+programadores em C provavelmente iria dividir o código em arquivos de fonte
+separados. Assim, você não só poderá recompilar seu jogo mais rapidamente, como
+também estará lidando com seções menores de código. Isso deixa o processo
+inteiro muito menos confuso.
+Há várias, várias maneiras de dividir o seu código, mas uma maneira é ter um
+arquivo fonte separado para cada elemento que será exibido no jogo:
+
+    asteroid.c      //um arquivo contendo todo o código-fonte para manter o 
+                    //controle e exibir a última posição de um asteroide.
+
+    blast.c         //a nave poderá atirar em um asteroid com seu conhão, então 
+                    //você vai precisar de código para senhar e mover um tiro 
+                    //de canhão pela tela.
+
+    spaceship.c     //o héroi do jogo, a pequena, porém corajosa, nave espacial.
+                    //Diferentemente dos asteróides, você deve apenas ter de 
+                    //lidar com uma de cada vez.
+
+    blasteroids.c   //é sempre bom ter um arquivo foonte separado para lidar 
+                    //com núcleo do jogo. O código aqui precisará ficar atento 
+                    //a teclas pressionadas, executar um temporizador e, também,
+                    //dizer para todas as outas naves, asteroides e tiros como 
+                    //se mover pela tela.
+A NAVE
+Quando você estiver controlando muitos objetos em uma tela, é útil criar um
+struct para cada um. Use isso para a nave:
+
+    typedef struct {
+        float sx;
+        float sy;
+        float headin;
+        float speed;
+        ALLEGRO_COLOR color;
+    } Spaceship;
+
+O QUE A NAVE PARECE
+Se você configurar o seu código para desenhar em volta da origem (isso será
+discutido mais tarde), poderá desenhar a nave usando código como este:
+A variável s é um ponteiro para um struct Spaceshipe. Faça a nave verde.
+    
+    al_draw_line(-8,  9, 0,-11, s->color, 3.0f);
+    al_draw_line( 0,-11, 8,  9, s->color, 3.0f);
+    al_draw_line(-6,  4,-1,  4, s->color, 3.0f);
+    al_draw_line( 6,  4, 4,  4, s->color, 3.0f);
+
+COLISÃO
+Se sua nave colidir com um asteroide, ela morre imediatamente e o jogador perde
+uma vida. Durante os primeiros cinco segundos depois que uma nova nave é
+criada, o jogo não verifica as colisões. A nova nave deve aparecer no contro da
+tela.
+
+COMPORTAMENTO DA NAVE
+A nave começa o jogo parada no centro da tela. Para fazê-la se mover, você
+precisará fazer com que ela reaja a teclas precionadas:
+
+cima        : aceleram
+baixo       : feia
+esquerda    : vira sentido anti-horário
+direita     : vira sentido horário
+espaço      : atira!
+
+Certifique-se de que a nave não acelere demais. Você provavelmente não vai
+querer que a nave ande mais que algumas ventenas de pixels por segundo.
+
+LENDO TECLAS PRESSIONADAS
+A linguagem C é usada para escrever código para quase todas as peças de
+hardware computacional no mundo. Mas o bizarro é que não existe uma maneira
+padrão de ler uma tecla pressionada usando C. Todas as funções padrão, como
+fgets, leem apenas as teclas, uma vez que a tecla de retorno foi pressionada.
+Mas Allegro premite, sim, a leitura das teclas precionadas. Cada envento que
+for enviado para um jogo via Allegro vem em fila. Isso é apenas uma lista de
+dados que descrevem quais teclas foram pressionadas, onde o mouse está, e assim
+por diante. Em algum lugar, você vai precisar de um loop que espera um evento
+aparecer na fila.
+
+    ALLEGRO_EVENT_QUEUE *queue;
+    queue = al_create_event_queue();
+    ALLEGRO_EVENT event;
+    all_wait_for_event(queue, $event);
+
+Uma vez que você receba um evento, você precisa decidir se ele reprenta uma
+tecla pressionada ou não. Você faz isso lendo o seu tipo.
+
+    if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+        switch(event.keyboard.keycode) {
+            case ALLEGRO_KEY_LEFT:
+                ...
+            break;
+            case ALLEGRO_KEY_RIGHT:
+                ...
+            break;
+            case ALLEGRO_KEY_SPACE:
+                ...
+            break;
+        }
+    }
+
+
