@@ -1,0 +1,158 @@
+THREADS
+FREQUENTEMENTE PROGRAMAS PRECISAM FAZER DIVERSAS COISAS AO MESMO TEMPO.
+THREADS POSIX PODEM FAZER SEU CÓDIGO MAIS INTERATIVO, SEPRARANDO ALGUNS
+SEGMENTOS DE CÓDIGO PARA SEREM EXECUTADOS EM PARALELO. MAS TENHA CUIDADO!
+THREADS SÃO FERRAMENTAS PODEROSAS, MAS VOCÊ NÃO QUER QUE ELAS ENTREM EM
+COLISÃO. NESTE CAPÍTULO, VOCÊ APRENDERÁ COMO COLOCARR SINAIS DE TRÂNSITO E
+MARCADORES DE PISTA QUE IRÃO PREVENIR UM ACIDENTE DE CÓDIGO. NO FINAL, VOCÊ
+SABERÁ COMO CRIAR THREADS POSIX E COMO USAR MECANISMOS DE SINCRONIZAÇÃO PARA
+PROTEGER A AUTENTICIDADE DE DADOS SENSITIVOS.
+
+TAREFAS SÃO SEQUENCIAIS... OU NÃO...
+Imagine que você esteja escrevendo algo complexo como um jogo em C. O código
+vai precisar realizar várias tarefas diferentes:
+
+    Precisa atualizar os gráficos na tela
+    Precisa calcular as localizações mais recentes dos objetos que estão se movendo no jogo.
+    Precisa le informações de controle de controlador de jogos ou teclado.
+    Talvez tenha de se comunicar com o disco e a rede.
+
+O código não só vai precisaar fazer tudo isso, como vai precisar fazer tudo
+isso ao mesmo tempo. Isso acontece em vários programas diferentes. Programas de
+mensagens instântaneas precisam ler o texto da rede e enviar dados para a rede
+ao mesmo tempo. Reprodutores de mídia precisam exibir vídeos, além de estarem
+atentos à entrada dos controles do usuário.
+Como o seu código pod realizar tarefas diferentes ao mesmo tempo?
+
+...PROCESSO NÃO SÃO SEMPRE A SOLUÇÃO
+Você já aprendeu como fazer com que o computaddor faça diversas coisas
+simultaneamente: com processos. No último capítulo, você construiu um servidor
+de rede que era capaz de lidar com vários clientes ao mesmo tempo. Cada vez que
+um novo usuário se conectava a ele, o servidor criava um processo para lidar
+com a nova sessão.
+Isso significa que quando você quiser fazer diversas coisas ao mesmo tempo,
+deverá simplesmente criar processos separado? Bem, não exatamente, pelo
+seguintes motivos:
+
+    - Processos demoram para serem criados
+    Algumas máquinas demoram um pouco para criar novos processos. Nem é tanto
+    tempo assim, mas toma tempo. Mas se a tarefa extra que você quer realizar
+    leva apenas alguns centésimos de segundo, mesmo assim criar um processo
+    novo a cada vez não será muito eficiente.
+
+    - Processos não compartilham dados facilmente
+    Quando você cria um processo filho, ele automáticamente tem uma cópia
+    completa de todos os dados do processo pai. Mas é uma cópia dos dados. Se o
+    filho precisar enviar dados para o pai, você precisa usar algo como um
+    pipe.
+
+    - Processos são difíceis
+    Você precisa criar um bloco de código para gerar processos, e isso pode
+    deixar o seu código muito grande e bagunçadoi.
+
+Você precisa de algo que comece uma tarefa separada rapidamente, compartilhando
+todos os seus dados atuais, e isso sem você ter de escrever muito código.
+Você precisa de threads.
+
+PROCESSOS SIMPLES FAZEM UMA COISA DE CADA VEZ
+Digamos que você tenha uma lista de tarefas que precisa realizar:
+Você não pode fazer tudo ao mesmo tempo, não sozinho. Se alguém entrar na loja,
+você vai ter de parar de organizar o estoque. Se parece que vai chover, você
+talvez tenha de parar de fazer a contabilidade e consertar o telhado. S e
+trabalha em uma loja sozinho, você é como um processo simples: faz uma coisa de
+depois da outra, mas sempre uma coisa de cada vez. É claro que você pode fazer
+um pouco de cada tarefa para manter o funcionamento, mas e se houver um
+bloqueio? E se você estiver atendendo um cliente na loja quando o telefone
+toca?
+Todos os programas que você criou até agora tiveram uma única thread de
+execução. É como só ter um funcionário no processo do programa.
+
+CONTRATE FUNCIONARIOS EXTRAS: USE THREADS
+Um programa multithreads é como uma loja com vários funcionários. Se uma pessoa
+estiver operando o caixa, outra estiver mantendo o estoque e ooutra estiver
+passando parafina nas pranchas, todos podem trabalhar sem interrupção.
+Se uma pessoa tiver de atender o telefone, não vai atrapalhar o trabalho dos
+outros na loja.
+Da mesma maneira que diversas pessoas podem trabalhar na mesma loja, você pode
+ter diversas threads vivendo no mesmo processo. Todas as threads terão acesso à
+mesma seção de memória heap. Todos poderão ler e escrever nos mesmo arquivos e
+conversar nos mesmo sockets de rede. Se uma thread modificar uma variável
+global, todos as outras threads verão a mudança imediatamente.
+Isso significa que você pode dar uma tarefa separada para cada thread e todas
+serão realizadas ao mesmo tempo.
+
+COMO SE CRIAM THREADS?
+Há alguas bibliotecas de threads, você vai usar a mais popular: a biblioteca
+de threads POSIX, ou pthred. Você pode usar a biblioteca pthread no Cygwin,
+Linux e Mac.
+Digamos que você queira executar essas duas funções em threads separados:
+
+    //funções threads precisam ter o tipo de retorno void*
+    void* does_not (void *a)        |void* does_too (void*)
+    {                               |{
+        int i = 0;                  |   int i = 0;
+        for (i = 0; i < 5; i++) {   |   for (i = 0; i < 5; i++){
+            Sleep(1);               |       Sleep(1);
+            puts("Does not!");      |       puts("Does too!");
+        }                           |   }
+        return NULL;                |   return NULL;
+    }                               |}
+    //nada útuil para retornar, então só use NULL
+
+Você precebeu que ambas as funções retornam um ponteiro void?
+Lembre-se: um ponteiro void pode ser usado para apontar parra qualquer dado na
+memória, e você precisa se certificar de que suas funções threads tenham o tipo
+de retorno void*
+Você vai executar cada uma dessas funções em sua própria thread.
+Você vai precisar executar ambas as funções em paralelo em threads separados.
+Vamos ver como fazer isso.
+
+CRIE THREADS COMO PTHREAD_CREATE
+Para executar essas funções, você vai precisar de um pouco de código de
+configuração, como algumas headres e talvez uma função error() para chamar se
+houver um problema.
+
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <unistd.h>
+    #include <errno.h>
+    #include <pthread.h>
+
+    void error (char *msg)
+    {
+        fprintf(stderr, "%s: %s\n", msg, strerror(errno));
+        exit(1);
+    }
+
+Mas depois você pode começar o seu código para sua função main. Você vai criar
+duas threads, e cada uma precisa ter seus dados armazinados em uma estrutura de
+dados pthread_t. Depois você pode criar e executar uma thread com
+pthread_creator().
+    
+    pthread_t t0;//isso registra todas as informações da thread
+    pthread_t t1;
+    
+    //isso cria a thread
+    if (pthread_create(&t0, NULL, does_not, NULL) == -1)//does_not é o nome da função que a thread vai executar.
+        error("Can't create thread t0");
+    if (pthread_create(&t1, NULL, does_too, NULL) == -1)
+        error("Can't create thread t1");
+
+Esse código vai executar suas duas funções em threads separadas. Mas você ainda
+não terminou. Se o programa apenas executar esse código e depois terminar, as
+threads serão mortas ao final do programa. Então, você precisa esperar suas
+threads terminarem:
+
+    void* result;//o ponteiro void que cada função retorna será armazenado aqui
+    if (pthread_join(t0, &result) == -1)
+        error("Can't join thread t0");
+    if (pthread_join(t1, &result) == -1)
+        error("Can't join thread t1");
+
+A função pthread_join() também recebe o valor de retorno da sua função thread e
+o armazena em uma variável ponteiro void. Quando ambas threads tiverem
+terminado, seu programa será encerrado sem problemas.
+Vamos ver se funciona.
+
+    
