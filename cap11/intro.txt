@@ -226,3 +226,25 @@ int say(int socket, char *s)
         fprintf(stderr, "%s: %s\n", "Erro talkinh to the client", strerr(errno));
     return result;
 }
+
+VOCÊ PODE FORK() UM PROCESSO PARA CADA CLIENTE
+Quando os clientes se conectam ao servidor, eles começam uma conversa em um
+socket separado e recém-criado. Isso significa que o socket de servidor
+principal está livre para procurar outro cliente. Então vamos fazer isso.
+Quando um cliente se conecta, você pode fork() um processo filho separado para
+lidar com a conversa entre servidor e cliente.
+Enquanto o cliente estiver conversando com o processo filho, o processo pai do
+servidor pode se conectar ao próximo cliente.
+
+O PAI E O FILHO USAM SOCKETS DIFERENTES
+Uma coisa a se ter em mente é que o processo pai do servidor só precisa usar o
+socket de escuta principal. Isso acontece porque ele é o que chama accept()
+para aceitar novas conexões. Por outro lado, o processo filho sempre terá de
+lidar apenas com o socket secundário que é criado pela chamada accept(). Isso
+significa que uma vez que o pai chamou fork() para o filho, o pai pode fechar o
+socket secundário e o filho pode fechar o socket de escuta principal.
+    
+    close(connect_d);//depos de fork-ar o filho, o pai pode fechar este socket
+    close(listener_d);//uma vez que o filho for criado, ele pode fechar este socket
+
+
