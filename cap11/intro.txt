@@ -247,4 +247,118 @@ socket secundário e o filho pode fechar o socket de escuta principal.
     close(connect_d);//depos de fork-ar o filho, o pai pode fechar este socket
     close(listener_d);//uma vez que o filho for criado, ele pode fechar este socket
 
+ESCREVENDO UM CLIENTE WEB
+E se quiser escrever seu próprio programa cliente? É realmente tão diferente
+assim de um servidor? Para ver a semelhanças e diferenças, você vai ter de
+criar um cliente web para o protocolo de transferencia de hipertexto (HTTP);
+HTTP é muito parecido com o protocolo de internet knock-knock que você
+programou faz pouco tempo. Todo os protocolos são conversas estruturadas. Cada
+vez que um cliente e servidor web conversam, eles dizem o mesmo tipo de coisa.
+Abra telnet e veja como baixar http://en.wikipedia.org/wiki/O'Relly_Media
+
+Quando seu programa se conectar ao servidor web, vau precisar enviar pelo menos
+trê coisas:
+(*) Um comando GET
+    GET /wiki/O'Reilly_Media http/1.1
+(*) O nome de domínio
+    Host: en.wikipedia.org
+(*) Uma linha em branco
+Mas, antes de poder enviar quaisquer dados para o servidor, você precisa fazer
+uma conexão do cliente. E como se faz isso?
+
+CLIENTES QUE MANDAM
+Clientes e servidores se comunicam usando sockets, mas a maneira que cada um
+consegue um socket é um pouco diferente. Você já viu que servidores usam a
+sequência BLAB:
+    (*) Bind    Vincular a uma porta
+    (*) Listen  Escutar
+    (*) Accept  Aceitar
+    (*) Begin   Começar a conversa
+Um servidor passa a maioria da sua vida esperando uma nova conexão de um
+cliente. Até um cliente se conectar, um servidor não pode fazer nada. Clientes
+não têm este problema. Um cliente pode se conectar e começar a conversa com um
+servidor quando quiser. Esta é a sequência para um cliente:
+    (*) Conectar-se a uma porta remota
+    (*) Começar a conversar.
+
+PORTAS REMOTAS E ENDEREÇOS IP
+Quando um servidor se conecta à rede, ele precisa decidir que porta vai usar.
+Mas clientes precisam saber um pouco mais: precisam saber a porta do servidor
+remoto, mas também precisam saber seu endereço de protocolo de internet (IP):
+
+    208.201.239.100
+
+Endereços de internet são um pouco difíceis de lembrar, por isso geralmente
+seres humanos usam nomes de domínios. Um nome de domínio é só um trecho de
+texto mais fácil de se lembrar como:
+
+    www.oreilly.com
+
+Apesar de seres humanos preferirem nomes de domínio, os pacotes de informação
+reais que trafegam na rede usam apenas o endereço de IP númericos.
+
+CRIE UM SOCKET PARA UM ENDEREÇO IP
+Uma vez que seu cliente saiba o endereço e número de porta do servidor, ele
+pode criar um socket de clients de servidor são criados da mesma maneira:
+
+    int s = socket(PF_INET, SOCK_STREAM, 0);
+
+A diferença entre o código do cliente e o servidor é o que eles fazem com o
+sockets quando o criam. Um servidor vai vincular o socket a uma porta local,
+mas um cliente vai conextar o socket a uma porta remota;
+    
+    //essas linhas criam um endereço socket  
+    struct sockaddr_in si;
+    memset(&si, 0, sizeof(si));
+    si.sin_family = PF_INET;
+    si.sin_addr.s_addr = inet_addr("208.201.239.100");//servidor
+    si.sin_port = htons(80);
+    connect(s, (struct sockaddr*)&si, sizeof(si));//Esta linha conecta o socket à porta remota
+
+O código acima funciona apenas para endereços IP numéricos. Para conectar um
+socket a um nome de domínio, você vai precisar usar de uma função chamada
+getaddrinfo().
+
+GETADDRINFO() PEGA ENDEREÇOS PARA DOMÍNIOS
+O sistema de nomes de domínio é um grande livreo de endereços. É uma maneira de
+converter um nome de dominío, como www.google.com, no tipo de endereço IP
+numérico que os computadores precisam para endereçar os pacotes de informação
+que enviam pela rede.
+
+CRIE  UM SOCKETE PARA UM NOME DE DOMÍNIO
+Geralmente, vai querer que seu código cliente use o sistema DNS (Sistema de
+Nomes de Domínios) para criar sockets. Assim, seus usuários não precisarão
+procurar os endereços IP. Para usar DNS, você precisa modelar seus sockets de
+cliente de uma maneira ligeiramente diferente:
+
+    #include <netdb.h>//vai precisar incluir este header para a função getaddrinfo()
+    ...
+    struct addrinfo *res;
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = PF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    getaddrinfo("www.oreilly.com", 80, &hints, &res);
+
+A função getaddrinfo() constrói uma nova estrutura de dados no heap chamada
+recurso de nomes. O recurso de nomes representa uma porta em um servidor de com
+um nome de domínio específico. Escondido dentro do recurso de nomes está o
+endereço IP que o computador vai precisar. Às vezes, domínios muito grande
+podem ter vários endereços IP, mas o código aqui vai simplesmente escolher um
+deles. você pode então usar o recurso de nomes para cruar um socket.
+
+    int s = socket(res->ai_family, res->ai_socktype, res-ai_protocol);
+
+Finalmente, você pode se conectar ao socket remoto. Com o recurso de nomes foi
+criado no heap, você precisará organizá-lo com uma função chamada
+freeaddrinfo().
+    
+    //res->ai_addr é o endereço da porta e domínio
+    connect(s, res->ai_addr, res->ai_addrlen);//res->ai_addrlen é o tamanho de endereço na memória.//Isso vai se conectar ao socket remoto
+    freeaddrinfo(res);//quando tiver conectado, você pode excluir os dados de endereço com freeaddrinfo()
+
+Quando tiver conectado um socket a uma porta remota, pode ler e escrever para
+ele usando as mesma funções revc() e send() que usou para o servidor. Isso
+significa que agora já deve ter informação suficiente para escrever um cliente
+web...
 
