@@ -1,0 +1,17 @@
+CAIXA DE FERRAMENTAS C
+
+Voce ja tem o capitulo 12 no seu repertorio e, agora, acrescentou threads a
+caixa de ferramentas.
+
+* Processos simples fazem uma coisa de cada vez.
+* POSIX threads (pthread) e uma biblioteca de threads
+* Threads permitem que um processo faça mais de uma coisa ao mesmo tempo.
+* Threads sao processos de peso levee
+* pthread_create() cria uma thread para executar uma funcao.
+* pthread_join() espera a thread terminar.
+* Threads compartilham as mesmas variaveis globais
+* Se duas threads lerem e atualizarem a mesma variavel, seu codigo pode ficar
+* imprevisivel.
+* Mutexes sao cadeados que protegem dados compartilhados.
+* pthread_mutex_lock() cria um mutex no codigo
+* pthread_mutex_unlock() libera o mutex
