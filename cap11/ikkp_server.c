@@ -10,17 +10,49 @@
 int listener_d;
 
 void handle_shutdown (int);
+int catch_signal(int, void(*)(int));
 int read_in (int, char*, int);
 void error (char*);
 int open_listener_socket (void);
 void bind_to_port (int, int);
 int say (int, char*);
 
-
-
 int main (int argc, char *argv[])
 {
-    puts("ola mundo");
+    if (catch_signal(SIGINT, handle_shutdown) == -1)
+        error("Can't set the interrupt handler");
+    
+    listener_d = open_listener_socket();
+    bind_to_port(listener_d, 30000);
+    
+    if (listen(listener_d, 10) == -1)
+        error("Can't listen");
+    
+    struct sockaddr_storage client_addr;
+    unsigned int address_size = sizeof(client_addr);//onde isso vai ser usado?
+    puts("Waiting for connection");
+    
+    char buf[255];
+    while (1) {
+        int connect_d = accept(listener_d, (struct sockaddr*)&client_addr, &address_size);
+        if (connect_d == -1)
+            error("Can't open secondary socket");
+        if (say(connect_d, "Internet Knock-Knock Protocol Serve\r\nVersion 1.0\r\nKnock! Knock!\r\n> ") != -1) {
+            read_in(connect_d, buf, sizeof(buf));
+            if (strncasecmp("Who's there?", buf, 12))
+                say(connect_d, "You should say 'Who's there?'!");
+            else {
+                if (say(connect_d, "Oscar\r\n> ") != -1) {
+                    read_in(connect_d, buf, sizeof(buf));
+                    if (strncasecmp("Oscar who?", buf, 10))
+                        say(connect_d, "You should say 'Oscar who?'!\r\n");
+                    else
+                        say(connect_d, "Oscar silly question, you get a silly answer\r\n");
+                }
+            }
+        }
+        close(connect_d);
+    }
     return 0;
 }
 
@@ -31,6 +63,14 @@ void handle_shutdown (int sig)
     exit(0);
 }
 
+int catch_signal (int sig, void(*handler)(int))
+{
+    struct sigaction action;
+    action.sa_handler = handler;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    return sigaction (sig, &action, NULL);
+}
 
 int read_in(int socket, char *buf, int len)
 {
@@ -51,7 +91,6 @@ int read_in(int socket, char *buf, int len)
     return len - slen;
 }
 
-
 void error(char *msg)
 {
     fprintf(stderr, "%s - %s\n", msg, strerror(errno));
@@ -69,7 +108,7 @@ void bind_to_port(int socket, int port)
 {
     struct sockaddr_in name;
     name.sin_family = PF_INET;
-    name.sin_port = (in_port_t)htons(30000);//port fica aqui
+    name.sin_port = (in_port_t)htons(port);//port fica aqui
     name.sin_addr.s_addr = htons(INADDR_ANY);
     int reuse = 1;
     if (setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (char*)&reuse, sizeof(int))== -1)
@@ -83,7 +122,7 @@ int say(int socket, char *s)
 {
     int result = send(socket, s, strlen(s), 0);
     if (result == -1)
-        fprintf(stderr, "%s: %s\n", "Erro talkinh to the client", strerror(errno));
+        fprintf(stderr, "%s: %s\n", "Erro talking to the client", strerror(errno));
         
     return result;
 }
