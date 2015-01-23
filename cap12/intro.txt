@@ -182,3 +182,45 @@ a variável beers não foi reduzida a zero - as threads ficaram se atraparando.
 E por que o resultado era tão imprevisivel? Porque as threads nem sempre
 executaram a linha de código ao mesmo tempo. Às vezes as threads não entraram
 em colisão e, às vezes, houve colisão.
+
+VOCÊ PRECISA ACRESCENTAR SINAIS DE TRÂNSITO
+Programas multithreads podem ser poderoso, mas eles também podem agir de forma
+imprevisível, a não ser que você implemente algumas salvaguardas.
+Imagine que dois carros querem atravessar a mesma rua estreita. Para evitar
+acidentes, você pode colocar sinais de trânsito. Aqueles sinais de trânsito
+impedem os carros de acessar o recurso compartilhado (a rua) ao mesmo tempo.
+O mesmo vale para duas ou mais threads com acesso a um mesmo recurso de dados
+compartilhado: você precisa incluir sinais de trânsito para nenhum par de
+threads possa ler os dados e rescrevê-los ao mesmo tempo.
+Os sinais de trânsito que previnem colisões de threads se chamam mutexes, isto
+é uma das maneiras mais simples de deixar o seu código seguro para threads.
+
+USE MUTEX COMO SINAL DE TRÂNSITO
+Para proteger uma seção de código, você vai precisar criar um mutex lock assim:
+    
+    pthread_mutex_t a_lock = PTHREAD_MUTEX_INITIALIZER;
+
+O mutex precisa ficar visível para todos as threads que possam entrar em
+colisão, ou seja, você  deveria criá-lo como uma variável global.
+PTHREAD_MUTEX_INITIALIZER na realidade é um macro. Quando o compilador vê isso,
+ele insere todo o código que o seu programa precisa para criar o mutex lock
+corretamente.
+
+    (1) Vermelho significa pare.
+    Você precisa colocar seu primeiro sinal de trânsitoo no início da sua seção
+    de código sensitovo. A função pthread_mutex_lock() vai deixar só uma thread
+    passar. Todos os outros terão de esperar quando chegarem a esse ponto.
+        
+        pthread_mutex_lock(&a_lock);
+        /* Sensitive code start here...*/
+
+    (2) Verde significa siga.
+    Quando o thread chega ao final do código sensitivo, ele chama
+    pthread_mutex_unlock(). Isso faz o sinal de trânsito voltar a ser verde, e
+    outra thread recebe permissão para entrar no código do código sensitivo
+
+        /*...End of sensitive code */
+        pthread_mutex_unlock(&a_lock);
+
+Agora que você sabe como criar locks no seu código, você tem muito controle
+sobre exatamente como suas threads irão funcionar.
