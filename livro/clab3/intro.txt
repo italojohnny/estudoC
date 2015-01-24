@@ -196,4 +196,111 @@ tecla pressionada ou não. Você faz isso lendo o seu tipo.
         }
     }
 
+O TIRO
+Tome isso, seu filho de uma pedra espacial! O canhão da nave pode dar tiros que
+atravessam a tela, e é o seu trabalho garantir que eles se movam pela tela.
+Essa é uma struct para o tiro:
 
+    typedef struct {
+        float sx;
+        float sy;
+        float heading;
+        float speed;
+        int gone;
+        ALLEGRO_COLOR color;
+    } Blast;
+
+APARÊNCIA DO TIPO
+O tiro é uma linha pontinhada. Se o usuário precionar a tecla do tiro
+rapidamente, os caminhos dos tiros vão se sobrepor e a linha pode ficar sólida.
+Assim, atirar rapidamente dará a impressão de mais um tiro mais potente.
+
+OMPORTAMENTO DO TIRO
+Diferentemente dos outros objetos animados, tiros que sumirem da tela não
+reaparecerão. Isso significa que você terá de criar código que possa facilmente
+criar e destruir tiros. Tiros são sempre atirados na direção na qual a nave
+está andando e ele sempre se propagam em linha reta com velocidade constante -
+digamos, três vezes a velocidade máxima da nava. Se um tiro atingir um
+asteroide, ele será dividida em dois.
+
+O ASTEROIDE
+Use este struct para cada asteroide:
+    
+    typedef struct {
+        float sx;
+        float sy;
+        float heading;
+        float twist;
+        float speed;
+        float rot_velocity;
+        float scale;
+        float gone;
+        ALLEGRO_COLOR color;
+    } Asteroid;
+
+APARÊNCIA DO ASTEROIDE
+Esse é o código para desenhar um asteroide em volta da origem:
+
+    al_draw_line(-20, 20,-25,  5, a->color, 2.0f);
+    al_draw_line(-25,  5,-25,-10, a->color, 2.0f);
+    al_draw_line(-25,-10, -5,-10, a->color, 2.0f);
+    al_draw_line( -5,-10,-10,-20, a->color, 2.0f);
+    al_draw_line(-10,-20,  5,-20, a->color, 2.0f);
+    al_draw_line(  5,-20, 20,-10, a->color, 2.0f);
+    al_draw_line( 20,-10, 20, -5, a->color, 2.0f);
+    al_draw_line( 20, -5,  0,  0, a->color, 2.0f);
+    al_draw_line(  0,  0, 20, 10, a->color, 2.0f);
+    al_draw_line( 20, 10, 10, 20, a->color, 2.0f);
+    al_draw_line( 10, 20,  0, 15, a->color, 2.0f);
+    al_draw_line(  0, 15,-20, 20, a->color, 2.0f);
+
+COMO O ASTEROIDE SE MOVE
+Asteroides se movem em linha reta, atravessando a tela. Apesar de eles se
+moverem em linha reta, eles continuamente firam em torno de seus eixos. Se um
+asteroide sumir em um lado da tela, ele imediatamente aparece no lado oposto.
+
+QUANDO O ASTEROIDE É ATINDIDO
+Se um asteroide for atingido pelo canhão da nave, ele imediatemente é dividido
+em dois. Cada um dessas partes terá metade do tamanho do asteroide original.
+Quando um asteroide for atingido/dividido algumas vezes, ele é removido da
+tela. A pontuação do jogador aumenta em 100 pontos com cada acerto.
+Você precisará decidir como você vai registrar o conjunto de asteroides na
+tela. Você vai criar um imenso array? Ou você vai usar uma lista encadeada?
+
+O STATUS DO JOGO
+Há algumas coisas que você presisa exibir na tela: o número de vidas restantes
+e a pontuação atual. Quando as vidas se esgotarem, você deve exibir "Game
+Over!" em letras grandes e amigáveis no coentro da tela.
+
+USE TRANSFORMAÇÕES PARA MOVER OS OBJETOS POR AÍ
+Você vai precisar animar os ojetos na tela. A nave precisa voar e os asteroides
+precisam girar, flutuar e até mudar de tamanho. Rotação, translação e
+escalonamento requerem muitos cálculos matemáticos. Mas allegro inclui muitas
+transformações built-in.
+Quando você estiver desenhando um objeto como uma nava, você provavelmente deve
+se preocupar apenas com desenhar em volta da origem. A origem é o canto
+superior à esquerda da tela e tem as coordenadas (0,0). As coordenadas x
+atravessam a tela horizontalmente e as coordenadas y descem. Você pode usar
+transformações para mover a origem para onde o objeto deve ir na tela e depois
+girá-lo para apontar na direção correta. Quando isso tiver sido feito, tudo que
+você fazer é desenhar seu objeto na origem e tudo estará no lugar certo.
+Por exemplo, esta é uma maneira de desenhar a nave na tela:
+
+    void draw_ship (Spaceship* s)
+    {
+        ALLEGRO_TRANSFORM transform;
+        al_identity_transform(&transform);
+        al_rotate_transform(&transform, DEGREE(s->heading));
+        al_translate_trandform(&transform, s->sx, s->sy);
+        al_use_transform(&transform);
+        al_draw_line(-8,  9, 0,-11, s->color, 3.0f);
+        al_draw_line( 0,-11, 8,  9, s->color, 3.0f);
+        al_draw_line(-6,  4,-1,  4, s->color, 3.0f);
+        al_draw_line( 6,  4, 1,  4, s->color, 3.0f);
+    }
+
+O produto final
+Quando tiver terminado, está na hora de joga Blasteroids!
+
+HÁ MUITAS OUTRAS COISAS QUE VOCÊ PODE FAZER PARA MELHORAR O JOGO. POR EXEMPLO:
+POR QUE NÃO TENTAR UAR OPENCV?
