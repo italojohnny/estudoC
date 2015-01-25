@@ -110,7 +110,7 @@ arquivo fonte separado para cada elemento que será exibido no jogo:
                     //controle e exibir a última posição de um asteroide.
 
     blast.c         //a nave poderá atirar em um asteroid com seu conhão, então 
-                    //você vai precisar de código para senhar e mover um tiro 
+                    //você vai precisar de código para desenhar e mover um tiro 
                     //de canhão pela tela.
 
     spaceship.c     //o héroi do jogo, a pequena, porém corajosa, nave espacial.
@@ -118,7 +118,7 @@ arquivo fonte separado para cada elemento que será exibido no jogo:
                     //lidar com uma de cada vez.
 
     blasteroids.c   //é sempre bom ter um arquivo foonte separado para lidar 
-                    //com núcleo do jogo. O código aqui precisará ficar atento 
+                    //com o núcleo do jogo. O código aqui precisará ficar atento 
                     //a teclas pressionadas, executar um temporizador e, também,
                     //dizer para todas as outas naves, asteroides e tiros como 
                     //se mover pela tela.
