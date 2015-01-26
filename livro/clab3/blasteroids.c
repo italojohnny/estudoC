@@ -33,35 +33,35 @@ int main (void)
     //test_spaceship();
 
     ALLEGRO_DISPLAY *display= NULL;
-    ALLEGRO_BITMAP *image = NULL;
-    ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+    //ALLEGRO_BITMAP *image = NULL;
+    //ALLEGRO_EVENT_QUEUE *event_queue = NULL;
     ALLEGRO_FONT *font = NULL;
 
     if (!al_init()) error("Couldn't initialize allegro!");
-    if (!al_init_image_addon()) error("Can't initialize image_addon");
-    if (!al_init_primitives_addon()) error("Couldn't initialize primitives addon!");
-    //al_init_font_addon();
-    //if (!al_init_ttf_addon()) error("Can't initializae font addon");
+    //if (!al_init_image_addon()) error("Can't initialize image_addon");
+    //if (!al_init_primitives_addon()) error("Couldn't initialize primitives addon!");
+    al_init_font_addon();
+    if (!al_init_ttf_addon()) error("Can't initializae font addon");
 
-    event_queue = al_create_event_queue();
-    if (!event_queue) error ("Can't create event queue");
+    //event_queue = al_create_event_queue();
+    //if (!event_queue) error ("Can't create event queue");
 
-    image = al_load_bitmap("test.jpg");
-    if (!image) error("Can't load image");
+    //image = al_load_bitmap("test.jpg");
+    //if (!image) error("Can't load image");
 
     display=al_create_display(WIDTH, HEIGHT);
     if (!display) error("Couldn't create allegro display!");
     
-    font = al_load_font("Courier.ttf", 48, 0);
+    font = al_load_font("/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf", 48, 0);
     if (!font) error("Can't loading font");
 
 //=======================================================    
-    al_register_event_source(event_queue, al_get_display_event_source(display)); 
+    //al_register_event_source(event_queue, al_get_display_event_source(display)); 
 
     //al_draw_line(100,100,400,400,al_map_rgb(255,0,0),3);
     //Spaceship a;
     //draw_spaceship(&a);
-
+/*
     al_flip_display();
     while (1) {
         ALLEGRO_EVENT event;
@@ -79,9 +79,21 @@ int main (void)
 
         al_flip_display(); 
     }
-    //al_rest(10.0);
+*/
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    
+    al_draw_text(font, al_map_rgb(255, 0, 0), 10, 10, ALLEGRO_ALIGN_LEFT, "esquerda");
+    al_draw_text(font, al_map_rgb(0, 255, 0), WIDTH - 10, 50, ALLEGRO_ALIGN_RIGHT, "direita");
+    al_draw_text(font, al_map_rgb(0, 0, 255), WIDTH/2, 90, ALLEGRO_ALIGN_CENTRE, "centro");
+    int var = 42;
+    char *my_text = "A resposta para a vida o universo e tudo mais e ";
+    al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH/2, 250, ALLEGRO_ALIGN_CENTRE, "test %s %i", my_text, var);
+    
+    al_flip_display();
+    al_rest(10.0);
+    al_destroy_font(font);
     al_destroy_display(display);
-    al_destroy_event_queue(event_queue);
+    //al_destroy_event_queue(event_queue);
     return 0;
 }
 
