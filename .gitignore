@@ -2,4 +2,9 @@
 
 *.o
 
+*.jpg
+*.bmp
+*.png
+
 test
+blasteroids
