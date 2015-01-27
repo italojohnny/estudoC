@@ -8,11 +8,12 @@ OBJECTS=$(SOURCES:.c=.o)
 
 all: $(NAME)
 	./$(NAME)
+
 $(NAME): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LIBS) $(CFLAGS) -o $@
 
 %.o: %.c
-	$(CC) -c $< -o $@
+	$(CC) -c $(LIBS) $< -o $@
 
 clean:
 	rm -f *.o $(NAME)

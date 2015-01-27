@@ -5,6 +5,7 @@
 *.jpg
 *.bmp
 *.png
-
+*.ttf
+main
 test
 blasteroids
