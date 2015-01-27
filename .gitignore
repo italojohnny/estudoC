@@ -6,6 +6,9 @@
 *.bmp
 *.png
 *.ttf
+*.ogg
+*.wav
+
 main
 test
 blasteroids
