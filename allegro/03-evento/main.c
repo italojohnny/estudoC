@@ -24,10 +24,11 @@ int main (void)
 
     janela = al_create_display(LARGURA_TELA, ALTURA_TELA);
     if (!janela) error("Falha ao criar janela");
-    
-    imagem = al_load_bitmap("test.jpg");
+//=========================    
+    imagem = al_load_bitmap("italo.jpg");
+    imagem = al_load_bitmap("/home/zak/Documents/estudo_c/allegro/03-evento/test.jpg");
     if (!imagem) error("Falha ao carregar o arquivo de imagem");
-
+//=========================
     fila_eventos = al_create_event_queue();
     if (!fila_eventos) error("Falha ao criar fila de eventos");
     
