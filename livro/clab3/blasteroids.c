@@ -8,13 +8,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
-//#include <allegro5/allegro_image.h>
-//#include <allegro5/allegro_font.h>
-//#include <allegro5/allegro_ttf.h>
-
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include "spaceship.h"
 #include "blast.h"
 #include "asteroid.h"
@@ -22,61 +19,100 @@
 const int WIDTH  = 800;
 const int HEIGHT = 600;
 
-ALLEGRO_DISPLAY *my_display = NULL;
+ALLEGRO_DISPLAY *myDisplay = NULL;
+ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
 
 Spaceship *a;
+int statusGame;
 
-void error (char *msg);
-void initialize (void);
+void inicialize (void);
 void finalize (void);
+void error (char *msg);
+
+void loop (void);
+void keyboard (void);
+void timer (void);
 void draw (void);
 
 int main (void)
 {
-    initialize();
-    while (1) {
-        
-        draw();
-
-    }
+    statusGame = 1;
+    inicialize();
+    
+    loop();
+puts("so pra ver se saiu aqui");
     finalize();
     return 0;
 }
 
-void draw (void)
+void loop (void)
 {
+    /* inicia threas para desenhar, teclado e tempo */
+    while (statusGame) {
+        if (!al_is_event_queue_empty(myEventQueue)) {
+            
+            ALLEGRO_EVENT evento;
+            al_wait_for_event(myEventQueue, &evento);
 
-    al_clear_to_color(al_map_rgb(0, 0, 0));
-/*    al_draw_line(20.0, 40.0, 40.0, 60.0, al_map_rgb(255, 0, 0), 1.0);
-    al_draw_triangle(70.0, 30.0, 20.0, 55.0, 110.0, 250.0, al_map_rgb(255, 255, 255), 5.0);
-    al_draw_filled_triangle(40.0, 90.0, 120.0, 246.0, 400.0, 23.0, al_map_rgb(255, 255, 0));
-    al_draw_rectangle(70.0, 30.0, 110.0, 250.0, al_map_rgb(255, 0, 255), 6.0);
-    al_draw_filled_rectangle(88.0, 10.0, 340.0, 77.0, al_map_rgb(0, 255, 255));
-    al_draw_ellipse(70.0, 90.0, 20.0, 55.0, al_map_rgb(255, 255, 255), 5.0);
-    al_draw_filled_ellipse(98.0, 145.0, 25.0, 15.0, al_map_rgb(128, 255, 128));
-    al_draw_circle(250.0, 300.0, 70.0, al_map_rgb(128, 0, 0), 2.0);
-    al_draw_filled_circle(350.0, 50.0, 43.0, al_map_rgb(0, 0, 255));
-*/
-    draw_spaceship(&a);
-    al_flip_display();
+            if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+                statusGame = 0;
+        }
+    }
 }
 
-void initialize (void)
+void keyboard (void)
 {
-    if (!al_init()) error("");
-    if (!al_init_primitives_addon()) error("");
-    my_display = al_create_display(WIDTH, HEIGHT);
-    if (!my_display) error("");
-    al_set_window_title(my_display, "Blasteroids");
+
+}
+
+void timer (void)
+{
+
+}
+
+void draw (void)
+{
+ 
+   
+}
+
+void inicialize (void)
+{
+    if (!al_init())
+        error("allegro");
+
+    if (!al_init_primitives_addon())
+        error("add-on allegro_primitives");
+    
+    al_init_font_addon();
+    if (!al_init_ttf_addon())
+        error("add-on allegro_ttf");
+
+    if (!al_install_keyboard())
+        error("keyboard");
+    
+    myDisplay = al_create_display(WIDTH, HEIGHT);
+    if (!myDisplay)
+        error("create display");
+    al_set_window_title(myDisplay, "Blasteroids");
+
+    myEventQueue = al_create_event_queue();
+    if (!myEventQueue)
+        error("create event queue");
+
+    al_register_event_source(myEventQueue, al_get_display_event_source(myDisplay));
+    al_register_event_source(myEventQueue, al_get_keyboard_event_source());
 }
 
 void finalize (void)
 {
-    al_destroy_display(my_display);
+    al_destroy_event_queue(myEventQueue);
+    al_destroy_display(myDisplay);
 }
 
 void errro (char *msg)
 {
     fprintf(stderr, "%s: %s\n", msg, strerror(errno));
+    finalize();
     exit(1);
 }

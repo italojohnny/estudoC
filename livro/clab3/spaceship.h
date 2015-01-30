@@ -4,7 +4,7 @@
 typedef struct {
     float sx;
     float sy;
-    float headin;
+    float heading;
     float speed;
     ALLEGRO_COLOR color;
 } Spaceship;
@@ -12,5 +12,6 @@ typedef struct {
 
 void draw_spaceship (Spaceship *s);
 void test_spaceship (void);
+void draw_ship (Spaceship *s);
 
 #endif
