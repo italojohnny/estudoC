@@ -15,14 +15,19 @@ const int HEIGHT = 600;
 
 ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
+ALLEGRO_FONT *myFont = NULL;
 
 int statusGame;
+int scoreGame;
+
 Spaceship a;
 Asteroid b;
+Blast c;
 
 int main (void)
 {
     statusGame = 1;
+    scoreGame = 0;
     inicialize();
     
     loop();
@@ -58,15 +63,17 @@ void keyboard (void)
 
 void timer (void)
 {
-
+    if (++scoreGame > 999) scoreGame = 0;
 }
 
 void draw (void)
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
-
+    
+    al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%0.3d", scoreGame);
     draw_ship(&a);
     draw_asteroid(&b);
+    draw_blast(&c);
 
     al_flip_display(); 
 }
@@ -82,7 +89,11 @@ void inicialize (void)
     al_init_font_addon();
     if (!al_init_ttf_addon())
         error("add-on allegro_ttf");
-
+    
+    myFont = al_load_font("2Dumb.ttf", 35, 0);
+    if (!myFont)
+        error("font");
+    
     if (!al_install_keyboard())
         error("keyboard");
     
