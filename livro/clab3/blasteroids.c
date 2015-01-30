@@ -18,6 +18,7 @@ ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
 
 int statusGame;
 Spaceship a;
+Asteroid b;
 
 int main (void)
 {
@@ -65,6 +66,7 @@ void draw (void)
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     draw_ship(&a);
+    draw_asteroid(&b);
 
     al_flip_display(); 
 }
