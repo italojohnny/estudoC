@@ -26,7 +26,7 @@ Blast c;
 
 int main (void)
 {
-    statusGame = 1;
+    statusGame = 3;
     scoreGame = 0;
     inicialize();
     
@@ -69,12 +69,23 @@ void timer (void)
 void draw (void)
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    
-    al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%0.3d", scoreGame);
-    draw_ship(&a);
-    draw_asteroid(&b);
-    draw_blast(&c);
+    switch (statusGame) {
+        case 1://tela de start
+            
+        break;
+        case 2://o jogo
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
+            draw_ship(&a);
+            draw_asteroid(&b);
+            draw_blast(&c);
+        break;
+        case 3://game over
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
+        break;
+        case 4://tela de record score
 
+        break;
+    }
     al_flip_display(); 
 }
 

@@ -1,7 +1,6 @@
 NAME=blasteroids
 CC=gcc
-#CFLAGS=-O3 -Wall -Wextra -Werror
-CFLAGS=-O
+CFLAGS=-O3 -Wall -Wextra -Werror
 LIBS=-lallegro -lallegro_primitives -lallegro_ttf -lallegro_font
 
 #SOURCES=$(wildcard *.c)
@@ -35,5 +34,5 @@ blasteroids: blasteroids.o asteroid.o blast.o spaceship.o
 all: blasteroids
 	./blasteroids
 
-clean:
+clear:
 	rm -f *.o $(NAME)
