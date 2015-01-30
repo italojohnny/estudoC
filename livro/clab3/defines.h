@@ -9,5 +9,13 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
+void inicialize (void);
+void finalize (void);
+void error (char *msg);
+
+void loop (void);
+void keyboard (void);
+void timer (void);
+void draw (void);
 
 #endif

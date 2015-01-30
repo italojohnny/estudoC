@@ -16,19 +16,8 @@ const int HEIGHT = 600;
 ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
 
-Spaceship a;
 int statusGame;
-int tempi = 0;
-float tempf = 0.0;
-
-void inicialize (void);
-void finalize (void);
-void error (char *msg);
-
-void loop (void);
-void keyboard (void);
-void timer (void);
-void draw (void);
+Spaceship a;
 
 int main (void)
 {
@@ -36,6 +25,7 @@ int main (void)
     inicialize();
     
     loop();
+
     finalize();
     return 0;
 }
@@ -47,9 +37,10 @@ void loop (void)
         if (!al_is_event_queue_empty(myEventQueue)) {
             ALLEGRO_EVENT evento;
             al_wait_for_event(myEventQueue, &evento);
-            if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+            if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE ||(evento.type == ALLEGRO_EVENT_KEY_DOWN && evento.keyboard.keycode == ALLEGRO_KEY_ESCAPE))
                 statusGame = 0;
         }
+        keyboard();
         timer();
         draw();
     }
@@ -57,7 +48,6 @@ void loop (void)
 
 void keyboard (void)
 {
-    //esc                   //termina partida
     //seta para cima        //acelara
     //seta para baixo       //freia
     //seta para direita     //vira sentido horario

@@ -1,6 +1,7 @@
 NAME=blasteroids
 CC=gcc
-CFLAGS=-O3 -Wall -Wextra -Werror
+#CFLAGS=-O3 -Wall -Wextra -Werror
+CFLAGS=-O
 LIBS=-lallegro -lallegro_primitives -lallegro_ttf -lallegro_font
 
 #SOURCES=$(wildcard *.c)
