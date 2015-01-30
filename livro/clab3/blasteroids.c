@@ -4,14 +4,8 @@
     temporizador e, tambem dizer para todas as outras naves, asteroides e tiros
     como se mover pela tela.
 */
+#include "defines.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
 #include "spaceship.h"
 #include "blast.h"
 #include "asteroid.h"
@@ -22,8 +16,10 @@ const int HEIGHT = 600;
 ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
 
-Spaceship *a;
+Spaceship a;
 int statusGame;
+int tempi = 0;
+float tempf = 0.0;
 
 void inicialize (void);
 void finalize (void);
@@ -40,7 +36,6 @@ int main (void)
     inicialize();
     
     loop();
-puts("so pra ver se saiu aqui");
     finalize();
     return 0;
 }
@@ -50,19 +45,24 @@ void loop (void)
     /* inicia threas para desenhar, teclado e tempo */
     while (statusGame) {
         if (!al_is_event_queue_empty(myEventQueue)) {
-            
             ALLEGRO_EVENT evento;
             al_wait_for_event(myEventQueue, &evento);
-
             if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
                 statusGame = 0;
         }
+        timer();
+        draw();
     }
 }
 
 void keyboard (void)
 {
-
+    //esc                   //termina partida
+    //seta para cima        //acelara
+    //seta para baixo       //freia
+    //seta para direita     //vira sentido horario
+    //seta para esquerda    //vira sentido anti-horario
+    //barra de espaco       //atira
 }
 
 void timer (void)
@@ -72,8 +72,11 @@ void timer (void)
 
 void draw (void)
 {
- 
-   
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+
+    draw_ship(&a);
+
+    al_flip_display(); 
 }
 
 void inicialize (void)

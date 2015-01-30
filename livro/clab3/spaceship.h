@@ -1,6 +1,8 @@
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
+#include "defines.h"
+
 typedef struct {
     float sx;
     float sy;
@@ -9,8 +11,6 @@ typedef struct {
     ALLEGRO_COLOR color;
 } Spaceship;
 
-
-void draw_spaceship (Spaceship *s);
 void test_spaceship (void);
 void draw_ship (Spaceship *s);
 
