@@ -5,13 +5,9 @@
     como se mover pela tela.
 */
 #include "defines.h"
-
 #include "spaceship.h"
 #include "blast.h"
 #include "asteroid.h"
-
-//const int WIDTH  = 800;
-//const int HEIGHT = 600;
 
 ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
@@ -21,17 +17,20 @@ int statusGame;
 int scoreGame;
 
 Spaceship a;
-Asteroid b;
+Asteroid b, d, e;
 Blast c;
 
 int main (void)
 {
+    //srand(time(NULL));
     statusGame = 2;
     scoreGame = 0;
     inicialize();
     
     start_ship(&a);
     asteroid_start(&b);
+    asteroid_start(&d);
+    asteroid_start(&e);
     loop();
 
     finalize();
@@ -111,14 +110,16 @@ void draw (void)
              al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "START");          
         break;
         case 2://o jogo
-            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
 
             draw_ship(&a);
             draw_asteroid(&b);
-            draw_blast(&c);
+            draw_asteroid(&d);
+            draw_asteroid(&e);
+            //draw_blast(&c);
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");

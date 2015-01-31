@@ -39,7 +39,6 @@ void draw_ship (Spaceship* s)
     ALLEGRO_TRANSFORM transform;
     al_identity_transform(&transform);
     al_rotate_transform(&transform, s->heading * M_PI/180);
-    //al_rotate_transform(&transform, 0);
     al_translate_transform(&transform, s->sx, s->sy);
     al_use_transform(&transform);
    
