@@ -4,14 +4,31 @@
 */
 
 #include "asteroid.h"
+void asteroid_anima (Asteroid *a)
+{
+   if (a->sx < 0) a->sx = WIDTH;
+   if (a->sy < 0) a->sy = HEIGHT;
+   if (a->sx > WIDTH) a->sx = 0;
+   if (a->sy > HEIGHT)a->sy = 0;
+   a->sx += 0.1;
+   a->sy += 0.1;
+}
+
+void asteroid_start (Asteroid *a)
+{
+    a->sx = 100;
+    a->sy = 400;
+    a->heading = 0;
+    a->twist = 0;
+    a->speed = 0;
+    a->scale = 0;
+    a->gone = 0;
+    a->color = al_map_rgb(0, 255, 0);
+}
 
 void draw_asteroid (Asteroid *a)
 {
-    a->color = al_map_rgb(0, 255, 0);
-    a->sx = 640 / 2;
-    a->sy = 480 /2;
-    a->heading = 0.0;
-
+    asteroid_anima(a);
     ALLEGRO_TRANSFORM transform;
     al_identity_transform(&transform);
     al_rotate_transform(&transform, a->heading);

@@ -7,6 +7,7 @@
 
 void ship_spin (Spaceship *s, float  orient)
 {
+    orient *= s->speed;
     if (s->heading > 360)
             s->heading = 0;
     if (s->heading < 0)
@@ -16,8 +17,12 @@ void ship_spin (Spaceship *s, float  orient)
 
 void ship_advance (Spaceship *s)
 {
-    s->sx += sin(s->heading *M_PI/180);
-    s->sy -= cos(s->heading *M_PI/180);
+    if (s->sx < 0) s->sx = 0;
+    if (s->sy < 0) s->sy = 0;
+    if (s->sx > WIDTH) s->sx = WIDTH;
+    if (s->sy > HEIGHT)s->sy = HEIGHT;
+    s->sx += s->speed * sin(s->heading *M_PI/180);
+    s->sy -= s->speed * cos(s->heading *M_PI/180);
 }
 
 void start_ship (Spaceship *s)
@@ -25,8 +30,8 @@ void start_ship (Spaceship *s)
     s->sx = 640/2;
     s->sy = 480/2;
     s->heading = 0.0;
-    s->speed = 0.0;
-    s->color = al_map_rgb(255, 0, 0);
+    s->speed = 0.5;
+    s->color = al_map_rgb(0, 255, 0);
 }
 
 void draw_ship (Spaceship* s)

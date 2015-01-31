@@ -10,8 +10,8 @@
 #include "blast.h"
 #include "asteroid.h"
 
-const int WIDTH  = 800;
-const int HEIGHT = 600;
+//const int WIDTH  = 800;
+//const int HEIGHT = 600;
 
 ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
@@ -31,7 +31,7 @@ int main (void)
     inicialize();
     
     start_ship(&a);
-
+    asteroid_start(&b);
     loop();
 
     finalize();
@@ -42,56 +42,52 @@ void loop (void)
 {
     /* inicia threas para desenhar, teclado e tempo */
     while (statusGame) {
+        ALLEGRO_EVENT evento;
+
         if (!al_is_event_queue_empty(myEventQueue)) {
-            ALLEGRO_EVENT evento;
+            //ALLEGRO_EVENT evento;
             al_wait_for_event(myEventQueue, &evento);
             if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE ||(evento.type == ALLEGRO_EVENT_KEY_DOWN && evento.keyboard.keycode == ALLEGRO_KEY_ESCAPE))
                 statusGame = 0;
         }
-        keyboard();
+        keyboard(evento);
         timer();
         draw();
     }
 }
 
-void keyboard (void)
-{
-    if (al_is_event_queue_empty(myEventQueue)) {
-        ALLEGRO_EVENT key_event;
-        al_wait_for_event(myEventQueue, &key_event);
-        
-        if (key_event.type == ALLEGRO_EVENT_KEY_DOWN || key_event.type == ALLEGRO_EVENT_KEY_CHAR) {
-
-            switch (statusGame) {
-                case 1: break;
-                case 2:
-                    switch (key_event.keyboard.keycode) {
-                        case ALLEGRO_KEY_ESCAPE:
-                            statusGame = 0;
-                        break;
-                        case ALLEGRO_KEY_SPACE:
-                            //atira
-                        break;
-                        case ALLEGRO_KEY_UP:
-                            ship_advance(&a);
-                        break;
-                        case ALLEGRO_KEY_DOWN:
-                            //freia
-                        break;
-                        case ALLEGRO_KEY_LEFT:
-                            //vira sentido anti-horario
-                            ship_spin(&a, -1.0);
-                        break;
-                        case ALLEGRO_KEY_RIGHT:
-                            //vira sentido horario
-                            ship_spin(&a, 1.0);
-                        break;
-                    }
-                break;
-                case 3: break;
-                case 4: break;
-                case 5: break;
-            }
+void keyboard (ALLEGRO_EVENT key_event)
+{       
+    if (key_event.type == ALLEGRO_EVENT_KEY_DOWN || key_event.type == ALLEGRO_EVENT_KEY_CHAR) {
+        switch (statusGame) {
+            case 1: break;
+            case 2:
+                switch (key_event.keyboard.keycode) {
+                    case ALLEGRO_KEY_ESCAPE:
+                        statusGame = 0;
+                    break;
+                    case ALLEGRO_KEY_SPACE:
+                        //atira
+                    break;
+                    case ALLEGRO_KEY_UP:
+                        ship_advance(&a);
+                    break;
+                    case ALLEGRO_KEY_DOWN:
+                        //freia
+                    break;
+                    case ALLEGRO_KEY_LEFT:
+                        //vira sentido anti-horario
+                        ship_spin(&a, -1.0);
+                    break;
+                    case ALLEGRO_KEY_RIGHT:
+                        //vira sentido horario
+                        ship_spin(&a, 1.0);
+                    break;
+                }
+            break;
+            case 3: break;
+            case 4: break;
+            case 5: break;
         }
     }
 }
@@ -116,9 +112,9 @@ void draw (void)
         break;
         case 2://o jogo
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
 
             draw_ship(&a);
             draw_asteroid(&b);

@@ -10,14 +10,15 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#define  PI 3.1415
+#define WIDTH 640
+#define HEIGHT 480
 
 void inicialize (void);
 void finalize (void);
 void error (char *msg);
 
 void loop (void);
-void keyboard (void);
+void keyboard (ALLEGRO_EVENT key_event);
 void timer (void);
 void draw (void);
 
