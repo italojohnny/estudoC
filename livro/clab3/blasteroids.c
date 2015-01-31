@@ -26,10 +26,12 @@ Blast c;
 
 int main (void)
 {
-    statusGame = 3;
+    statusGame = 2;
     scoreGame = 0;
     inicialize();
     
+    start_ship(&a);
+
     loop();
 
     finalize();
@@ -54,16 +56,55 @@ void loop (void)
 
 void keyboard (void)
 {
-    //seta para cima        //acelara
-    //seta para baixo       //freia
-    //seta para direita     //vira sentido horario
-    //seta para esquerda    //vira sentido anti-horario
-    //barra de espaco       //atira
+    if (al_is_event_queue_empty(myEventQueue)) {
+        ALLEGRO_EVENT key_event;
+        al_wait_for_event(myEventQueue, &key_event);
+        
+        if (key_event.type == ALLEGRO_EVENT_KEY_DOWN || key_event.type == ALLEGRO_EVENT_KEY_CHAR) {
+
+            switch (statusGame) {
+                case 1: break;
+                case 2:
+                    switch (key_event.keyboard.keycode) {
+                        case ALLEGRO_KEY_ESCAPE:
+                            statusGame = 0;
+                        break;
+                        case ALLEGRO_KEY_SPACE:
+                            //atira
+                        break;
+                        case ALLEGRO_KEY_UP:
+                            ship_advance(&a);
+                        break;
+                        case ALLEGRO_KEY_DOWN:
+                            //freia
+                        break;
+                        case ALLEGRO_KEY_LEFT:
+                            //vira sentido anti-horario
+                            ship_spin(&a, -1.0);
+                        break;
+                        case ALLEGRO_KEY_RIGHT:
+                            //vira sentido horario
+                            ship_spin(&a, 1.0);
+                        break;
+                    }
+                break;
+                case 3: break;
+                case 4: break;
+                case 5: break;
+            }
+        }
+    }
 }
 
 void timer (void)
 {
-    if (++scoreGame > 999) scoreGame = 0;
+    switch (statusGame) {
+        case 1: break;//tela de start
+        case 2: break;//o jogo
+        case 3: break;//game over
+        case 4: break;//tela de record score
+        case 5: break;//gravar seu record
+    }
 }
 
 void draw (void)
@@ -71,10 +112,11 @@ void draw (void)
     al_clear_to_color(al_map_rgb(0, 0, 0));
     switch (statusGame) {
         case 1://tela de start
-            
+             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "START");          
         break;
         case 2://o jogo
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%f", a.heading);
             draw_ship(&a);
             draw_asteroid(&b);
             draw_blast(&c);
@@ -83,7 +125,10 @@ void draw (void)
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
         break;
         case 4://tela de record score
-
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "RECORD SCORE");
+        break;
+        case 5://gravar seu record
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INPUT NEW RECORD");
         break;
     }
     al_flip_display(); 

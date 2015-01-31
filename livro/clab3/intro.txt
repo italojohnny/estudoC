@@ -1,7 +1,7 @@
 C LAB 3
 BLASTEROIDS
 
-Este projeto de laboratório dá ass especificações de um programa para você
+Este projeto de laboratório dá as especificações de um programa para você
 criar usando o conhecimento que adquiriu nos últimos capítulos.
 Este projeto é maior do que os que você tem visto até agora. Então leia tudo
 antes de começar e vá com calma. E não se preocupe se tiver dificuldade. Não há
@@ -28,7 +28,7 @@ Se a nave for atingida por um asteroide, você perde uma vida. Você tem três
 vidas, e quando você perder a última, é o fim do jogo.
 
 ALLEGRO
-Allegro é uma biblioteca para desenvolvimento se jogos open source que permite
+Allegro é uma biblioteca para desenvolvimento de jogos open source que permite
 a criação, compilação e execução do código do jogo em diversos sistemas
 operacionais. Ele funciona com Windows, Linux, Mac OS e até telefones.
 Allegro é bastante simples de usar, mas o fato de ela ser uma biblioteca
