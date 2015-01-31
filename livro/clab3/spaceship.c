@@ -16,7 +16,8 @@ void ship_spin (Spaceship *s, float  orient)
 
 void ship_advance (Spaceship *s)
 {
-    s->sx += 1;
+    s->sx += sin(s->heading *M_PI/180);
+    s->sy -= cos(s->heading *M_PI/180);
 }
 
 void start_ship (Spaceship *s)
@@ -32,7 +33,7 @@ void draw_ship (Spaceship* s)
 {
     ALLEGRO_TRANSFORM transform;
     al_identity_transform(&transform);
-    al_rotate_transform(&transform, s->heading * 3.141592/180);
+    al_rotate_transform(&transform, s->heading * M_PI/180);
     //al_rotate_transform(&transform, 0);
     al_translate_transform(&transform, s->sx, s->sy);
     al_use_transform(&transform);

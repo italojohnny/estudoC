@@ -116,7 +116,10 @@ void draw (void)
         break;
         case 2://o jogo
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%f", a.heading);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
+
             draw_ship(&a);
             draw_asteroid(&b);
             draw_blast(&c);
