@@ -5,6 +5,12 @@
 
 #include "spaceship.h"
 
+void ship_shoot (Spaceship *s)
+{
+    s->color = al_map_rgb(255, 0, 0);
+    puts("ATIRANDO!!!!!!!!!!!");
+}
+
 void ship_spin (Spaceship *s, float  orient)
 {
     orient *= s->speed;

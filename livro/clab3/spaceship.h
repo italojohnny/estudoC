@@ -11,6 +11,8 @@ typedef struct {
     ALLEGRO_COLOR color;
 } Spaceship;
 
+
+void ship_shoot (Spaceship *s);
 void ship_spin (Spaceship *s, float orient);
 void ship_advance (Spaceship *s);
 void start_ship (Spaceship *s);

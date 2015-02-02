@@ -3,14 +3,47 @@
     de codigo para desenhar e mover um tiro de canhao pela tela.
 */
 #include "blast.h"
-
-void draw_blast (Blast *b)
+void blast_destroy ()
 {
-    b->color = al_map_rgb(0, 255, 0);
-    al_draw_line(0, 0, 100, 100, b->color, 1);
+    //recebe ponteiro do tiro que saiu da tela
+    //percorre lista ate encontrar tiro
+    //verifica se e o ultimo tiro da lista
+        //libera memoria do tiro
+    //se nao for o ultimo tiro da lista, nao faz nada
 }
 
-void test_blast (void)
+void blast_create()
 {
-    puts("blast");
+    //recebe ponteiro do tiro de origem
+    //percorre até o final da lista
+    //alloca memória para novo tiro
+    //define heading do tiro baseado na heading atual da nave
+}
+
+void blast_anime ()
+{
+    //receve ponteiro do tiro de origem
+    //percorre lista
+        //verifica se tiro já saiu do campo de visao
+            //destroi tiro
+        //desenha tiro
+        //b->sx = += b->speed * sin(b->heading * M_PI/180);
+        //b->sy = += b->speed * cos(b->heading * M_PI/180);
+}
+
+void blast_draw (Blast *b)
+{
+    //recebe o ponteiro do tiro de origem
+    //percorre lista
+    
+    ALLEGRO_TRANSFORM transform;
+    al_identity_transform(&transform);
+    al_rotate_transform(&transform, b->heading * M_PI/180);
+    al_translate_transform(&transform, b->sx, b->sy);
+    al_use_transform(&transform);
+ 
+    al_draw_line(0, 0, 100, 100, b->color, 1);
+
+    al_identity_transform(&transform);
+    al_use_transform(&transform);
 }

@@ -11,8 +11,9 @@ typedef struct {
     int gone;
     ALLEGRO_COLOR color;
 } Blast;
-
-void draw_blast (Blast *b);
-void test_blast (void);
+void blast_destroy ();
+void blast_create ();
+void blast_anime ();
+void blast_draw (Blast *b);
 
 #endif

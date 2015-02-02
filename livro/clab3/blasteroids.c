@@ -67,6 +67,7 @@ void keyboard (ALLEGRO_EVENT key_event)
                     break;
                     case ALLEGRO_KEY_SPACE:
                         //atira
+                        ship_shoot(&a);
                     break;
                     case ALLEGRO_KEY_UP:
                         ship_advance(&a);
@@ -119,7 +120,7 @@ void draw (void)
             draw_asteroid(&b);
             draw_asteroid(&d);
             draw_asteroid(&e);
-            //draw_blast(&c);
+            blast_draw(&c);
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
