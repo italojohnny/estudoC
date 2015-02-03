@@ -2,7 +2,7 @@
 #define SPACESHIP_H
 
 #include "defines.h"
-
+#include "blast.h"
 typedef struct {
     float sx;
     float sy;
@@ -12,11 +12,10 @@ typedef struct {
 } Spaceship;
 
 
-void ship_shoot (Spaceship *s);
+void ship_shoot (Spaceship *s, Blast *b);
 void ship_spin (Spaceship *s, float orient);
 void ship_advance (Spaceship *s);
-void start_ship (Spaceship *s);
-void test_spaceship (void);
-void draw_ship (Spaceship *s);
+void ship_start (Spaceship *s);
+void ship_draw (Spaceship *s);
 
 #endif

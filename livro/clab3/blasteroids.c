@@ -16,18 +16,18 @@ ALLEGRO_FONT *myFont = NULL;
 int statusGame;
 int scoreGame;
 
-Spaceship a;
+Spaceship ship;
 Asteroid b, d, e;
-Blast c;
+Blast my_blast;
 
 int main (void)
 {
-    //srand(time(NULL));
+    srand(time(NULL));
     statusGame = 2;
     scoreGame = 0;
     inicialize();
     
-    start_ship(&a);
+    ship_start(&ship);
     asteroid_start(&b);
     asteroid_start(&d);
     asteroid_start(&e);
@@ -67,21 +67,21 @@ void keyboard (ALLEGRO_EVENT key_event)
                     break;
                     case ALLEGRO_KEY_SPACE:
                         //atira
-                        ship_shoot(&a);
+                        //ship_shoot(&ship, &c);
                     break;
                     case ALLEGRO_KEY_UP:
-                        ship_advance(&a);
+                        ship_advance(&ship);
                     break;
                     case ALLEGRO_KEY_DOWN:
                         //freia
                     break;
                     case ALLEGRO_KEY_LEFT:
                         //vira sentido anti-horario
-                        ship_spin(&a, -1.0);
+                        ship_spin(&ship, -1.0);
                     break;
                     case ALLEGRO_KEY_RIGHT:
                         //vira sentido horario
-                        ship_spin(&a, 1.0);
+                        ship_spin(&ship, 1.0);
                     break;
                 }
             break;
@@ -111,16 +111,16 @@ void draw (void)
              al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "START");          
         break;
         case 2://o jogo
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 100, 100, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
 
-            draw_ship(&a);
+            ship_draw(&ship);
             draw_asteroid(&b);
             draw_asteroid(&d);
             draw_asteroid(&e);
-            blast_draw(&c);
+            blast_draw(&my_blast);
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");

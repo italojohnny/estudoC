@@ -5,10 +5,15 @@
 
 #include "spaceship.h"
 
-void ship_shoot (Spaceship *s)
+void ship_shoot (Spaceship *s, Blast *b)
 {
+    b->color = al_map_rgb(0, 255, 255);
+    b->heading = s->heading;
+    b->sx = s->sx;
+    b->sy = s->sy;
+    
     s->color = al_map_rgb(255, 0, 0);
-    puts("ATIRANDO!!!!!!!!!!!");
+
 }
 
 void ship_spin (Spaceship *s, float  orient)
@@ -31,7 +36,7 @@ void ship_advance (Spaceship *s)
     s->sy -= s->speed * cos(s->heading *M_PI/180);
 }
 
-void start_ship (Spaceship *s)
+void ship_start (Spaceship *s)
 {
     s->sx = 640/2;
     s->sy = 480/2;
@@ -40,7 +45,7 @@ void start_ship (Spaceship *s)
     s->color = al_map_rgb(0, 255, 0);
 }
 
-void draw_ship (Spaceship* s)
+void ship_draw (Spaceship* s)
 {
     ALLEGRO_TRANSFORM transform;
     al_identity_transform(&transform);
@@ -55,9 +60,4 @@ void draw_ship (Spaceship* s)
     
     al_identity_transform(&transform);
     al_use_transform(&transform);
-}
-
-void test_spaceship (void)
-{
-    puts("test Spaceship");
 }

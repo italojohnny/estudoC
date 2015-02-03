@@ -24,8 +24,8 @@ void asteroid_start (Asteroid *a)
     a->sy = rand()%HEIGHT;//sortear de 0 a HEIGHT
     a->heading = rand()%359;//sortiar de 0 a 359;
     a->twist = 0;
-    a->speed = 0.5;
-    a->rot_velocity = -1.5;//sortear de -1.5 a 1.5
+    a->speed = 0.05;
+    a->rot_velocity = 0.5;//sortear de -1.5 a 1.5
     a->scale = 1;
     a->gone = 0;
     a->color = al_map_rgb(0, 255, 0);
