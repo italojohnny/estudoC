@@ -13,7 +13,7 @@ void asteroid_anima (Asteroid *a)
    if (a->twist > 360) a->twist = 0;
    if (a->twist < 0) a->twist = 360;
    a->sx += a->speed * sin(a->heading * M_PI/180);
-   a->sy += a->speed * cos(a->heading * M_PI/180);
+   a->sy -= a->speed * cos(a->heading * M_PI/180);
    a->twist += a->rot_velocity;
 
 }

@@ -2,6 +2,7 @@
 #define BLAST_H
 
 #include "defines.h"
+#include "spaceship.h"
 
 typedef struct Blast{
     float sx;
@@ -13,9 +14,9 @@ typedef struct Blast{
     struct Blast *next;
 } Blast;
 
-void blast_destroy ();
-void blast_create ();
-//void blast_anime (Blast *b);
+void blast_anime (Blast *b);
 void blast_draw (Blast *b);
+void blast_shoot (Blast **b, Spaceship *s);
+Blast *blast_create (Spaceship *s);
 
 #endif

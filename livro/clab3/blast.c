@@ -3,50 +3,54 @@
     de codigo para desenhar e mover um tiro de canhao pela tela.
 */
 #include "blast.h"
-void blast_destroy ()
-{
-    //recebe ponteiro do tiro que saiu da tela
-    //percorre lista ate encontrar tiro
-    //verifica se e o ultimo tiro da lista
-        //libera memoria do tiro
-    //se nao for o ultimo tiro da lista, nao faz nada
-}
 
-void blast_create()
-{
-    //recebe ponteiro do tiro de origem
-    //percorre até o final da lista
-    //alloca memória para novo tiro
-    //define heading do tiro baseado na heading atual da nave
-}
-/*
 void blast_anime (Blast *b)
 {
-    b->speed = 1.5;
-    //receve ponteiro do tiro de origem
-    //percorre lista
-        //verifica se tiro já saiu do campo de visao
-            //destroi tiro
-        //desenha tiro
     b->sx += b->speed * sin(b->heading * M_PI/180);
     b->sy -= b->speed * cos(b->heading * M_PI/180);
 }
-*/
+
 void blast_draw (Blast *b)
 {
-    //recebe o ponteiro do tiro de origem
-    //percorre lista
-    //blast_anime (b);
-    ALLEGRO_TRANSFORM transform;
-    al_identity_transform(&transform);
-    al_rotate_transform(&transform, b->heading * M_PI/180);
-    al_translate_transform(&transform, b->sx, b->sy);
-    al_use_transform(&transform);
-    
-    al_draw_line(0,-6, 0, -3, b->color, 1);
-    al_draw_line(0, 1, 0, -1, b->color, 1);
-    al_draw_line(0, 3, 0,  6, b->color, 1);
+    if (b != NULL) {      
+        Blast *t = b;
+        while ( t != NULL) {
+            blast_anime(t);
+            ALLEGRO_TRANSFORM transform;
+            al_identity_transform(&transform);
+            al_rotate_transform(&transform, t->heading * M_PI/180);
+            al_translate_transform(&transform, t->sx, t->sy);
+            al_use_transform(&transform);
 
-    al_identity_transform(&transform);
-    al_use_transform(&transform);
+            al_draw_line(0, 6, 0, 3, t->color, 1.0f);
+            al_draw_line(0, 1, 0,-1, t->color, 1.0f);
+            al_draw_line(0,-6, 0,-3, t->color, 1.0f);
+
+            al_identity_transform(&transform);
+            al_use_transform(&transform);
+
+            t = t->next;
+        }
+    }
+}
+
+void blast_shoot (Blast **b, Spaceship *s)
+{   puts("entrou aqui?"); 
+    Blast *t = blast_create(s);
+    t->next = *b;
+    *b = t;
+    //printf("p=%f,%f; heading=%f; speed=%f; gone=%d;\n", b->sx, b->sy, b->heading, b->speed, b->gone);
+}
+
+Blast *blast_create (Spaceship *s)
+{
+    Blast *newBlast     = malloc(sizeof(Blast));
+    newBlast->sx        = s->sx;
+    newBlast->sy        = s->sy;
+    newBlast->heading   = s->heading;
+    newBlast->speed     = s->speed;
+    newBlast->color     = s->color;
+    newBlast->gone      = 0;
+    newBlast->next      = NULL;
+    return newBlast;
 }

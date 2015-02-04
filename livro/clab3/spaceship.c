@@ -5,17 +5,6 @@
 
 #include "spaceship.h"
 
-void ship_shoot (Spaceship *s, Blast *b)
-{
-    b->color = al_map_rgb(0, 255, 255);
-    b->heading = s->heading;
-    b->sx = s->sx;
-    b->sy = s->sy;
-    
-    s->color = al_map_rgb(255, 0, 0);
-
-}
-
 void ship_spin (Spaceship *s, float  orient)
 {
     orient *= s->speed;
