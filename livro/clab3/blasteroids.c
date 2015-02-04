@@ -19,9 +19,11 @@ int scoreGame;
 Spaceship ship;
 Asteroid b, d, e;
 Blast my_blast;
+Blast *pblast;
 
 int main (void)
 {
+    
     srand(time(NULL));
     statusGame = 2;
     scoreGame = 0;
@@ -121,6 +123,7 @@ void draw (void)
             draw_asteroid(&d);
             draw_asteroid(&e);
             blast_draw(&my_blast);
+           
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");

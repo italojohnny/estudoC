@@ -12,6 +12,7 @@ typedef struct Blast{
     ALLEGRO_COLOR color;
     struct Blast *next;
 } Blast;
+
 void blast_destroy ();
 void blast_create ();
 //void blast_anime (Blast *b);
