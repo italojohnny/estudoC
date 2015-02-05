@@ -5,6 +5,7 @@
 #include "spaceship.h"
 
 typedef struct Blast{
+    int count;
     float sx;
     float sy;
     float heading;
@@ -15,7 +16,7 @@ typedef struct Blast{
 } Blast;
 
 void blast_anime (Blast *b);
-void blast_draw (Blast *b);
+void blast_draw (Blast **b);
 void blast_shoot (Blast **b, Spaceship *s);
 Blast *blast_create (Spaceship *s);
 

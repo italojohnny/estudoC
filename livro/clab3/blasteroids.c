@@ -23,7 +23,7 @@ Blast *blast_origin;
 int main (void)
 {
     srand(time(NULL));
-    statusGame = 2;
+    statusGame = 1;
     scoreGame = 0;
     inicialize();
     
@@ -59,7 +59,10 @@ void keyboard (ALLEGRO_EVENT key_event)
 {       
     if (key_event.type == ALLEGRO_EVENT_KEY_DOWN || key_event.type == ALLEGRO_EVENT_KEY_CHAR) {
         switch (statusGame) {
-            case 1: break;
+            case 1: 
+                if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                    statusGame = 2;
+            break;
             case 2:
                 switch (key_event.keyboard.keycode) {
                     case ALLEGRO_KEY_ESCAPE:
@@ -120,7 +123,7 @@ void draw (void)
             draw_asteroid(&b);
             draw_asteroid(&d);
             draw_asteroid(&e);
-            blast_draw(blast_origin);
+            blast_draw(&blast_origin);
           
         break;
         case 3://game over
