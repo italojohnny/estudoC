@@ -1,0 +1,155 @@
+31 - COMPREENDENDO AS PALAVRAS-CHAVES DE C
+A linguagem C define várias palavras-chaves que têm significado especiais para o compilador. Quando você escolher nomes de variáveis (e criar suas próprias funções), não use essas palavras-chave. A tabela 21 lista as palavras-chaves de C:
+----------------------------------------------------------------------
+|        |          |          |        |        | if       |        |
+|        |          |          |        |        | else     |        |
+|        |          |          |        |        | for      |        |
+|        |          |          | float  |        | while    |        |
+|        | const    |          | double |        | do       |        |
+|        | static   |          | long   | struct | swicth   |        |
+|typedef | auto     | unsigned | short  | union  | case     | sizeof |
+|        | register | signed   | void   | enum   | default  |        |
+|        | extern   |          | int    |        | break    |        |
+|        | volatile |          | char   |        | continue |        |
+|        |          |          |        |        | return   |        |
+|        |          |          |        |        | goto     |        |
+----------------------------------------------------------------------
+
+...
+
+77 - USANDO O CONTROLADOR DE DISPOSITIVO ANSI
+Várias dicas apresentadas neste livro utilizam muito as capacidades de formatação de printf. Embora printf ofereça especificadores de formato que você usa para controlar o número de dígitos mostrados, para exibir saída octal ou hexadecimal, ou para justificar texto à direita ou à esquerda, printf não oferece outros especificadores de formato. printf não fornece especificadores de formato que permitem posicionar o cursor em uma linha e coluna específicas, limpar a tela ou exibir saída em cores. No entanto, dependendo do sistema operacionall que estiver usando, você pode provavelmente efetuar essas operações usando o controlador de dispositivo ANSI. O controlador ANSI suporta diferenes seqüências de escape que o instruem a usar cores específicas, a posicionar o cursor e até a limpar a tela. Os programadores chama esses comandos de formatação seqüências de escape, pois elas iniciam com o caracte ASCII Escape (o valor 27). Se você estiver usando DOS, instale o coontrolador de dispositivo colocando uma entrada tal como a seguinte dentro do seu arquivo config.sys (e depois reinicialize o computador):
+DEVICE=C:\DOS\ANSI.SYS
+Após você instalar o controlador ANSI, seus programas pdem escrever seqüências de Escape usando printf.
+Nota: se Você está rodando o Windows 95 na mesma máquina que compila programas, adicionar o controlador ANSI o seu arquivo config.sys do sistema, não afetará as operações no Windows 95.
+
+78 - USANDO O CONTROLADOR ANSI PARA LIMPAR SUA TELA
+Uma das operações mais comuns que cada um dos seus programas executará quanso iniciar sua execução é limpar a tela, use o controlador ANSI descrito na Dica 77, e, depois, chame a seguinte seqüência de escape para limpar sua tela de vídeo:
+	Esc[2j
+Um modo fácil de chamar a seqüência de escape é eusando a representação do caractere escape (\033). Para imprimir o caractere escape, faça como mostrado aqui:
+	printf("\033[2J");
+
+79 - USANDO O CONTROLADOR ANSI PARA EXIBIR AS CORES DA TELA
+Várias dicas apresentadas até aqui neste livro utilizam muitas funções printf para exibir saída. Embora printf ofereça especificadores de formato poderesos, não oferece um modo para você exibir texto em cores. No entanto, se estiver usando o controlador ANSI, como discutido na Dica 77, você pode usar as seqüências de escape listadas na Tabela 79 para exibir a saída em cores.
+
+Seqüência de Escape 	Cor
+Esc[30m					Cor do primeiro plano preta
+Esc[31m					Cor do primeiro plano vermelha
+Esc[32m					Cor do primeiro plano verde
+Esc[33m					Cor do primeiro plano laranja
+Esc[34m					Cor do primeiro plano azul
+Esc[35m					Cor do primeiro plano magenta
+Esc[36m					Cor do primeiro plano ciano
+Esc[37m					Cor do primeiro plano branca
+Esc[40m					Cor do fundo preta
+Esc[41m					Cor do fundo vermelha
+Esc[42m					Cor do fundo verde
+Esc[43m					Cor do fundo laranja
+Esc[44m					Cor do fundo azul
+Esc[45m					Cor do fundo magenta
+Esc[46m					Cor do fundo ciano
+Esc[47m					Cor do fundo branco
+
+O comonado printf a seguir seleciona a cor de fundo azul:
+	printf("\033[44m");
+Similarmente, o comando printf a seguir seleciona texto vermelho em um fundo branco:
+	printf("\033[47m\033[31m");
+No exemplo anterior, printf escreve duas seqüências de escape. O controlador ANSI lhe permite especificar as cores na tela, separando-as com ponto-e-vírgula, como mostrado aqui:
+	printf("\033[47;31m");
+
+80 - USANDO O CONTROLADOR ANSI PARA POSICIONAR O CURSOR
+Como você aprendeu, o controlador ANSI suporta as seqüências ANSI que, por sua vez, lhe permitem limpar a tela e exibir saídas em cores. Alé disso, o controlador ANSI oferece seqüências de escape que lhe permitem posicionar o cursor  para especificar as posições de linha e de coluna, que, por sua vez, lhe permitem exibir sua saída em posições específicas na tela. A Tabela 80 mostra as seqüências de escape para o posicionamento do cursor.
+
+Esc[x;yH	Posiciona o cursour na linha x, coluna y 	Esc[10;25H
+Esc[xA		Move o cursor x linhas para cima		 	Esc[1a
+Esc[xB		Move o cursor x linhas para baixo		 	Esc[2b
+Esc[yC		Move o cursor y colunas para a direita	 	Esc[10c
+Esc[yD		Move o cursor y colunas para a esquerda 	Esc[10d
+Esc[S		Armazena a posição atual do cursour		 	Esc[S
+Esc[U		Restaura a posição do cursour 			 	Esc[U
+Esc[2j		Limpa a tela, movendo o cursor o canto 		Esc[2j
+			superior esquerdo
+Esc[K		Posiciona o cursour na linha x, coluna y 	Esc[K
+
+...
+
+135 - USANDO A CONSTRANTE DE PRÉ-PROCESSADOR _FILE_
+Quando você trabalha em um grande projeto, algumas vezes pode querer que o pré-processador saiba o nome do arquivo-fonte atual. Por exemplo, você poderia usar o nome de arquivo dentro de uma diretiva de pré-processador que inclua uma mensagem para o usuário dizendo que o programa ainda está em desenvolvimentto, como mostrado aqui:
+
+O programa Folha.c ainda está em desenvolvimento e teste. Esta é uma versão Beta.
+
+Para ajudar seus programadores a efetuar esse processamento, o pré-processado C define a constante __FILE__ como igual ao nome do arquivo-fonte atual. O programa a seguir, consfile.c, ilustra o uso da constrante __FILE__:
+
+	#include <stdio.h>
+
+	int main (void)
+	{
+		printf("O arquivo %s esta em teste Beta\n", __FILE__);
+		return 0;
+	}
+
+136 - USANDO A CONSTANTE DE PRÉ-PROCESSADOR __LINE__
+Ao trabalhar em um projeto grande, algumas vezes você poderá querer que o pré-processador saiba, e potencialmente use, o número da linha atual do arquivo-fonte atual. Por exemplo, se estiver depurando um programa, você poderia querer que o compilador exibisse mensagens a partir de vários pontos dentro do programa, como mostrado aqui:
+
+	#include <stdio.h>
+	int main (void)
+	{
+		printf("Cheguei com sucesso a linha %d\n", __LINE__);
+
+		//outros comandos aqui...
+
+		printf("Cheguei com sucesso a linha %d\n", __LINE__);
+		return 0;
+	}
+
+...
+
+507 - COMPREENDENDO PONTEIROS COMO ENDEREÇOS
+508 - DETERMINANDO O ENDEREÇO DE UMA VARIÁVEL
+...
+511 - DECLARANDO VARIÁVEIS PONTEIRO
+512 - DESREFERENCIANDO UM PONTEIRO
+513 - USANDO VALORES DE PONTEIRO
+514 - USANDO PONTEIROS COMO PARÂMETROS DE FUNÇÃO
+515 - COMPREENDENDO A ARITMÉTICA DE PONTEIROS
+516 - INCREMENTANDO E DECREMENTANDO UM PONTEIRO
+517 - COMBINANDO UMA REFERÊNCIA E INCREMENTO DE PONTEIRO
+518 - PRECORRENDO UMA STRING USANDO UM PONTEIRO
+519 - USANDO FUNÇÕES QUE RETORNAM PONTEIROS
+520 - CRIANDO UMA FUNÇÃO QUE RETORNA UM PONTEIRO
+521 - COMPREENDENDO UMA MATRIZ DE PONTEIROS
+...
+593 - ALOCANDO MEMÓRIA DINÂMICA
+...
+710 - MACROS PREDEFINIDAS DO MAKE
+Como você aprendeu, uma macro do MAKE é um símbolo que o MAKE substitui por um valor específico. O MAKE fornece várias macros predefinidas que você pode usar dentro de seus arquivos do MAKE nas regras explícitas. Da mesma forma, a Tabela 710.2 ilustra como usar macros em regras explícitas.
+
+			EXPLÍCITAS
+	MACRO 	VALOR RETORNADO
+	$*		Nome da base dependente com o caminho
+	$&		Nome da base dependente sem o caminho
+	$.		Nome completo dependente sem o caminho
+	$**		Nome completo dependente com o caminho
+	$<		Nome completo dependente com o caminho
+	$?		Nome completo dependente com o caminho
+
+			IMPLÍCITAS
+	MACRO 	VALOR RETORNADO
+	$*		Nome da base-alvo com o caminho
+	$&		Nome da base-alvo sem o caminho
+	$.		Nome completo do alvo sem o caminho
+	$**		Todos os nomes de arquivos dependentes
+	$<		Nome completo do alvo com caminho
+	$?		Todos os dependentes desatualizados
+
+O arquivo do MAKE a seguir, por exemplo, cria uma regra implícita que informa o MAKE  do relacionamento entre os arquivos com as extensões OBJ E C:
+	.C.OBJ:
+		TC $<
+Neste exemplo, o MAKE usará a extensão de regra implícita para expandir a macro $< no nome de arquivo-alvo e caminho.
+
+...
+
+738 - INTRODUÇÃO ÀS LISTAS DINÂMICAS
+739 - DECLARANDO UMA ESTRUTURA DE LISTA LIGADA
+740 - CRIANDO UMA LISTA LIGADA
+741 - EXEMPLO DE UMA LISTA LIGADA SIMPLES
