@@ -18,10 +18,11 @@ int scoreGame;
 
 Spaceship ship;
 Asteroid b, d, e;
-Blast *blast_origin;
+Blast *blast_origin, *Q;
 
 int main (void)
 {
+    tmp = 0;
     srand(time(NULL));
     statusGame = 1;
     scoreGame = 0;
@@ -71,7 +72,7 @@ void keyboard (ALLEGRO_EVENT key_event)
                     case ALLEGRO_KEY_SPACE:
                         //atira
                         blast_shoot(&blast_origin, &ship);
-                    break;
+                   break;
                     case ALLEGRO_KEY_UP:
                         ship_advance(&ship);
                     break;
@@ -124,7 +125,13 @@ void draw (void)
             draw_asteroid(&d);
             draw_asteroid(&e);
             blast_draw(&blast_origin);
-          
+/*            Q = blast_origin;
+            printf("\n------------------------\n");
+            while (Q != NULL) {
+                printf("<-(%d) ", Q->id);
+                Q = Q->next;                        
+            }
+*/  
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");

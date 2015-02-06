@@ -12,6 +12,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
+int tmp;
+
 #define WIDTH 640
 #define HEIGHT 480
 

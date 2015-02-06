@@ -115,7 +115,7 @@ void show (List *L)
 {
     List *P = L;
     while (P != NULL) {
-        printf(" |%d| ", P->info);
+        printf("(%d|%p)->", P->info, &P->next);
         P = P->next;
     }    
 }

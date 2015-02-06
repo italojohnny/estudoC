@@ -13,6 +13,7 @@ typedef struct Blast{
     int gone;
     ALLEGRO_COLOR color;
     struct Blast *next;
+    int id;
 } Blast;
 
 void blast_anime (Blast *b);
