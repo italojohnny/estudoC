@@ -14,10 +14,12 @@ void blast_anime (Blast *b)
             b->gone = 1;//o tiro nao pode ser mais animado
 
     } else {//se o tiro nao pode ser mais animado, ele deve ser destruido
-        //se entrou aqui, tem que ser eliminado a qualquer preco!!!
+        //se entrou aqui, tem que ser eliminado.
         //mas existe a problematica, se ele tiver descendentes, havera
-        //vazamento de memoria 
-
+        //vazamento de memoria
+        //Acredito que a resposta para o problema seja a criação de filas ao
+        //inves de listas
+        }
     }
 }
 
@@ -65,7 +67,6 @@ Blast *blast_create (Spaceship *s)
     newBlast->color     = s->color;
     newBlast->gone      = 0;
     newBlast->next      = NULL;
-    tmp++;
-    newBlast->id        = tmp;
+    newBlast->id        = ++tmp;
     return newBlast;
 }
