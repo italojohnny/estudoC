@@ -8,7 +8,7 @@
 *.ttf
 *.ogg
 *.wav
-
+*.exe
 main
 test
 blasteroids

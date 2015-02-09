@@ -1,5 +1,6 @@
 /*
     gcc -lallegro -lallegro_dialog main.c -o main && ./main
+    gcc main.c -o main -lallegro-5.0.10-mt -lallegro_dialog-5.0.10-mt
 */
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>

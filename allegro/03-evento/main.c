@@ -1,5 +1,6 @@
 /*
     gcc -lallegro_imagem -allegro main.c -o main
+    gcc main.c -o main -lallegro_image-5.0.10-mt -lallegro-5.0.10-mt
 */
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -24,10 +25,10 @@ int main (void)
 
     janela = al_create_display(LARGURA_TELA, ALTURA_TELA);
     if (!janela) error("Falha ao criar janela");
-//=========================    
-    imagem = al_load_bitmap("/home/zak/Documents/estudo_c/allegro/03-evento/test.jpg");
+
+    imagem = al_load_bitmap("test.jpg");
     if (!imagem) error("Falha ao carregar o arquivo de imagem");
-//=========================
+
     fila_eventos = al_create_event_queue();
     if (!fila_eventos) error("Falha ao criar fila de eventos");
     

@@ -1,11 +1,13 @@
 /*
     gcc -lallegro -lallegro_font -lallegro_ttf -lallegro_image main.c -o main
+    gcc main.c -o main -lallegro-5.0.10-mt -lallegro_image-5.0.10-mt -lallegro_ttf-5.0.10-mt -lallegro_font-5.0.10-mt
 */
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 const int LARGURA_TELA = 640;
 const int ALTURA_TELA = 480;
@@ -87,7 +89,7 @@ void inicializa (void)
     
     al_set_window_title(janela, "Utilizando o teclado");
     
-    fonte = al_load_font("3Dumb.ttf", 72, 0);
+    fonte = al_load_font("test.ttf", 72, 0);
     if (!fonte) error("Falha ao carregar fonte");
     
     fila_eventos = al_create_event_queue();
@@ -99,4 +101,9 @@ void inicializa (void)
     al_register_event_source(fila_eventos, al_get_keyboard_event_source());
     al_register_event_source(fila_eventos, al_get_display_event_source(janela));
 
+}
+void error (char *msg)
+{
+    fprintf(stderr, "%s - %s\n", msg, strerror(errno));
+    exit(1);
 }

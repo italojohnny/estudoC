@@ -1,5 +1,6 @@
 /*
     gcc -lallegro -lallegro_image -lallegro_font -lallegro_ttf main.c -o main
+    gcc main.c -o main -lallegro-5.0.10-mt -lallegro_image-5.0.10-mt -lallegro_ttf-5.0.10-mt -lallegro_font-5.0.10-mt
 */
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -92,7 +93,7 @@ void carregar_arquivos (void)
 {
     fundo = al_load_bitmap("test.jpg");
     if (!fundo) error("Falha ao carregar imagem");
-    fonte = al_load_font("2Dumb.ttf", 32, 0);
+    fonte = al_load_font("test.ttf", 32, 0);
     if (!fonte) error("Falha ao carregar fonte");
 }
 

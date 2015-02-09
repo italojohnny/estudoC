@@ -1,5 +1,6 @@
 /*
     gcc -lallegro_ttf -lallegro_font -lallegro main.c -o main && ./main
+    gcc main.c -o main -lallegro_ttf-5.0.10-mt -lallegro_font-5.0.10-mt -lallegro-5.0.10-mt
 */
 
 #include <allegro5/allegro.h>
@@ -25,7 +26,7 @@ int main (void)
     if (!al_init_ttf_addon()) error("2");
     janela = al_create_display(LARGURA_TELA, ALTURA_TELA);
     if (!janela) error("3");
-    fonte = al_load_font("3Dumb.ttf", 35, 0);
+    fonte = al_load_font("test.ttf", 35, 0);
     if (!fonte) {
         error("4");
         al_destroy_display(janela);

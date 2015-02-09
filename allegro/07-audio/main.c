@@ -1,5 +1,6 @@
 /*
     gcc -lallegro -lallegro_audio -lallegro_acodec main.c -o main && ./main
+    gcc main.c -o main -lallegro-5.0.10-mt -lallegro_audio-5.0.10-mt -lallegro_acodec-5.0.10-mt
 */
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
@@ -58,7 +59,7 @@ void inicializar (void)
     janela = al_create_display(LARGURA_TELA, ALTURA_TELA);
     if (!janela) error("Falha ao criar janela");
 
-    sample = al_load_sample("bigboom.wav");
+    sample = al_load_sample("test.wav");
     if (!sample) error("Falha ao carregar sample");
 
     fila_eventos = al_create_event_queue();
@@ -66,7 +67,7 @@ void inicializar (void)
 
     al_set_window_title(janela, "Testando sons");
     
-    musica = al_load_audio_stream("music.ogg", 4, 1024);
+    musica = al_load_audio_stream("test.ogg", 4, 1024);
     if (!musica) error("Falha ao carregar audio");
 
     al_register_event_source(fila_eventos, al_get_keyboard_event_source());
