@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include <opencv2/opencv.hpp>
+#include <stdlib.h>
+
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 using namespace cv;
 
@@ -11,7 +14,8 @@ int main(int argc, char** argv )
         return -1;
     }
 
-    Mat image;
+
+    IplImage image;
     image = imread( argv[1], 1 );
 
     if ( !image.data )
@@ -26,5 +30,3 @@ int main(int argc, char** argv )
 
     return 0;
 }
-
-

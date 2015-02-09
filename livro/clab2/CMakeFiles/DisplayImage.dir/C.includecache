@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zak/Documents/estudo_c/livro/clab2/main.c
+stdlib.h
+-
+stdio.h
+-
+opencv/cv.h
+-
+opencv/highgui.h
+-
+
