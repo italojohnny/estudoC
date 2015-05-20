@@ -1,4 +1,5 @@
 /*
+    italo
     A nave podera atirar em um asteroid com seu canhao, entao voce vai precisar
     de codigo para desenhar e mover um tiro de canhao pela tela.
 */
