@@ -1,0 +1,69 @@
+5. VETORES E ALOCAÇÃO DINÂMICA
+
+5.1 Vetores
+A forma mais simples de estruturamos um conjunto de dados é por meio de vetores. Como a maioria das linguagens de programação, C permite a definição de vetores. Definimos um vetor em C da seguinte forma:
+	
+	int v[10];
+
+A declaração acima diz que v é um vetor de inteiros dimensionado com 10 elementos, isto é, reserva um espaço de memória contínuo para armazenar 10 valores inteiros. Assim, se cada int ocupa 4 bytes, a declaração acima reserva um espaço de memmória de 40 bytes, como ilustra a figura abaixo.
+
+O acesso a cada elemente do vetor é feito através de uma indexação de variável v. Observamos que, em C, a indexação de um vetor varia de zero a n-1, onde n representa a dimensão do vetor. Assim:
+	v[0]	acessa o primeiro elemento de v
+	v[1]	acessa o segundo elemento de v
+	...
+	v[9]	acessa o décimo elemento de v
+Mas:
+	v[10]	está ERRADO (invasão de memória)
+
+Para exemplificar o uso de vetores, vamos considerar um programa que lê 10 números reais, fornecidos via teclado, e calcula a média e a variância deste números. A media e a variância são dadas por:
+
+Uma possível implementação é apresentada a seguir:
+
+Devemos observar que passamos para a função scanf o endereço de cada elementro do vetor (&v[i]), pois desejamos que os valores capturados sejam armazenados nos elementos do vetor. Se v[i] representa o (i+1)-ésimo elemento do vetor, &v[i] representa o endereço de memória onde esse elemento está armazenado.
+
+Na verdade exite uma associação forte entre vetores e ponteiros, pois se existe a declaração:
+	
+	int v[10];
+
+a variável v, que representa o vetor, é uma constante que armazena o endereço inidial do vetor, isto é, v, sem indexação, aponta para o primeiro elemento do vetor.
+
+A linguagem C também suporta aritmética de ponteiros. Podemos somar e subtrair ponteiros, desde que o valor do ponteiro resultante aponte para dentro da área reservada para o vetor. Se p representa um ponteiro para um inteiro, p+1 representa um ponteiro para o próximo inteiro armazenado na memória, isto é, o valor de p é incrementado de 4 (mais uma vez assumindo que um inteiro tem 4 bytes). Com isto, num vetor temos as seguintes equivalências:
+
+	v+0		aponta para o primeiro elemento do vetor
+	v+1		aponta para o segundo elemento do vetor
+	v+2		aponta para o terceiro elemento do vetor
+	...
+	v+9		aponta para o último elemento do vetor
+
+Portanto, excrever &v[i] é equivante a escrever (v+i). De maneira análoga, escrever v[i] é equivalente a escrever *(v+1) (é lógico que a forma indexada é mais clara e adequada). Devvemos notar que o uso da aritmética de ponteiros aqui é perfeitamente válido, pois os elementos dos vetores são armazenados de forma contínua na memória.
+
+Os vetores também podem ser inicializados na declaração:
+
+	int v[5] = {5, 10, 15, 20, 25};
+
+ou simplemente:
+	
+	int v[] = {5, 10, 15, 20, 25};
+
+Neste último caso, a linguagem dimensiona o vetor pelo número de elementos inicializados.
+
+Passagem de vetores para funções
+Passar um vetor para uma função consite em passar o endereço da primeira posição do vetor. Se passarmos um valor de endereço, a função chamada deve ter um parâmetros do tipo ponteiros para armazenar este valor. Assim, se passarmos para uma função um vetor de int, devemos ter um parâmetro do tipo int*, capaz de armazenar endereços de inteiros. Salientamos que a expressão "passar um vetor para uma função" deve ser interpretada como "passar o endereço inicial do vetor". Os elementos do vetor não são copiados para a função, o argumento copiado é apenas o endereço do primeiro elemento.
+
+Para exemplificar, vamod modificar o código do exemplo acima, usando funções separadas para cálculo da média e da variância. (Aqui, usamos ainda os operadores de atribuição += para acumular as somas.)
+
+Observamos ainda que, como é passado para a função o endereço do primeiro elemento do vetor (e não os elementos propriamente ditos), podemos alterar os valores dos elementos do vetor dentro da função. O exemplo abaixo ilustra:
+
+A saída do programa é 2, 4, 6, pois os elementos do vetor são incrementados dentro da função.
+
+5.2 Alocação dinâmica
+Até aqui, na declaração de um vetor, foir preciso dimensioná-lo. Isto nos obrigava a saber, de antemão, quanto espaço seria necessário, isto é, tinhamos que prever número máximo de elementos no vetor durante a codificação. Este pré-dimensionamento do vetor é um fator limitante. Por exemplo, se desenvolvermos um programa para calcular a média e a variância das notas de uma prova, teremos que prever o número máximo de alunos. Uma solução é dimensionar o vetor com um número absurdamente alto para não termos limitações quando na utilização do programa. No entanto, isto levaria a um desperdício de memória que é inaceitável em diversas aplicações. Se, por outro lado, formos modestos no pré-dimensionamento do vetor, o uso do programa fica muiot limitado, pois não conseguiríamos tratar turmas com o número de alunos maior que o previsto.
+
+Felizmente, a linguagem C oferece meios de requisitarmos espalo de memória em tempo de execução. Dizemos que podemos alocar memóira dinamicamente. Com este recurso, nosso programa para o cálculo da média e variância discutido acima pode, em tempo de execução, consultar o número de alunos da turma e então fazer a alocação do vetor dinamicamente, sem disperdício de memória.
+
+Uso da memória
+Informalmente, podemos dizer que existem três maneirsas de reservamos espaço de memória para o armazenamento de informações. A primeira delas é através do uso de variáveis globais (e estáticas). O espaço reservado para uma variável global existe enquanto o programa estiver sendo executado. A segunda maneira é através do uso de variáveis locais. Neste caso, como já discutimos, o espaço existe apenas enquanto a função que declarou a variável está sendo executada, sendo liberado para outros usos quando a execução da função termina. Por este motivo, a função que chama não pode fazer referência ao espaço local da função chamada. As variáveis globais ou locais podem ser simples ou vetores. Para os vetores, precisamos informar o números máximo de elementos, caso contrátirio o compilador não saberia o tamanho do espaço a ser reservado.
+
+A terceira maneira de reservamos memória é requisitando ao sistema, em tempo de execução, um espaço de um determinado tamanho. Este espaço alocado dinamicamente permanece reservado até que explicitamente seja liberado pelo programa. Por isso, podemo alocar dinamicamente um espaço de memória numa função e acessá-lo em outra. A partir do momento que liberarmos o espaço, ele estarpa disponibilizado para outros usos e não podemos mais acessá-lo. Se o programa não liberar um espaço alocado, este setá automaticamente liberado quando a execução do programa terminar.
+
+Apresentamos abaixo um esquema didático que ilustra de maneira fictícia a distriuição do uso da memória pelo sistema operacional.
