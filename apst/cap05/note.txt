@@ -67,3 +67,36 @@ Informalmente, podemos dizer que existem três maneirsas de reservamos espaço d
 A terceira maneira de reservamos memória é requisitando ao sistema, em tempo de execução, um espaço de um determinado tamanho. Este espaço alocado dinamicamente permanece reservado até que explicitamente seja liberado pelo programa. Por isso, podemo alocar dinamicamente um espaço de memória numa função e acessá-lo em outra. A partir do momento que liberarmos o espaço, ele estarpa disponibilizado para outros usos e não podemos mais acessá-lo. Se o programa não liberar um espaço alocado, este setá automaticamente liberado quando a execução do programa terminar.
 
 Apresentamos abaixo um esquema didático que ilustra de maneira fictícia a distriuição do uso da memória pelo sistema operacional.
+
+Quando requisitamos ao sistema operacional para executar um determinado programa, o código em linguagem de máquina do programa eve ser carregado na memória, conforme discutido no primeiro capítulo. O sistema operacional reserva também os espaços necessário para armazenarmos as variável globais (e estáticas) existentes no programa. O restante da memória livre é utilizado pelas variáveis locais e pelas variáveis alocadas dinamicamente. Cada vez que uma determinada função. Este espaçõ pertence à pilha de execução e, quando a função termina, é desempilhado. A parte da memória não ocupada pela pilha de execução pode ser requisitada dinamicamente. Se a pila tentar crescer mais do que o espaço disponível existente, dizemos que ela "estorou" e o programa é abortado com erro. Similarmente, se 
+ espaço de memória livrefor menor que o espaço requisitado dinamicamente, a alocação não é feita e o programa pode prever um tratamento de erro adequado (por exemplo, podemos imprimir a mensagem "Memória insuficiente" e interromper a execução do programa).
+
+ Funções da biblioteca padrão
+ Existem funções, presentes na biblioteca padrão stdlib, que permitem alocar e liberar memória dinamicamente. A função básica para alocar memória é malloc. Ela recebe como parâmentro o número de bytes que se deseja alocar e retorna o endereço inicial da área de memória alocada.
+
+ Para exemplificar, vamos considerar a alocação dinâmica de um vetor de inteiros com  10 elementos. Como a função malloc retorna o endereço da área alocada e, neste exemplo, desejamos armazenar valores inteiros nessa área, devemos declarar um ponteiro de inteiro para receber o endereço inicial do espaço alocado. O trecho de código então seria:
+
+	int *v;
+	v = malloc(10*4);
+
+Após este comando, se a alocação for bem sucedida, v armazenará o endereço inicial de uma área contínua de memória suficiente para armazenar 10 valores inteiros. Podemos, então tratar v como tratamos um vetor declarado estaticamete, pois, se v aponta para o inicio da área alocada, podemos dizer que v[0] acessa o espaço para o primeiro elemento que armazenaremos, v[1] acessa o segundo, e assim por diante (até v[9]);
+
+No exemplo acima, consideramos que um inteiro ocupa 4 bytes. Para ficarmos independentes de compiladores e máquinas, usamos o operador sizeof().
+
+	v = malloc(10*sizeof(int));
+
+Além disso, devemos lembrar que a função malloc é usada para alocar espaço para armazenar valores de qualquer tipo. Por este motivo, malloc retorna um ponteiro genérico, para um tipo qualquer, representado por void*, que pode ser convertido automaticamente pela linguagem para o tipo apropriado na atribuição. No entanto, é comum fazermos a conversão explicitamente, utilizando o operador de molde de tipo (cast). O comando para a alocação de vetor de inteiros fica então:
+
+	v = (int*) malloc(10*sizeof(int));
+
+A figura abaixo ilustra de maneira esquemática o que ocorre na memória:
+
+Se, porventura, não houver espaço livre suficiente para realizar a alocação, a função retorna um endereço nulo (representado pelo símbolo NULL, definido em stdlib.h). Podemos cercar o erro na alocação do programa verificando o valor de retorno da função malloc. Por exemplo, podemos imprirmir uma mensagem e abortar o programa com a função exit, também definida na stdlib.
+
+Para liberar um espaço de memória alocado dinamicamente, usamos a função free. esta função recebe como parâmetro o ponteiro da memória a ser liberada. Assim, para liberar o vetor v, fazemos:
+	
+	free(v);
+
+Só podemos passar para a função free um endereço de memória que tenha sido alocado dinamicamente. Devemos lembrar ainda que não podemos acessar o espaço na memória depois que o liberamos.
+
+Para exemplificar o uso dda alocação dinâmica, alteraremos o programa para o cálculo da média e da variância mostrado anteriormente. Agora, o programa lê o número de valores que serão fornecidos, aloca um vetor dinamicamente e faz os cálculos. Somente a função principal precisa ser alterada, pois as funções para calcular a média e a variância anteriormente apresentadas independem do fato de o vetor ter sido alocado estátiva ou dinamicamente.
