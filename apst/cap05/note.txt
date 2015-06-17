@@ -100,3 +100,4 @@ Para liberar um espaço de memória alocado dinamicamente, usamos a função fre
 Só podemos passar para a função free um endereço de memória que tenha sido alocado dinamicamente. Devemos lembrar ainda que não podemos acessar o espaço na memória depois que o liberamos.
 
 Para exemplificar o uso dda alocação dinâmica, alteraremos o programa para o cálculo da média e da variância mostrado anteriormente. Agora, o programa lê o número de valores que serão fornecidos, aloca um vetor dinamicamente e faz os cálculos. Somente a função principal precisa ser alterada, pois as funções para calcular a média e a variância anteriormente apresentadas independem do fato de o vetor ter sido alocado estátiva ou dinamicamente.
+

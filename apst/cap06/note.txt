@@ -1,0 +1,94 @@
+6. CADEIA DE CARACTERES
+
+6.1 Caracteres
+Efetivamente, a linguagem C não oferece um tipo caractere. Os caracteres são representados por códigos numéricos. A linguagem oferece o tipo char, que pode ser armazenar valores inteiros "pequenos": um char tem tamanho de 1 byte, 8 bits, e sua versão com sinal pode representar valores que variam de -128 a 127. Como os códigos associados aos caracteres estão dentro desse intervalo, usamos o tipo char para representar caracteres. A correspondência entre os carecteres e seus códigos numérica é feita por tabela de códigos. Em geral, usa-se a tabela ASCII, mas diferentes máquinas podem usar diferentes códigos. Contudo, se desejamos escrever códigos portáveis, isto é, que possam ser compilados e executados em máquinas diferentes, devemos evitar o uso explícito dos códigos referentes a uma determinada tabela, como será discutido nos exemplos subsequentes. Como ilustração, mostramos a seguir os códigos associados a alguns caracters segundo a tabela ASCII.
+
+Em C, a diferença entre carcteres e inteiros é feita apenas através da maneira pela qual são tratados. Por exemplo, podemos imprimir o mesmo valor de duas formas diferentes usando formatos diferentes. Vamos analisar o fragmento de código abaixo:
+
+	char c = 97;
+	printf("%d %c\n", c, c);
+
+Considerando a codificação de caracteres via tabela ASCII, a variável c, que foi inicializada com o valor 97, representa o caractere a. A função printf imprime o conteúdo da variável c usando dois formatos distintos: com o especificador de formato para inteiro, %d, será impresso o valor do código númerico, 97; com o formato de caractere, %c, será impresso o caractere associado ao código, a letra a.
+
+Conforme mencionamos, devemos evitar o uso explícito de código de caracteres. Para tanto, a linguagem C permite a escrita de constantes caracteres. Uma constante caractere é escrita envolvendo o caractere com aspas simples. Assim, a expressão 'a' representa uma constante caractere e resulta no valor numérico associado ao caractere a. Podemos, então, reescrever o fragmento de código acima sem particularizar a tabela ASCII.
+
+	char c = 'a';
+	printf("%d %c", c, c);
+
+Além de agregar portabilidade e clareza ao código, o uso de constantes caracteres nos livra de conhecermos os códigos associados a cada caractere.
+
+Independente da tabela de código numéricos utilizada, garante-se que os dígitos são codificados em sequência. Deste modo, se o dígito zero tem código 48, o dígito um tem obrigatoriamente código 49, e assim por diante. As letras minúsculas e as letras maiúsculas também formam dois grupos de códigos sequenciais. O exemplo a seguir tira proveito desta sequencia dos códigos de caracteres.
+
+Exemplo. Suponhamos que queremos escrever uma função para testar se um caractere é um dígito (um dos caracteres entre '0' e '9'). Esta função pode ter o protótipo:
+
+	int digito (char c);
+
+e ter como resultado 1 (verdadeiro se c for um dígito, e 0 (falso) se nçao for.
+
+A implementação desta função pode ser dada por:
+
+Exercício. Escreva uma função para determinar se um caractere é uma letra, com protótipo:
+
+	int letra(char);
+
+Exercício. Escreva uma função para conveter um caractere para maiúscula. Se o caractere dado representar uma letra minúscula, devemos ter como valor de retorno a letra maiúscula de retorno o mesmo caractere, sem alteração. O protótipo desta função pode ser dado por:
+
+	char maiuscula (char c);
+
+6.2 Cadeia de caracteres (strings)
+Cadeias de caracters (strings), em C, são representadas por vetores do tipo char terminadas, obrigatoriamente, pelo caractere nulo ('\0'). Portanto, para armazenarmos uma cadeia de caracteres, devemos reservar uma posição adicional para o caractere de fim da cadeia. Todas as funções que manipulam cadeias de caracteres (e a biblioteca padrão de C oferece várias delas) recebem como parâmetro um vetor de char, isto é, um ponteiro para o primeiro elemento do vetor que representa a cadeia, e processam caractere por caractere, até encontrarem o caractere nulo, que sinaliza o final da cadeia.
+
+Por exemplo, o especificador de formato %s da função printf permite imprimir uma cadeia de caracteres. A função printf então recebe um vetor de char e imprime elemento por elemento, até encontrar o caractere nulo.
+
+O código abaixo ilustra a representação de uma cadeia de caracrteres. Como queremos representar a palavra Rio, composta por 3 caracteres, declaramos um vetor com dimensão 4 (um elemento adicional para armazenarmos o caractere nulo no final da cadeia. O código preenche os elementos do vetor, incluindo o caractere '\0', e imprime a palavra na tela;
+
+Se o caractere '\0' não fosse colocado, a função printf executaria de forma errada, pois não conseguiria identificar o final da cadeia.
+
+Como as cadeias de caracters são vetores, podemo reescrever o código acima inicializando os valores dos elementos do vetor na declaração:
+
+A inicialização de cadeias de caracteres é tão comum em códigos C que a linguagem permite que elas sejam inicilaizadas escrevendo-se os caracteres entre aspas duplas. Neste caso, o caractere nulo é representado implicitamente. O código acima pode ser reescrito da seguinte forma:
+
+A variável cidade é automaticamente dimensionada e inicializada com os elementos. Para ilustrar a declaração e a inicilaização de cadeiaas de caracteres, consideremos as declarações abaixo:
+
+	char s1[] = "";
+	char s2[] = "Rio de Janeiro";
+	char s3[81];
+	char s4[81] = "Rio";
+
+Nestas declarações, a variável s1 armazena cadeia de caracreres vazia, representada por um vetor com um único elemento, o caractere '\0'. A variável s2 representa um vetor com 15 elementos. A variável s3 representa uma cadeia de caracteres capaz de representar cadeias com até 80 caracteres, já que foi dimensionada com 81 elementos. Esta variável, no entanto, não foi inicializada e seu conteúdo é desconhecido. A variável s4 também foi dimensionada para armazenar cadeias até 80 caracteres, mas seus primeiros quatros elementos foram atribuídos na declaração.
+
+Leitura de caracteres e cadeias de caracteres
+Para capturarmos o valor de um caracteres simples fornecido pelo usuário via teclado, usamos a função scanf, com o especificador de formato %c.
+
+	char a;
+	scanf("%c", &a);
+
+Desta forma, se o usuário digitar a letra r, por exemplo, o código associado à letra r será armazenado na variável a. Vale ressaltar que, diferente dos especificadores %d e %f, o especificador %c não pula os caracteres brancos. Portanto, se o usuário teclar um espaço antes da letra r, o código do espaço será capturado e a letra r será capturada apenas uma próxima chamada da função scanf. Se desejarmos pular todas as ocorrências de carateres brancos que porventura antecedam o caractere que queremos capturar, basta incluir um espaço em branco no formato, antes do especificador.
+
+Já mencionamos que o especificador %s pode ser usado na função printf para imprimir uma cadeia de caracteres. O mesmo especificador pode ser utilizado para capturar cadeias de caracteres na função scanf. No entanto, seu uso é muito limitado. O especificador %s na função scanf pula os eventuais caracteres brancos e captura a sequência de caracteres não brancos.  Consideremos o fragmento de código abaixo:
+
+	char cidade[81];
+	scanf("%s", cidade);
+
+Devemos notar que não usamos o caractere & na passagem da cadeia para a função, pois a cadeia é um vetor (o nome da variável representa o endereço). O uso do especificador de formato %s na leitura é limitado, pois o fragmento de código acima funciona apenas para capturar nomes simples. Se o usuário digitar Rio de Janeiro, apenas a palavra Rio será capturada, pois o %s lê somente uma sequência de caracteres não brancos.
+
+Em geral, queremos ler nomes compostos (nome de pessoas, cidades, endereço para correspondência, etc.). Para capturarmos estes nomes, podemos usar o especificador de formato %[...], no qual listamos entre os colchetes todos os caracteres que aceitaremos na leitura. Assim, o formato "%[aeio]" lê sequências de vogais, isto é, a leitura prossegue até que se encontrar um caractere que não seja uma vogal. Se o primeiro caractere entre colchete for o acento circunflexo (^), teremos o efeito inversos (negação). Assim, com o formato "%[^aeiou]" a leitura prossegue enquanto uma vogal não for encontrada. Esta construção permite capturamos nomes compostos. Considere o código abaixo:
+
+	char cidade[81];
+	scanf(" %[^\n]", cidade);
+
+A função scanf agora lê uma sequência de caracteres até que seja encontrado o caractere de mudança de linha ('\n'). Em termos práticos, captura-se linha fornecida pelo usuário até que ele tecle "Enter". A inlcusão do espaço no formato (antes do sinal %) garante que eventuais caracteres brancos que precedam o nome serão pulados.
+
+Para finalizar, devemos salientar que o trecho de código acima é perigoso, pois, se o usuário fornecer uma linha que tenha mais de 80 caracteres, estaremos invadindo um espaço de memória que não estará reservado (o vetor foi dimensionado com 81 elementos).
+
+Para evitar esta possível invasão, podemos limitar o número máximo de caracteres que serão capturados.
+
+	char cidade[81];
+	scanf(" %80[^\n]", cidade);
+
+Exemplos de funções que manipulam cadeias de caracteres
+Nesta seção, discutiremos a implementação de algumas funções que manipulam cadeiaas de caracteres.
+
+Exemplo. Impressão caractere por caractere.
+Vamos inicialmente considerar a implementação de uma função que imprime uma cadeia de caracteres, caractere por caractere. A implementação pode ser dada por:
+
