@@ -92,3 +92,191 @@ Nesta seção, discutiremos a implementação de algumas funções que manipulam
 Exemplo. Impressão caractere por caractere.
 Vamos inicialmente considerar a implementação de uma função que imprime uma cadeia de caracteres, caractere por caractere. A implementação pode ser dada por:
 
+que teria funcionalidade análoga à utilização do especificador do formato %s.
+
+Exemplo. Comprimento da cadeia de caracteres.
+Consideremos a implementação de uma função que recebe como parâmetro de entrada uma cadeia de caracteres e fornece como retorno o número de caracteres existentes na cadeia. O protótipo da função pode ser dado por:
+
+	int comprimento (char *s);
+
+Para contat o número de caracteres da cadeia, basta contarmos o número de caracteres até que o caractere nulo (que indica o fim da cadeia) seja encontrado. O caractere nulo em si não deve ser contado. Uma possível implementação desta função é:
+
+Salientamos o uso do carectere de escape \" para incluir aspas na saída.
+
+Exemplo. Cópia de cadeia de caracteres.
+Vamos agora considerar a implementação de uma função para copiar os elementos de uma cadeia de caracteres para outra. Assuminos que a cadeia que receberá a cópia tem espaço suficiente para que a operação seja realizada. O prótótipo desta função pode ser dado por:
+
+	void copia (char* dest, char*, orig);
+
+A função copia os elementos da cadeia original (orig) para a cadeia de destino (dest). Uma possível implementação desta função é mostrada abaixo:
+
+Salientamos a necessidade de "fechar" a cadeia copiada após a cópia dos caracteres não nulos. Quando o laço for terminar, a variável i terá o índice de onde está armazenado o caractere nulo na cadeia original. A cópia também deve conter o '\0' nesta posíção.
+
+Exemplo. Concatenação de cadeias de caracteres.
+Vamos considerar uma extensão do exemplo anterior e discutir a implementação de uma função para concatenar uma cadeia de caracteres com outra já existente. Isto é, os caracteres de uma cadeia são copiados no final da outra cadeia. Assim, se uma cadeia representa inicialmente a cadeia X e concatenarmos a ela a cadeia Y, teremos como resultado a cadeia XY. Vamos mais uma vez considerar que existe espaço reservado que permite fazer a cópia dos caracteres. O protótipo da função pode ser dado por:
+
+	void concatena (char* dest, char* orig);
+
+Funções análogas às funções comprimento, copia e concatena são disponibilizadas pela bibiloteca padrão de C. As funções da biblioteca padrão são, respectivamente, strlen, strcpy e strcat, que fazem parte da biblioteca de cadeia de caracteres (string), string.h. Existem diversas outras funções que manipulam cadeias de caracteres nessa biblioteca. A razão de mostrarmos possíveis implementações destas funções como exercício é ilustrar a codigicação da manipulação de cadeias de caracteres.
+
+Exemplo 5: Duplicação de cadeias de caracteres.
+Consideramos agora um exemplo com alocação dinâmica de caracteres e forneça uma cópia da cadeia, alocada dinamicamente. O protótipo desta função pode ser dado por:
+	char* duplica (char* s);
+
+Uma possível implementação, usando as funções da biblioteca padrão, é:
+
+Funções recursivas
+Uma cadeia de caracteres pode ser definida de forma recursiva. Podemos dizer que uma cadeia de caracters é representada por:
+	* uma cadeia de caracteres vazia; ou
+	* um caractere seguido de uma (sub) cadeia de caracteres.
+
+Isto é, podemos dizer que uma cadeia s não vazia pode ser representada pelo seu primeiro caractere s[0] seguido da cadeia que começa no endereço do então segundo caractere, &s[1].
+
+Vamos reescrever algumas das funções mostradas acima, agora com a versão recursiva.
+
+Exemplo. Impressão caractere por caractere.
+Uma versão recursiva da função para imprimir a cadeia caractere por caractere é mostrada a seguir. Como já foi discutido, uma implementação recursiva deve ser projetada considerando-se a definição recursiva do objeto, no caso uma cadeia de caracteres. Assim, a função deve primeiro testar se a condição da cadeia é vazia. Se a cadeia for vazia, nada precisa ser impresso; se não for vazia, devemos imprimir o primeiro caractere e então chamar uma função para imprimir a sub-cadeia que se segue. Para imprimir a sub-cadeia podemo usar a própria função, recursivamente.
+
+void imprime_rec (char* s){
+	if (s[0] != '\0') {
+		printf("%c", s[0]);
+		imrprime_rec (&s[1]);
+	}
+}
+
+Algumas implementações ficam bem mais simples se feitas recursivamente. Por exemplo, é simples alterar a função acima e fazer com que os caracteres da cadeia sejam impressos em ordem inversa, de trás para a frente: basta imprimir a sub-cadeia antes de imprimir o primeiro caractere.
+
+void imprime_iv (char *s) {
+	if (s[0] != '\0') {
+		imprime_iv(&s[1]);
+		printf("%c", s[0]); 
+	}
+}
+
+Como exercício, sugerimos implementar a impressão inversa sem usar recursividade.
+
+Exemplo. Comprimento da cadeia de caracteres.
+Uma implementação recursiva da função que retorna o número de caracteres existentes na cadeia é mostrada a seguir:
+
+	int comprimento_rec (char* s) {
+		if (s[0] == '\0')
+			return 0;
+		else
+			return 1+comprimento_rec (&s[1]);
+	}
+
+Exemplo. Cópia de cadei de caracteres.
+Vamos mostrar agora uma possível implementaçõ recursiva da função copia mostrada anteriormente.
+
+É fácil verificar que o código acima pode ser escrito de foma mais compacta.
+
+Constante cadeia de caracteres**
+Em códigos C, uma sequência de caracteres delimitado por aspas representa uma constante cadeia de caracteres, ou seja, uma expressão constante, cuja avaliação resulta no ponteiro onde a cadeia de caracteres está armazenada. Para exemplificar, vamos considerar o trecho de código abaixo:
+
+De forma ilustrativa, o que acontece é que, quando o compilador encontra a cadeia "Rio", automaticamente é alocado na área de constantes a seguite sequência de caracteres:
+	'R','i','o','\0'
+e é fornecido o ponteiro para o primeiro elemento desta sequência. Assim, a função strcpy recebe dois ponteiros de cadeias: o primeiro aponta para o espaço associado à variável cidade e o segundo aponta para a área de constantes onde está armazenada a cadeia Rio.
+
+Desta forma, também é válido escrever:
+
+Existe uma diferença sutil entre as duas declaraçõe abaixo:
+
+	char s1[] = "Italo Johnny dos Anjos";
+	char *s2 = "Italo Johnny dos Anjos";
+
+Na primeira, declaramos um vetor de char local que é inicializado com a cadeia de caracteres, seguido do carectere nulo. A variável s1 ocupa, portanto, X bytes de memória. Na segunda, declaramos um ponteiro para char que é inicializado com o endereço de uma área de memória onde a constante cadeia de caracteres Italo Johnny está armazenada. A variável s2  ocupa 4 bytes (espalo de um ponteiro). Podemos verificar esta diferença imprimindo os valores sizeof(s1) e sizeof(s2). Como s1 é um vetor local, podemos alterar o valor de seus elementos. Por exemplo, é válido escrever s1[0] = 'X'; alterando o conteúdo da cadeia para Xtalo Johnny dos Anjos. No entanto, não é válido escrever s2[0] = 'X', pois estaríamos tentando alterar o conteúdo de uma área de constante.
+
+6.3 Vetor de vadeia de caracteres
+Em muitas aplicações, desejamos representar um vetor de cadeia de caracteres. Por exemplo, podemo considerar uma aplicação que armazena os nomes de todos os alunos de uma turma num vetor. Sabemos que uma cadeia de caracteres é representada porum vetor do tipo char. Para representarmos um vetor onde cada elemento é uma cadeia de caracteres, devemos ter um vetor cujos elementos são do tipo char*, isto é, um vetor de ponteiros para char. Assim, criamos um conjunto (vetor) bidimensional de char. Assumindo que o nome de nenhum aluno terá mais do que 80 caracteres e que o número máximo de alunos numa turma é 50, podemos declarar um vetor bidmensional para armazenar os nomes dos alunos.
+
+	char alunos[50][81];
+
+Com esta variável declarada, alunos[i] acessa a cadeia de caracteres com o nome do (i+1)-ésimo aluno da turma e, consequentemente, alunos[i][j] acessa a (j+i)-ésima letra do nome do (i+1)-ésimo aluno. Considereando que alunos é uma variável global, uma função para imprimir os nomes dos n alunos de uma turma poderia ser dada por:
+
+void imprime (int n)
+{
+	int i;
+	for (i = 0; i < n; i++)
+		printf("%s\n", alunos[i]);
+}
+
+No próximo capítulo, que trata de matrizes, discutiremos conjuntos bidimensionais com mais detalhes. Para representação de vetores de cadeias de caracteres, optamos, em geral, por declarar um vetor de ponteiros e alocar dinamicamente cada elemento (no caso, uma cadeia de caracteres). Desta forma, otimizamos o uso do espalo de memória, pois não precisamos achar uma dimensão máxima para todas as cadeias do vetor nem desperdiçamos espaço excessivo quando temos poucos nomes de alunos a serem armazenados. Cada elemento do vetor é um ponteiro. Se precisarmos armazenar um nome na posição, alocamos o espaço de memória necessário para armazenar a cadeia de caracteres correspondente. Assim, nosso vetor com os nomes dos alunos pode ser declarado da seguinte forma:
+
+	#define MAX 50;
+	char* alunos[MAX];
+
+Exemplo. Leitura e impressão dos nomes dos alunos.
+Vamos escrevr uma função que captura os nomes dos alunos de uma turma. A função inicialmente lê o número de alunos da turma (que deve ser menor ou igual a MAX) e captura os nomes fornecidos por linha, fazendo a alocação correspondente. Para escrever esta função, podemos pensar numa função auxiliar que captura uma linha e fornece como retorno uma cadeia alocada dinamicamente com a linha inserida. Fazendo uso das funções que escrevemos acima, podemos ter:
+
+char* lelinha (void)
+{
+	char linha[121];
+	scanf(" %120[^\n]", linha);
+	return duplica(linha);
+}
+
+A função para capturar os nomes dos aluno preenche o vetor de nome e pode ter como valor de retorno o número de lidos:
+
+int lenomes (char **alunos)
+{
+	int i;
+	int n;
+	do {
+		scanf("%d", &n);
+	} while (n > MAX);
+	
+	for (i = 0; i < n; i++)
+		aluno[i] = lelinha();
+	return n;
+}
+
+A função para liberar os nomes alocados na tebela pode ser iplementada por:
+
+void liberanomes (int n, char** alunos)
+{
+	int i;
+	for (i = 0; i < n; i++)
+		free(alunos[i]);
+}
+
+Uma função para imprimir os nomes dos alunos pode se dada por:
+
+void imprimenomes((int n, char** alunos)
+{
+	int i;
+	for (i = 0; i < n; i++)
+		printf("%s\n", alunos[i]);
+}
+
+Um programa que faz uso destas funções é mostrado a seguir:
+
+int main (void)
+{
+	char* alunos[MAX];
+	int n = lenomes(alunos);
+	imprimenomes(n, alunos);
+	liberanomes(n, alunos);
+	return 0;
+}
+
+Parâmetros da função main**
+Em todos os exemplos mostrados, temos considerado que a função principal, main, não recebe parâmetros. Na verdade, a função main pode ser definida para recever zero ou dois parâmetros, geralmente chamados argc e argv. O parâmetro argc recebe o número de argumentos passados para o programa quando este é executado; por exemplo, de um comando de linha do sistema operacional. O parâmetro argv é um vetor de cadeias de caracteres, que armazena os nomes passados como argumentos. Por exemplo, se temos um programa executável com o nome mensagem e se ele for invocado através da linha de comando:
+
+	> mensagem estrutura de dados
+
+a variável argc receberá o valor 4 e o vetor argv será inicializado com os seguintes elementos: argv[0]= "mensagem", argv[1]= "estruturas", argv[2]= "de", e argv[3]="dados". Isto é, o primeiro elemento armazena o próprio nome do executável e os demais são preenchidos com os nomes passados na linha de comando. Esses parâmetros podem ser úteis para, por exemplo, passar o nome de um arquivo de onde serão capturados os dados de um programa. A manipulação de arquivos será discutida mais adiante no curso. Por ora, mostramos um exemplo simples que trata os dois parâmetros da função main.
+
+#include <stdio.h>
+int main (int argc, char** argv)
+{
+	int i;
+	for (i = 0; i < argc; i++)
+		printf("%s\n", argv[i]);
+	return 0;
+}
+
+Se este programa tiver seu executável chamado de mensagem e for invocado com a linha de comando mosrtada acima, a saída será:
+	mensagem
+	estruturas
+	de
+	dados
