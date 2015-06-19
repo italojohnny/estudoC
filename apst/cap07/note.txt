@@ -1,0 +1,69 @@
+7. TIPOS ESTRUTURADOS
+
+Na linguagem C, existem os tipos básicos (char, int, float, etc.) e seus respectivos ponteiros que podem ser usados na declaração de variáveis. Para estruturar dados complexos, nos quais as informações são compostas por diversos campos, necessitamos de mecanismos que nos permitam agurpar tipos distintos. Neste capítulo, apresentaremos os mecanismos fundamentais da linguagem C para a esrtuturação de tipos.
+
+7.1 O tipo estrutura
+Em C, podemos definir um tipo de dado cujo campos são compostos de vários valores de tipos mais simples. Para ilustrar, vamos considerar o desenvolvimento de programas que mainpulam pontos cartesiano. Cada ponto pode ser representado por suas coordenadas x e y, ambas dadas por valores reais. Sem um mecanismo para agrupar as dois componentes, teríamos que representar cada ponto por duas variáveis independentes.
+
+	float x;
+	float y;
+
+No entando, deste modo, os dois valores ficam dissociados e, no caso do programa manipular vários pontos, cabe ao programador não misturar a coordenada x de um ponto com a coordenada y de outro. Para facilitar este trabalho, a linguagem C oferece recursos para agruparmos dados. Uma estrutura, em C, serve basicamente para agrupar diversas variáveis dentro de um único contexto. No nosso exemplo, podemos definir uma estrutura ponto que contenha as duas variáveis. A sintaxe para a definição de uma estrutura é mostrada abaixo:
+	
+	struct ponto {
+		float x;
+		float y;
+	}
+
+Desta forma, a estrutura ponto passa ser um tipo e podemos então declarar variáveis deste tipo.
+	struct ponto p;
+
+Esta linha de código declara p como sendo uma variável do tipo struct ponto. Os elementos de uma estrutura podem ser acessado através do operador de acesso "ponto" (.). Assim, é válido escrever:
+
+	ponto.x = 10.0;
+	ponto.y = 5.0;
+
+Manipulamos os elementos de uma estrutura da mesma forma que variáveis simples. Podemos acessar seus valores, atribuir-lhes novos valores, acessar seus endereços, etc.
+
+Exemplo: Capturar e imprimir as coordenadas de um ponto.
+Para exemplificar o uso de estruturas em programas, vamos considerar um exemplo simples em que capturamos e imprimimos as coordenadas de um ponto qualquer.
+
+A variável p, definida dentro de main, é uma variável local como outra qualquer. Quando a declaração é encontrada, aloca-se, na pilha de execução, um espaço para seu armazenamento, isto é, um espaço suficiente para armazenar todos os campos da estrutura (no caso, dois númetos reais). Notamos que o acesso ao endereço de um campo da estrutura é feita da mesma forma que com variáveis simples: basta escrever &(p.x), ou simplesmente &p.x, pois o operador de acesso ao campo da estrutura tem precedência sobre o operador "endereço de".
+
+Ponteiro para estruturas
+Da mesma forma que podemos declarar variáveis do tipo estrutura:
+
+	struct ponto p;
+
+podemos também declarar variáveis do tipo ponteiro para estrutura:
+
+	struct ponto *pp;
+
+Se a varipavel pp armazenar o endereço de uma estrutura, podemos acessar os campos dessa estrutura indiretamente, através de seu ponteiro:
+
+	*(pp).x = 12.0;
+
+Neste caso, os parênteses são indispensáveis, pois o operador "conteúdo de" tem precedência menor que o operador de acesso. O acesso de campos de estruturas é tão comum em programas C quea linguagem oferece outro operador de acesso, que permite acessar campos a partir do ponteiro da estrutura. Este operador é composto de um traço seguido de um sinal de maior, formando uma seta (->). Portanto, podemos reescrever a atribuição anterior fazendo:
+
+	pp->x = 12.0;
+
+Em resumo, se temos uma variáve estrutura e queremos acessar seus campos, usamos o operador de acesso ponto (p.x); se temos uma variável ponteiro para estrutura, usamos o operador de acesso seta (pp->x). Seguindo o raciocínio, se temos o ponteiro e queremos acessar o endereço de um campo, fazemos &pp->x!
+
+Passagem de estruturas para funções
+Para exemplificar a passagem de variáveis do tipo estrutura para funções, podemos reescrever o programa simples, mostrado anteriormente, que captura e imprime as coordenadas de um ponto qualquer. Inicialmente, podemos pensar em escrever uma função que imprima as coordenadas do ponto. Esta função poderia ser dada por:
+
+	void imprime (struct ponto p) {
+		printf("O ponto fornecido foi: (%.2f, %.2f)\n", p.x, p.y);
+	}
+
+A passagem de estruturas para funções de processa de forma análoga à passagem de variáveis simples, porém exitem uma análise mais detalhada. Da forma como está escrita no códio acima, a função recebe uma estrutura inteira como parâmento. Portanto, faz-se uma cópia de toda a estrutura para a pilha e a função acessa os dados desta cópia. Existem dois pontos a serem ressaltados. Primeiro, como em toda passagem por valores, a função não tem como alterar os valores dos elementos da estrutura original (na função imprime isso realemtne não é necessário, mas seria numa função de leitura). O segundo ponto siz respeito à eficiência, visto que copiar uma estrutura inteiroa para a pilha pode ser uma operação custosa (principalmente se a estrutura for muito grande). É mais conveniente passar apenas o ponteiro da estrutura, mesmo que não seja necessário alterar os valores dos elementos dentro da função, pois copiar um ponteiro para a pilha é muito mais eficiente do que copiar uma estrutura inteira. Um ponteiro ocupa em geral 4 bytes, enquanto uma estrutura pode ser definida para escrevermos a função imprime é:
+
+	void imprime (struct ponto* pp) {
+		printf("O ponto fornecido foi: (%.2f, %.2f)\n", pp->x, pp->y);
+	}
+
+Podemos ainda pensar numa função para ler a hora do evento. Observamos que, neste caso, obrigatoriamente devemo passar o ponteiro da estrutura, caso contrário não seria possível passar ao programa principal os dados lidos:
+
+	void captura (struct ponto *pp) {
+		printf("Digite as coordenadas do ponto()")
+	}
