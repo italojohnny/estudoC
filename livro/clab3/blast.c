@@ -1,5 +1,4 @@
 /*
-    italo
     A nave podera atirar em um asteroid com seu canhao, entao voce vai precisar
     de codigo para desenhar e mover um tiro de canhao pela tela.
 */
@@ -21,8 +20,8 @@ void blast_anime (Blast *b)
         //Acredito que a resposta para o problema seja a criação de filas ao
         //inves de listas
         }
-    }
 }
+
 
 void blast_draw (Blast **b)
 {

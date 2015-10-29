@@ -1,5 +1,5 @@
 /*
-    gcc -lallegro -lallegro_image -lallegro_font -lallegro_ttf main.c -o main
+    gcc -lallegro -lallegro_image -lallegro_font -lallegro_ttf main.c -o main && ./main
     gcc main.c -o main -lallegro-5.0.10-mt -lallegro_image-5.0.10-mt -lallegro_ttf-5.0.10-mt -lallegro_font-5.0.10-mt
 */
 #include <allegro5/allegro.h>

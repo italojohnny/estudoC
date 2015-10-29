@@ -1,4 +1,5 @@
 /*
+	gcc -lallegro_image -lallegro main.c -o main && ./main
     gcc main.c -o main -lallegro-5.0.10-mt -lallegro_image-5.0.10-mt
 */
 #include <allegro5/allegro.h>
