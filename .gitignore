@@ -9,6 +9,7 @@
 *.ogg
 *.wav
 *.exe
+a.out
 main
 test
 blasteroids
