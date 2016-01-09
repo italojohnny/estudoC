@@ -17,7 +17,7 @@ int statusGame;
 int scoreGame;
 
 Spaceship ship;
-Asteroid b, d, e;
+Asteroid a, b, d, e;
 Blast *blast_origin, *Q;
 
 int main (void)
@@ -29,6 +29,7 @@ int main (void)
     inicialize();
     
     ship_start(&ship);
+    asteroid_start(&a);
     asteroid_start(&b);
     asteroid_start(&d);
     asteroid_start(&e);
@@ -116,22 +117,25 @@ void draw (void)
         break;
         case 2://o jogo
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
-            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", a.heading);
-            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", a.sx);
-            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", a.sy);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", ship.heading);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", ship.sx);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", ship.sy);
 
             ship_draw(&ship);
+            draw_asteroid(&a);
             draw_asteroid(&b);
             draw_asteroid(&d);
             draw_asteroid(&e);
             blast_draw(&blast_origin);
-/*            Q = blast_origin;
-            printf("\n------------------------\n");
+/*
+			Q = blast_origin;
+
+			printf("\n------------------------\n");
             while (Q != NULL) {
                 printf("<-(%d) ", Q->id);
                 Q = Q->next;                        
             }
-*/  
+*/
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
@@ -158,7 +162,7 @@ void inicialize (void)
     if (!al_init_ttf_addon())
         error("add-on allegro_ttf");
     
-    myFont = al_load_font("2Dumb.ttf", 35, 0);
+    myFont = al_load_font("pixel.ttf", 35, 0);
     if (!myFont)
         error("font");
     

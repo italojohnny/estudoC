@@ -14,6 +14,7 @@ void blast_anime (Blast *b)
             b->gone = 1;//o tiro nao pode ser mais animado
 
     } else {//se o tiro nao pode ser mais animado, ele deve ser destruido
+		//printf("%d", b->id);
         //se entrou aqui, tem que ser eliminado.
         //mas existe a problematica, se ele tiver descendentes, havera
         //vazamento de memoria
@@ -28,7 +29,7 @@ void blast_draw (Blast **b)
     if (*b != NULL) {
         Blast *t = *b;
 
-        while ( t != NULL) {
+        while (t != NULL) {
             ALLEGRO_TRANSFORM transform;
             al_identity_transform(&transform);
             al_rotate_transform(&transform, t->heading * M_PI/180);
@@ -43,10 +44,57 @@ void blast_draw (Blast **b)
             al_use_transform(&transform);
             
             blast_anime(t);
-            if (t != NULL)
+            //if (t != NULL)
                 t = t->next; 
         }
+
+		Blast *u = *b;
+		Blast *aux_prev = NULL,  *aux_next = NULL;
+		printf("=========================\n");
+		while ( u != NULL) {
+			aux_next = NULL;
+			if (u->gone == 1) {//encontrou um No para excluir
+				printf("=>%d\n", u->id);
+				if (u ->next != NULL) {//ele tem proximo? Se sim, entrar No if
+					aux_next = u->next;//entao, amarzena o endereco do proximo.
+
+					if (aux_prev != NULL){ //esse No marcado para excluicao tem um No anterior?
+						aux_prev->next = aux_next;//entao, liga o anterio com o proximo. Agora o No esta pronto para exclusao
+						//printf("excluido: %d\n", u->id);
+						free(u);
+						break;
+					} else {
+						//printf("\n----achou um ESTRANHO------\n");
+						//printf("%d \n%f \n%f \n%f \n%f \n%d", u->id, u->sx, u->sy, u->heading, u->speed, u->gone);
+
+					}
+				
+				} else{
+					printf("\n----achou o ultimo----\n");
+					if(u->next == NULL)
+						printf("\nnull");
+					else
+						printf("\ntem valor");
+					printf("\n%d", u->id);
+
+					if (aux_prev != NULL) {
+						aux_prev = NULL;
+						free(u);
+						break;
+					}
+
+
+				}
+				
+			
+			} else
+				printf("%d\n", u->id);
+
+			aux_prev = u;
+			u = u->next;
+		}
     }
+	
 }
 
 void blast_shoot (Blast **b, Spaceship *s)

@@ -1,6 +1,7 @@
 NAME=blasteroids
 CC=gcc
-CFLAGS=-g -O3 -W -Wall -Wextra -Werror
+#CFLAGS=-g -O3 -W -Wall -Wextra -Werror
+CFLAGS=-g
 #LIBS=-L/usr/lib/x86_64-linux-gnu -lm -lallegro -lallegro_primitives -lallegro_ttf -lallegro_font
 LIBS=-lm -lallegro -lallegro_primitives -lallegro_ttf -lallegro_font
 
