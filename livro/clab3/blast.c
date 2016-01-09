@@ -50,51 +50,38 @@ void blast_draw (Blast **b)
 
 		Blast *u = *b;
 		Blast *aux_prev = NULL,  *aux_next = NULL;
-		printf("=========================\n");
+
 		while ( u != NULL) {
 			aux_next = NULL;
 			if (u->gone == 1) {//encontrou um No para excluir
-				printf("=>%d\n", u->id);
+
 				if (u ->next != NULL) {//ele tem proximo? Se sim, entrar No if
 					aux_next = u->next;//entao, amarzena o endereco do proximo.
 
-					if (aux_prev != NULL){ //esse No marcado para excluicao tem um No anterior?
+					if (aux_prev != NULL){ //esse No tem algum No anterior?
 						aux_prev->next = aux_next;//entao, liga o anterio com o proximo. Agora o No esta pronto para exclusao
-						//printf("excluido: %d\n", u->id);
 						free(u);
 						break;
-					} else {
-						//printf("\n----achou um ESTRANHO------\n");
-						//printf("%d \n%f \n%f \n%f \n%f \n%d", u->id, u->sx, u->sy, u->heading, u->speed, u->gone);
 
+					} else {//esse No nao tem nenhum anterior a ele! 
+						*b = aux_next;
+						free(u);
+						break;
 					}
 				
-				} else{
-					printf("\n----achou o ultimo----\n");
-					if(u->next == NULL)
-						printf("\nnull");
-					else
-						printf("\ntem valor");
-					printf("\n%d", u->id);
-
-					if (aux_prev != NULL) {
-						aux_prev = NULL;
-						free(u);
+				} else {//ele não tem proximo!
+					if (aux_prev == NULL) {//se ele nao tiver anterior
+						free(u);//libera memoria
+						*b = NULL;//limpa origem
 						break;
 					}
-
 
 				}
-				
-			
-			} else
-				printf("%d\n", u->id);
-
+			}
 			aux_prev = u;
 			u = u->next;
 		}
     }
-	
 }
 
 void blast_shoot (Blast **b, Spaceship *s)

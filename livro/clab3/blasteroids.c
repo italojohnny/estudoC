@@ -127,7 +127,7 @@ void draw (void)
             draw_asteroid(&d);
             draw_asteroid(&e);
             blast_draw(&blast_origin);
-/*
+
 			Q = blast_origin;
 
 			printf("\n------------------------\n");
@@ -135,7 +135,7 @@ void draw (void)
                 printf("<-(%d) ", Q->id);
                 Q = Q->next;                        
             }
-*/
+
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");

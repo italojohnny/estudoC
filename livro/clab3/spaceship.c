@@ -30,7 +30,7 @@ void ship_start (Spaceship *s)
     s->sx = 640/2;
     s->sy = 480/2;
     s->heading = 0.0;
-    s->speed = 0.1;
+    s->speed = 2.0;
     s->color = al_map_rgb(255, 0, 0);
 }
 
