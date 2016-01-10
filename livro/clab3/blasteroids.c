@@ -20,6 +20,8 @@ Spaceship ship;
 Asteroid a, b, d, e;
 Blast *blast_origin, *Q;
 
+bool btn_up, btn_down, btn_left, btn_right, btn_fire, btn_start;
+
 int main (void)
 {
     tmp = 0;
@@ -27,7 +29,7 @@ int main (void)
     statusGame = 1;
     scoreGame = 0;
     inicialize();
-    
+
     ship_start(&ship);
     asteroid_start(&a);
     asteroid_start(&b);
@@ -58,14 +60,32 @@ void loop (void)
 }
 
 void keyboard (ALLEGRO_EVENT key_event)
-{       
-    if (key_event.type == ALLEGRO_EVENT_KEY_DOWN || key_event.type == ALLEGRO_EVENT_KEY_CHAR) {
+{
+    if (key_event.type == ALLEGRO_EVENT_KEY_UP) {
+		switch (statusGame) {
+			case 2:
+				switch (key_event.keyboard.keycode) {
+                    case ALLEGRO_KEY_UP:
+						btn_up = false;
+					break;
+					case ALLEGRO_KEY_LEFT://vira sentido anti-horario
+						btn_left = false;
+                    break;
+                    case ALLEGRO_KEY_RIGHT://vira sentido horario
+						btn_right = false;
+                    break;
+				}
+			break;
+		}
+	}
+
+    if (key_event.type == ALLEGRO_EVENT_KEY_DOWN) {
         switch (statusGame) {
-            case 1: 
+            case 1:
                 if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER)
                     statusGame = 2;
             break;
-            case 2:
+            case 2://o jogo
                 switch (key_event.keyboard.keycode) {
                     case ALLEGRO_KEY_ESCAPE:
                         statusGame = 0;
@@ -75,18 +95,16 @@ void keyboard (ALLEGRO_EVENT key_event)
                         blast_shoot(&blast_origin, &ship);
                    break;
                     case ALLEGRO_KEY_UP:
-                        ship_advance(&ship);
+						btn_up = true;
                     break;
                     case ALLEGRO_KEY_DOWN:
                         //freia
                     break;
-                    case ALLEGRO_KEY_LEFT:
-                        //vira sentido anti-horario
-                        ship_spin(&ship, -1.0);
+                    case ALLEGRO_KEY_LEFT://vira sentido anti-horario
+						btn_left = true;
                     break;
-                    case ALLEGRO_KEY_RIGHT:
-                        //vira sentido horario
-                        ship_spin(&ship, 1.0);
+                    case ALLEGRO_KEY_RIGHT://vira sentido horario
+						btn_right = true;
                     break;
                 }
             break;
@@ -101,7 +119,17 @@ void timer (void)
 {
     switch (statusGame) {
         case 1: break;//tela de start
-        case 2: break;//o jogo
+        case 2://o jogo
+			if (ship.boost < 0.0) ship.boost = 0;
+			if (btn_up) ship_advance(&ship);
+			else if (ship.boost >= 0.0)ship.boost -= 0.1;
+
+			if (btn_down){}
+
+			if (btn_left) ship_spin(&ship, -1.0);
+			if (btn_right) ship_spin(&ship, 1.0);
+
+		break;
         case 3: break;//game over
         case 4: break;//tela de record score
         case 5: break;//gravar seu record
@@ -113,13 +141,14 @@ void draw (void)
     al_clear_to_color(al_map_rgb(0, 0, 0));
     switch (statusGame) {
         case 1://tela de start
-             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "START");          
+             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "START");
         break;
         case 2://o jogo
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", ship.heading);
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", ship.sx);
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", ship.sy);
+            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 130, ALLEGRO_ALIGN_LEFT, "boost: %f", ship.boost);
 
             ship_draw(&ship);
             draw_asteroid(&a);
@@ -127,15 +156,15 @@ void draw (void)
             draw_asteroid(&d);
             draw_asteroid(&e);
             blast_draw(&blast_origin);
-
+/*
 			Q = blast_origin;
 
 			printf("\n------------------------\n");
             while (Q != NULL) {
                 printf("<-(%d) ", Q->id);
-                Q = Q->next;                        
+                Q = Q->next;
             }
-
+*/
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
@@ -147,7 +176,7 @@ void draw (void)
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INPUT NEW RECORD");
         break;
     }
-    al_flip_display(); 
+    al_flip_display();
 }
 
 void inicialize (void)
@@ -157,18 +186,18 @@ void inicialize (void)
 
     if (!al_init_primitives_addon())
         error("add-on allegro_primitives");
-    
+
     al_init_font_addon();
     if (!al_init_ttf_addon())
         error("add-on allegro_ttf");
-    
+
     myFont = al_load_font("pixel.ttf", 35, 0);
     if (!myFont)
         error("font");
-    
+
     if (!al_install_keyboard())
         error("keyboard");
-    
+
     myDisplay = al_create_display(WIDTH, HEIGHT);
     if (!myDisplay)
         error("create display");
@@ -180,6 +209,8 @@ void inicialize (void)
 
     al_register_event_source(myEventQueue, al_get_display_event_source(myDisplay));
     al_register_event_source(myEventQueue, al_get_keyboard_event_source());
+
+	btn_up = btn_down = btn_left = btn_right = btn_fire = btn_start = false;
 }
 
 void finalize (void)

@@ -8,6 +8,7 @@ typedef struct {
     float sy;
     float heading;
     float speed;
+    float boost;
     ALLEGRO_COLOR color;
 } Spaceship;
 
