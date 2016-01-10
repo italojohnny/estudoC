@@ -27,10 +27,11 @@ void blast_draw (Blast **b)
             al_rotate_transform(&transform, t->heading * M_PI/180);
             al_translate_transform(&transform, t->sx, t->sy);
             al_use_transform(&transform);
-
-            //al_draw_line(0, 6, 0, 3, t->color, 1.0f);
-            al_draw_line(0, 1, 0,-1, t->color, 1.0f);
-            //al_draw_line(0,-6, 0,-3, t->color, 1.0f);
+			
+			//al_draw_circle(0,0,5,al_map_rgb(0, 255, 255), 0);
+            //al_draw_line( 5, 4, 5,-1, t->color, 1.0f);
+            al_draw_line( 0, 4, 0,-4, t->color, 1.0f);
+            //al_draw_line(-5, 4,-5,-1, t->color, 1.0f);
 
             al_identity_transform(&transform);
             al_use_transform(&transform);
@@ -91,7 +92,7 @@ Blast *blast_create (Spaceship *s)
     newBlast->sy        = s->sy;
     newBlast->heading   = s->heading;
     newBlast->speed     = s->speed * 3;
-    newBlast->color     = s->color;
+    newBlast->color     = al_map_rgb(255, 255, 255);//s->color;
     newBlast->gone      = 0;
     newBlast->next      = NULL;
     newBlast->id        = ++tmp;

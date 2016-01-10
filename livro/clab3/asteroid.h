@@ -13,11 +13,13 @@ typedef struct {
     float scale;//escala
     int  gone;//ele foi destruido?
     ALLEGRO_COLOR color;
+	struct Asteroid *next;
+	int id;
 } Asteroid;
 
 void asteroid_anima (Asteroid *a);
 void asteroid_start (Asteroid *a);
 void draw_asteroid (Asteroid *a);
-void test_asteroid (void);
+Asteroid *asteroid_create ();
 
 #endif

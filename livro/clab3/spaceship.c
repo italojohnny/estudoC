@@ -50,10 +50,10 @@ void ship_draw (Spaceship* s)
 	if (s->gone == 0) {
 		//al_draw_filled_circle(0, 0, 11, s->color);
 
-		al_draw_line(-8,  9, 0,-11, s->color, 3.0);
-		al_draw_line( 0,-11, 8,  9, s->color, 3.0);
-		al_draw_line(-6,  4,-1,  4, s->color, 3.0);
-		al_draw_line( 6,  4, 1,  4, s->color, 3.0);
+		al_draw_line(-8,  9, 0,-11, s->color, 1.0);
+		al_draw_line( 0,-11, 8,  9, s->color, 1.0);
+		al_draw_line(-6,  4,-1,  4, s->color, 1.0);
+		al_draw_line( 6,  4, 1,  4, s->color, 1.0);
 
 	} else if (s->gone == 1) { s->gone++; al_draw_circle(0, 0, 10, s->color, 0);
 	} else if (s->gone == 2) { s->gone++; al_draw_circle(0, 0, 9, s->color, 1);

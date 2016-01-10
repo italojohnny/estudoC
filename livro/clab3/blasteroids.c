@@ -12,12 +12,15 @@
 ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
 ALLEGRO_FONT *myFont = NULL;
+ALLEGRO_FONT *myFontTitle = NULL;
+ALLEGRO_FONT *myFontEmail = NULL;
 
 int statusGame;
 int scoreGame;
 
 Spaceship ship;
-Asteroid a, b, d, e;
+//Asteroid a, b, d, e;
+Asteroid *asteroid_origin, *A;
 Blast *blast_origin, *Q;
 
 bool btn_up, btn_down, btn_left, btn_right, btn_fire, btn_start;
@@ -31,10 +34,10 @@ int main (void)
     inicialize();
 
     ship_start(&ship);
-    asteroid_start(&a);
-    asteroid_start(&b);
-    asteroid_start(&d);
-    asteroid_start(&e);
+    //asteroid_start(&a);
+    //asteroid_start(&b);
+    //asteroid_start(&d);
+    //asteroid_start(&e);
     loop();
 
     finalize();
@@ -65,6 +68,9 @@ void keyboard (ALLEGRO_EVENT key_event)
 		switch (statusGame) {
 			case 2:
 				switch (key_event.keyboard.keycode) {
+					case ALLEGRO_KEY_SPACE://atira
+						btn_fire = false;
+					break;
                     case ALLEGRO_KEY_UP:
 						btn_up = false;
 					break;
@@ -153,7 +159,11 @@ void draw (void)
     al_clear_to_color(al_map_rgb(0, 0, 0));
     switch (statusGame) {
         case 1://tela de start
-             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "START");
+             al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "Blasteroids");
+             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+110, ALLEGRO_ALIGN_CENTRE, "- START -");
+             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+130, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
+             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+150, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
+             al_draw_text(myFontEmail, al_map_rgb(0, 0, 255), WIDTH/2, HEIGHT-15, ALLEGRO_ALIGN_CENTRE, "italojohnnydosanjos@gmail.com");
         break;
         case 2://o jogo
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
@@ -163,10 +173,10 @@ void draw (void)
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 130, ALLEGRO_ALIGN_LEFT, "boost: %f", ship.boost);
 
             ship_draw(&ship);
-            draw_asteroid(&a);
-            draw_asteroid(&b);
-            draw_asteroid(&d);
-            draw_asteroid(&e);
+            //draw_asteroid(&a);
+            //draw_asteroid(&b);
+            //draw_asteroid(&d);
+            //draw_asteroid(&e);
             blast_draw(&blast_origin);
 /*
 			Q = blast_origin;
@@ -193,31 +203,26 @@ void draw (void)
 
 void inicialize (void)
 {
-    if (!al_init())
-        error("allegro");
+    if (!al_init()) error("allegro");
 
-    if (!al_init_primitives_addon())
-        error("add-on allegro_primitives");
+    if (!al_init_primitives_addon()) error("add-on allegro_primitives");
 
     al_init_font_addon();
-    if (!al_init_ttf_addon())
-        error("add-on allegro_ttf");
+    if (!al_init_ttf_addon()) error("add-on allegro_ttf");
 
     myFont = al_load_font("pixel.ttf", 35, 0);
-    if (!myFont)
-        error("font");
+    myFontTitle = al_load_font("pixel.ttf", 80, 0);
+    myFontEmail = al_load_font("pixel.ttf", 25, 0);
+    if (!myFont || !myFontTitle || !myFontEmail) error("font");
 
-    if (!al_install_keyboard())
-        error("keyboard");
+    if (!al_install_keyboard()) error("keyboard");
 
     myDisplay = al_create_display(WIDTH, HEIGHT);
-    if (!myDisplay)
-        error("create display");
+    if (!myDisplay) error("create display");
     al_set_window_title(myDisplay, "Blasteroids");
 
     myEventQueue = al_create_event_queue();
-    if (!myEventQueue)
-        error("create event queue");
+    if (!myEventQueue) error("create event queue");
 
     al_register_event_source(myEventQueue, al_get_display_event_source(myDisplay));
     al_register_event_source(myEventQueue, al_get_keyboard_event_source());

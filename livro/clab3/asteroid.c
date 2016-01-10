@@ -24,12 +24,12 @@ void asteroid_start (Asteroid *a)
     a->sy = rand()%HEIGHT;//sortear de 0 a HEIGHT
     a->heading = rand()%359;//sortiar de 0 a 359;
     a->twist = rand()%359;
-    a->speed = 0.05;
-    a->rot_velocity = (rand()%3)-1.5;//sortear de -1.5 a 1.5
+    a->speed = (rand()%10)+0.1;
+    a->rot_velocity = (rand()%6)-3;//sortear de -1.5 a 1.5
     a->scale = (rand()%3)+1;
     a->gone = 0;
     a->color = al_map_rgb(0, 255, 0);
-	printf("%f\n", a->scale);
+	printf("%f\n", a->speed);
 }
 
 void draw_asteroid (Asteroid *a)
@@ -40,7 +40,8 @@ void draw_asteroid (Asteroid *a)
     al_rotate_transform(&transform, a->twist * M_PI/180);
     al_translate_transform(&transform, a->sx, a->sy);
     al_use_transform(&transform);
-    
+
+	al_draw_circle(0, 0, 12.5*a->scale, al_map_rgb(255, 255, 255), 0);
     al_draw_line(-10.0*a->scale, 10.0*a->scale,-12.5*a->scale, 02.5*a->scale, a->color, 2.0f);//a
     al_draw_line(-12.5*a->scale, 02.5*a->scale,-12.5*a->scale,-05.0*a->scale, a->color, 2.0f);//b
     al_draw_line(-12.5*a->scale,-05.0*a->scale,-02.5*a->scale,-05.0*a->scale, a->color, 2.0f);//c
@@ -58,7 +59,9 @@ void draw_asteroid (Asteroid *a)
     al_use_transform(&transform);
 }
 
-void test_asteroid (void)
+Asteroid *asteroid_create ()
 {
-    puts("asteroid");
+	Asteroid *newAsteroid = malloc(sizeof(Asteroid));
+
+	return newAsteroid;
 }
