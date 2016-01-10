@@ -23,12 +23,13 @@ void asteroid_start (Asteroid *a)
     a->sx = rand()%WIDTH;//sortear de 0 a WIDTH
     a->sy = rand()%HEIGHT;//sortear de 0 a HEIGHT
     a->heading = rand()%359;//sortiar de 0 a 359;
-    a->twist = 0;
+    a->twist = rand()%359;
     a->speed = 0.05;
-    a->rot_velocity = 0.5;//sortear de -1.5 a 1.5
-    a->scale = 1;
+    a->rot_velocity = (rand()%3)-1.5;//sortear de -1.5 a 1.5
+    a->scale = (rand()%3)+1;
     a->gone = 0;
     a->color = al_map_rgb(0, 255, 0);
+	printf("%f\n", a->scale);
 }
 
 void draw_asteroid (Asteroid *a)
@@ -40,18 +41,18 @@ void draw_asteroid (Asteroid *a)
     al_translate_transform(&transform, a->sx, a->sy);
     al_use_transform(&transform);
     
-    al_draw_line(-20, 20,-25,  5, a->color, 2.0f);
-    al_draw_line(-25,  5,-25,-10, a->color, 2.0f);
-    al_draw_line(-25,-10, -5,-10, a->color, 2.0f);
-    al_draw_line( -5,-10,-10,-20, a->color, 2.0f);
-    al_draw_line(-10,-20,  5,-20, a->color, 2.0f);
-    al_draw_line(  5,-20, 20,-10, a->color, 2.0f);
-    al_draw_line( 20,-10, 20, -5, a->color, 2.0f);
-    al_draw_line( 20, -5,  0,  0, a->color, 2.0f);
-    al_draw_line(  0,  0, 20, 10, a->color, 2.0f);
-    al_draw_line( 20, 10, 10, 20, a->color, 2.0f);
-    al_draw_line( 10, 20,  0, 15, a->color, 2.0f);
-    al_draw_line(  0, 15,-20, 20, a->color, 2.0f);
+    al_draw_line(-10.0*a->scale, 10.0*a->scale,-12.5*a->scale, 02.5*a->scale, a->color, 2.0f);//a
+    al_draw_line(-12.5*a->scale, 02.5*a->scale,-12.5*a->scale,-05.0*a->scale, a->color, 2.0f);//b
+    al_draw_line(-12.5*a->scale,-05.0*a->scale,-02.5*a->scale,-05.0*a->scale, a->color, 2.0f);//c
+    al_draw_line(-02.5*a->scale,-05.0*a->scale,-05.0*a->scale,-10.0*a->scale, a->color, 2.0f);//d
+    al_draw_line(-05.0*a->scale,-10.0*a->scale, 02.5*a->scale,-10.0*a->scale, a->color, 2.0f);//e
+    al_draw_line( 02.5*a->scale,-10.0*a->scale, 10.0*a->scale,-05.0*a->scale, a->color, 2.0f);//f
+    al_draw_line( 10.0*a->scale,-05.0*a->scale, 10.0*a->scale,-02.5*a->scale, a->color, 2.0f);//g
+    al_draw_line( 10.0*a->scale,-02.5*a->scale, 00.0*a->scale, 00.0*a->scale, a->color, 2.0f);//h
+    al_draw_line( 00.0*a->scale, 00.0*a->scale, 10.0*a->scale, 05.0*a->scale, a->color, 2.0f);//i
+    al_draw_line( 10.0*a->scale, 05.0*a->scale, 05.0*a->scale, 10.0*a->scale, a->color, 2.0f);//j
+    al_draw_line( 05.0*a->scale, 10.0*a->scale, 00.0*a->scale, 07.5*a->scale, a->color, 2.0f);//k
+    al_draw_line( 00.0*a->scale, 07.5*a->scale,-10.0*a->scale, 10.0*a->scale, a->color, 2.0f);//l
 
     al_identity_transform(&transform);
     al_use_transform(&transform);

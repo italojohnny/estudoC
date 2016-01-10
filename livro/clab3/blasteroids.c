@@ -121,7 +121,6 @@ void timer (void)
         case 2://o jogo
 			if (btn_fire) {
 				blast_shoot(&blast_origin, &ship);
-				ship.gone = 1;
 				btn_fire = false;
 			}
 
@@ -158,10 +157,10 @@ void draw (void)
         break;
         case 2://o jogo
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", ship.heading);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", ship.sx);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", ship.sy);
-            al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 130, ALLEGRO_ALIGN_LEFT, "boost: %f", ship.boost);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", ship.heading);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", ship.sx);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 100, ALLEGRO_ALIGN_LEFT, "sy: %f", ship.sy);
+            //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 130, ALLEGRO_ALIGN_LEFT, "boost: %f", ship.boost);
 
             ship_draw(&ship);
             draw_asteroid(&a);
@@ -169,7 +168,7 @@ void draw (void)
             draw_asteroid(&d);
             draw_asteroid(&e);
             blast_draw(&blast_origin);
-
+/*
 			Q = blast_origin;
 
 			printf("\n------------------------\n");
@@ -177,7 +176,7 @@ void draw (void)
                 printf("<-(%d) ", Q->id);
                 Q = Q->next;
             }
-
+*/
         break;
         case 3://game over
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
