@@ -77,10 +77,11 @@ void blast_draw (Blast **b)
 void blast_shoot (Blast **b, Spaceship *s)
 {
 	if (*b == NULL) tmp = 0;
-
-    Blast *t = blast_create(s);
-    t->next = *b;
-    *b = t;
+	if (s->gone == 0) {
+		Blast *t = blast_create(s);
+		t->next = *b;
+		*b = t;
+	}
 }
 
 Blast *blast_create (Spaceship *s)
