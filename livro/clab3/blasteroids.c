@@ -13,10 +13,11 @@ ALLEGRO_DISPLAY *myDisplay = NULL;
 ALLEGRO_EVENT_QUEUE *myEventQueue = NULL;
 ALLEGRO_FONT *myFont = NULL;
 ALLEGRO_FONT *myFontTitle = NULL;
-ALLEGRO_FONT *myFontEmail = NULL;
+ALLEGRO_FONT *myFontInfo = NULL;
 
 int statusGame;
 int scoreGame;
+int menuGame;
 
 Spaceship ship;
 //Asteroid a, b, d, e;
@@ -29,7 +30,8 @@ int main (void)
 {
     tmp = 0;
     srand(time(NULL));
-    statusGame = 1;
+    statusGame = 7;
+	menuGame = 0;
     scoreGame = 0;
     inicialize();
 
@@ -53,8 +55,8 @@ void loop (void)
         if (!al_is_event_queue_empty(myEventQueue)) {
             //ALLEGRO_EVENT evento;
             al_wait_for_event(myEventQueue, &evento);
-            if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE ||(evento.type == ALLEGRO_EVENT_KEY_DOWN && evento.keyboard.keycode == ALLEGRO_KEY_ESCAPE))
-                statusGame = 0;
+            //if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE ||(evento.type == ALLEGRO_EVENT_KEY_DOWN && evento.keyboard.keycode == ALLEGRO_KEY_ESCAPE))
+                //statusGame = 0;
         }
         keyboard(evento);
         timer();
@@ -87,14 +89,32 @@ void keyboard (ALLEGRO_EVENT key_event)
 
     if (key_event.type == ALLEGRO_EVENT_KEY_DOWN) {
         switch (statusGame) {
-            case 1:
-                if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER)
-                    statusGame = 2;
+            case 1://TELA INICIAL
+				switch (key_event.keyboard.keycode) {
+					case ALLEGRO_KEY_ESCAPE:
+						statusGame = 0;
+					break;
+					case ALLEGRO_KEY_UP:
+						if (menuGame == 0) menuGame = 3;
+						else menuGame--;
+					break;
+					case ALLEGRO_KEY_DOWN:
+						if (menuGame == 3) menuGame = 0;
+						else menuGame++;
+					break;
+					default:
+						switch(menuGame) {
+							case 0: statusGame = 2; break;//vai para o jogo
+							case 1: statusGame = 6; break;//vai para a tela de instrucoes
+							case 2: statusGame = 5; break;//vai para a tela de records
+							case 3: statusGame = 7; break;//vai para a tela de creditos do jogo
+						}
+				}
             break;
-            case 2://o jogo
+            case 2://O JOGO
                 switch (key_event.keyboard.keycode) {
                     case ALLEGRO_KEY_ESCAPE:
-                        statusGame = 0;
+                        statusGame = 1;
                     break;
                     case ALLEGRO_KEY_SPACE://atira
 						btn_fire = true;
@@ -113,9 +133,11 @@ void keyboard (ALLEGRO_EVENT key_event)
                     break;
                 }
             break;
-            case 3: break;
-            case 4: break;
-            case 5: break;
+            case 3: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//GAME OVER
+            case 4: break;//GRAVAR SEU RECORD
+            case 5: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//TELA DE RECORD SCORE
+			case 6: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//TELA DE INSTRUCOES
+			case 7: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//TELA DE CREDITOS DO JOGO
         }
     }
 }
@@ -123,8 +145,10 @@ void keyboard (ALLEGRO_EVENT key_event)
 void timer (void)
 {
     switch (statusGame) {
-        case 1: break;//tela de start
-        case 2://o jogo
+        case 1://tela de start
+			//contador de tempo. Depois de x tempo decorrido nessa tela sem o jogador fazer nada - ir para tela de records
+		break;
+        case 2://O jogo
 			if (btn_fire) {
 				blast_shoot(&blast_origin, &ship);
 				btn_fire = false;
@@ -148,9 +172,11 @@ void timer (void)
 			if (btn_right) ship_spin(&ship, 1.0);
 
 		break;
-        case 3: break;//game over
-        case 4: break;//tela de record score
-        case 5: break;//gravar seu record
+        case 3: break;//GAME OVER
+        case 4: break;//GRAVAR SEU RECORD
+        case 5: break;//TELA DE RECORD SCORE
+		case 6: break;//TELA DE INSTRUCOES
+		case 7: break;//TELA DE CREDITOS DO JOGO
     }
 }
 
@@ -158,14 +184,27 @@ void draw (void)
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
     switch (statusGame) {
-        case 1://tela de start
-             al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "Blasteroids");
-             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+110, ALLEGRO_ALIGN_CENTRE, "- START -");
-             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+130, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
-             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+150, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
-             al_draw_text(myFontEmail, al_map_rgb(0, 0, 255), WIDTH/2, HEIGHT-15, ALLEGRO_ALIGN_CENTRE, "italojohnnydosanjos@gmail.com");
+        case 1://TELA DE START
+			al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "Blasteroids");
+
+			if (menuGame == 0)
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+100, ALLEGRO_ALIGN_CENTRE, "- START -");
+			else
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+100, ALLEGRO_ALIGN_CENTRE, "START");
+			if (menuGame == 1)
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+120, ALLEGRO_ALIGN_CENTRE, "- INSTRUCTIONS -");
+			else
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+120, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
+			if (menuGame == 2)
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+140, ALLEGRO_ALIGN_CENTRE, "- RECORDS SCORE -");
+			else
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+140, ALLEGRO_ALIGN_CENTRE, "RECORDS SCORE");
+			if (menuGame == 3)
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+160, ALLEGRO_ALIGN_CENTRE, "- GAME CREDITS -");
+			else
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+160, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
         break;
-        case 2://o jogo
+        case 2://O JOGO
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 40, ALLEGRO_ALIGN_LEFT, "an: %f", ship.heading);
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 70, ALLEGRO_ALIGN_LEFT, "sx: %f", ship.sx);
@@ -188,15 +227,22 @@ void draw (void)
             }
 */
         break;
-        case 3://game over
+        case 3://GAME OVER
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
         break;
-        case 4://tela de record score
-            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "RECORD SCORE");
-        break;
-        case 5://gravar seu record
+        case 4://GRAVAR SEU RECORD
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INPUT NEW RECORD");
         break;
+        case 5://TELA DE RECORD SCORE
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "RECORDS SCORE");
+        break;
+		case 6://TELA DE INSTRUCOES
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
+		break;
+		case 7://TELA DE CREDITOS DO JOGO
+            al_draw_text(myFont, al_map_rgb(255, 0, 0), WIDTH/2, 0, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
+            al_draw_text(myFontInfo, al_map_rgb(0, 255, 0), WIDTH/2, 155, ALLEGRO_ALIGN_CENTRE, "italojohnnydosanjos@gmail.com");
+		break;
     }
     al_flip_display();
 }
@@ -212,8 +258,8 @@ void inicialize (void)
 
     myFont = al_load_font("pixel.ttf", 35, 0);
     myFontTitle = al_load_font("pixel.ttf", 80, 0);
-    myFontEmail = al_load_font("pixel.ttf", 25, 0);
-    if (!myFont || !myFontTitle || !myFontEmail) error("font");
+    myFontInfo = al_load_font("pixel.ttf", 30, 0);
+    if (!myFont || !myFontTitle || !myFontInfo) error("font");
 
     if (!al_install_keyboard()) error("keyboard");
 

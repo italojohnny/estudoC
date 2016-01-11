@@ -117,7 +117,7 @@ arquivo fonte separado para cada elemento que será exibido no jogo:
                     //Diferentemente dos asteróides, você deve apenas ter de 
                     //lidar com uma de cada vez.
 
-    blasteroids.c   //é sempre bom ter um arquivo foonte separado para lidar 
+    blasteroids.c   //é sempre bom ter um arquivo fonte separado para lidar 
                     //com o núcleo do jogo. O código aqui precisará ficar atento 
                     //a teclas pressionadas, executar um temporizador e, também,
                     //dizer para todas as outas naves, asteroides e tiros como 
@@ -256,7 +256,7 @@ Esse é o código para desenhar um asteroide em volta da origem:
 
 COMO O ASTEROIDE SE MOVE
 Asteroides se movem em linha reta, atravessando a tela. Apesar de eles se
-moverem em linha reta, eles continuamente firam em torno de seus eixos. Se um
+moverem em linha reta, eles continuamente giram em torno de seus eixos. Se um
 asteroide sumir em um lado da tela, ele imediatamente aparece no lado oposto.
 
 QUANDO O ASTEROIDE É ATINDIDO
