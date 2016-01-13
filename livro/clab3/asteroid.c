@@ -41,7 +41,7 @@ void draw_asteroid (Asteroid *a)
     al_translate_transform(&transform, a->sx, a->sy);
     al_use_transform(&transform);
 
-	al_draw_circle(0, 0, 12.5*a->scale, al_map_rgb(255, 255, 255), 0);
+	//al_draw_circle(0, 0, 12.5*a->scale, al_map_rgb(255, 255, 255), 0);
     al_draw_line(-10.0*a->scale, 10.0*a->scale,-12.5*a->scale, 02.5*a->scale, a->color, 2.0f);//a
     al_draw_line(-12.5*a->scale, 02.5*a->scale,-12.5*a->scale,-05.0*a->scale, a->color, 2.0f);//b
     al_draw_line(-12.5*a->scale,-05.0*a->scale,-02.5*a->scale,-05.0*a->scale, a->color, 2.0f);//c

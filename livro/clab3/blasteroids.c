@@ -20,7 +20,7 @@ int scoreGame;
 int menuGame;
 
 Spaceship ship;
-//Asteroid a, b, d, e;
+Asteroid a, b, d, e;
 Asteroid *asteroid_origin, *A;
 Blast *blast_origin, *Q;
 
@@ -28,22 +28,28 @@ bool btn_up, btn_down, btn_left, btn_right, btn_fire, btn_start;
 
 int main (void)
 {
-    tmp = 0;
     srand(time(NULL));
     statusGame = 7;
 	menuGame = 0;
-    scoreGame = 0;
+
     inicialize();
 
-    ship_start(&ship);
-    //asteroid_start(&a);
-    //asteroid_start(&b);
-    //asteroid_start(&d);
-    //asteroid_start(&e);
     loop();
 
     finalize();
     return 0;
+}
+void start_game (void)
+{
+	btn_up = btn_down = btn_left = btn_right = btn_fire = btn_start = false;
+    tmp = 0;
+    scoreGame = 0;
+
+	ship_start(&ship);
+    asteroid_start(&a);
+    asteroid_start(&b);
+    asteroid_start(&d);
+    asteroid_start(&e);
 }
 
 void loop (void)
@@ -95,20 +101,23 @@ void keyboard (ALLEGRO_EVENT key_event)
 						statusGame = 0;
 					break;
 					case ALLEGRO_KEY_UP:
-						if (menuGame == 0) menuGame = 3;
+						if (menuGame == 0) menuGame = 4;
 						else menuGame--;
 					break;
 					case ALLEGRO_KEY_DOWN:
-						if (menuGame == 3) menuGame = 0;
+						if (menuGame == 4) menuGame = 0;
 						else menuGame++;
 					break;
-					default:
+					case ALLEGRO_KEY_ENTER:
+					case ALLEGRO_KEY_SPACE:
 						switch(menuGame) {
-							case 0: statusGame = 2; break;//vai para o jogo
+							case 0: start_game(); statusGame = 2; break;//vai para o jogo
 							case 1: statusGame = 6; break;//vai para a tela de instrucoes
 							case 2: statusGame = 5; break;//vai para a tela de records
 							case 3: statusGame = 7; break;//vai para a tela de creditos do jogo
+							case 4: exit(0);  break;//vai para a tela de creditos do jogo
 						}
+						break;
 				}
             break;
             case 2://O JOGO
@@ -133,11 +142,11 @@ void keyboard (ALLEGRO_EVENT key_event)
                     break;
                 }
             break;
-            case 3: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//GAME OVER
+            case 3: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//GAME OVER
             case 4: break;//GRAVAR SEU RECORD
-            case 5: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//TELA DE RECORD SCORE
-			case 6: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//TELA DE INSTRUCOES
-			case 7: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER) statusGame = 1; break;//TELA DE CREDITOS DO JOGO
+            case 5: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE RECORD SCORE
+			case 6: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE INSTRUCOES
+			case 7: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE CREDITOS DO JOGO
         }
     }
 }
@@ -203,6 +212,10 @@ void draw (void)
 				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+160, ALLEGRO_ALIGN_CENTRE, "- GAME CREDITS -");
 			else
 				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+160, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
+			if (menuGame == 4)
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+180, ALLEGRO_ALIGN_CENTRE, "- EXIT -");
+			else
+				al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2+180, ALLEGRO_ALIGN_CENTRE, "EXIT");
         break;
         case 2://O JOGO
             al_draw_textf(myFont, al_map_rgb(0,255, 0), 0, 0, ALLEGRO_ALIGN_LEFT, "%05d", scoreGame);
@@ -212,10 +225,10 @@ void draw (void)
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 130, ALLEGRO_ALIGN_LEFT, "boost: %f", ship.boost);
 
             ship_draw(&ship);
-            //draw_asteroid(&a);
-            //draw_asteroid(&b);
-            //draw_asteroid(&d);
-            //draw_asteroid(&e);
+            draw_asteroid(&a);
+            draw_asteroid(&b);
+            draw_asteroid(&d);
+            draw_asteroid(&e);
             blast_draw(&blast_origin);
 /*
 			Q = blast_origin;
@@ -240,8 +253,15 @@ void draw (void)
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
 		break;
 		case 7://TELA DE CREDITOS DO JOGO
-            al_draw_text(myFont, al_map_rgb(255, 0, 0), WIDTH/2, 0, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
-            al_draw_text(myFontInfo, al_map_rgb(0, 255, 0), WIDTH/2, 155, ALLEGRO_ALIGN_CENTRE, "italojohnnydosanjos@gmail.com");
+            al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, 5, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 155, ALLEGRO_ALIGN_CENTRE, "This game is a tribute to the classic arcade Spacewar.");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 175, ALLEGRO_ALIGN_CENTRE, "Developed with Allegro5 library in language C, for learningi");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 195, ALLEGRO_ALIGN_CENTRE, "purposes, therefore, does not seek any profit.");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 215, ALLEGRO_ALIGN_CENTRE, "The game code is available on github, at the address:");
+            al_draw_text(myFontInfo, al_map_rgb(0, 0, 255), WIDTH/2, 235, ALLEGRO_ALIGN_CENTRE, "https://github.com/italojohnny/estudoC/tree/master/livro/clab3");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 265, ALLEGRO_ALIGN_CENTRE, "To contact the planned, write to:");
+            al_draw_text(myFontInfo, al_map_rgb(0, 0, 255), WIDTH/2, 285, ALLEGRO_ALIGN_CENTRE, "italojohnnydosanjos@gmail.com");
+            al_draw_text(myFontTitle, al_map_rgb(0, 255, 0), WIDTH/2, 390, ALLEGRO_ALIGN_CENTRE, "I hope you enjoy the game!");
 		break;
     }
     al_flip_display();
@@ -273,7 +293,6 @@ void inicialize (void)
     al_register_event_source(myEventQueue, al_get_display_event_source(myDisplay));
     al_register_event_source(myEventQueue, al_get_keyboard_event_source());
 
-	btn_up = btn_down = btn_left = btn_right = btn_fire = btn_start = false;
 }
 
 void finalize (void)
