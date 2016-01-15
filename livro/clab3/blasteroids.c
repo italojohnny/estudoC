@@ -24,19 +24,24 @@ Asteroid a, b, d, e;
 Asteroid *asteroid_origin, *A;
 Blast *blast_origin, *Q;
 
+typedef struct {
+	int ponts;
+	char name[5];
+} Record;
+Record records[10];
+
 bool btn_up, btn_down, btn_left, btn_right, btn_fire, btn_start;
 
 int main (void)
 {
     srand(time(NULL));
-    statusGame = 7;
+    statusGame = 1;
 	menuGame = 0;
 
     inicialize();
-
     loop();
-
     finalize();
+
     return 0;
 }
 void start_game (void)
@@ -109,7 +114,6 @@ void keyboard (ALLEGRO_EVENT key_event)
 						else menuGame++;
 					break;
 					case ALLEGRO_KEY_ENTER:
-					case ALLEGRO_KEY_SPACE:
 						switch(menuGame) {
 							case 0: start_game(); statusGame = 2; break;//vai para o jogo
 							case 1: statusGame = 6; break;//vai para a tela de instrucoes
@@ -142,11 +146,11 @@ void keyboard (ALLEGRO_EVENT key_event)
                     break;
                 }
             break;
-            case 3: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//GAME OVER
+            case 3: if (key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//GAME OVER
             case 4: break;//GRAVAR SEU RECORD
-            case 5: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE RECORD SCORE
-			case 6: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE INSTRUCOES
-			case 7: if (key_event.keyboard.keycode == ALLEGRO_KEY_ENTER || key_event.keyboard.keycode == ALLEGRO_KEY_SPACE || key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE CREDITOS DO JOGO
+            case 5: if (key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE RECORD SCORE
+			case 6: if (key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE INSTRUCOES
+			case 7: if (key_event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) statusGame = 1; break;//TELA DE CREDITOS DO JOGO
         }
     }
 }
@@ -251,6 +255,25 @@ void draw (void)
         break;
 		case 6://TELA DE INSTRUCOES
             al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
+/*
+ * Use as setas cima e baixo para selecionar um menu desejado
+ * Use a tecla enter para acessar o menu selecionado.
+ * Use a tecla esc para sair do menu selecionado.
+ *
+ * 	O objetivo do é conseguir o maximo de pontos possíveis destruindo os asteroids, sem deixar algum deles atingir sua nave.
+ * 		Durante o jogo:
+ * 			* Use a seta cima para acelerar 
+ * 			* Use a seta baixo para freiar
+ * 			* use a setas esquerda ou direita para mudar a direção da nava
+ * 			* use o botao espaco para atirar contra os asteroids
+ * 			* use teclas esc para sair do jogo.
+ *
+ *
+ * Use the up and down keys to select a desired menu
+ * Use the enter key to access the selected menu
+ * Use the escape key to exit selected menu
+ *
+*/
 		break;
 		case 7://TELA DE CREDITOS DO JOGO
             al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, 5, ALLEGRO_ALIGN_CENTRE, "GAME CREDITS");
