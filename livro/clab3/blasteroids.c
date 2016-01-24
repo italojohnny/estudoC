@@ -20,9 +20,8 @@ int scoreGame;
 int menuGame;
 
 Spaceship ship;
-Asteroid a, b, d, e;
-Asteroid *asteroid_origin, *A;
-Blast *blast_origin, *Q;
+Asteroid *asteroid_origin, *Q;
+Blast *blast_origin;
 
 typedef struct {
 	int ponts;
@@ -49,12 +48,11 @@ void start_game (void)
 	btn_up = btn_down = btn_left = btn_right = btn_fire = btn_start = false;
     tmp = 0;
     scoreGame = 0;
-
 	ship_start(&ship);
-    asteroid_start(&a);
-    asteroid_start(&b);
-    asteroid_start(&d);
-    asteroid_start(&e);
+    asteroid_start(&asteroid_origin);
+    asteroid_start(&asteroid_origin);
+    asteroid_start(&asteroid_origin);
+    asteroid_start(&asteroid_origin);
 }
 
 void loop (void)
@@ -229,13 +227,10 @@ void draw (void)
             //al_draw_textf(myFont, al_map_rgb(0,255, 0), 1, 130, ALLEGRO_ALIGN_LEFT, "boost: %f", ship.boost);
 
             ship_draw(&ship);
-            draw_asteroid(&a);
-            draw_asteroid(&b);
-            draw_asteroid(&d);
-            draw_asteroid(&e);
+            draw_asteroid(&asteroid_origin);
             blast_draw(&blast_origin);
 /*
-			Q = blast_origin;
+			Q = asteroid_origin;
 
 			printf("\n------------------------\n");
             while (Q != NULL) {

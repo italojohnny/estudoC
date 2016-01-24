@@ -3,7 +3,7 @@
 
 #include "defines.h"
 
-typedef struct {
+typedef struct Asteroid{
     float sx;
     float sy;
     float heading;//em que direcao esta indo
@@ -18,8 +18,8 @@ typedef struct {
 } Asteroid;
 
 void asteroid_anima (Asteroid *a);
-void asteroid_start (Asteroid *a);
-void draw_asteroid (Asteroid *a);
-Asteroid *asteroid_create ();
+void draw_asteroid (Asteroid **a);
+void asteroid_start (Asteroid **a);
+Asteroid *asteroid_create (Asteroid *a);
 
 #endif

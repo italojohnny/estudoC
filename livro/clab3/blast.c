@@ -77,7 +77,7 @@ void blast_draw (Blast **b)
 
 void blast_shoot (Blast **b, Spaceship *s)
 {
-	if (*b == NULL) tmp = 0;
+	if (*b == NULL) tmp = 0;//zera o id usado no tiro. Esse codigo sera removido mais tarde
 	if (s->gone == 0) {
 		Blast *t = blast_create(s);
 		t->next = *b;
