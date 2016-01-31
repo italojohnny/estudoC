@@ -49,10 +49,10 @@ void start_game (void)
     tmp = 0;
     scoreGame = 0;
 	ship_start(&ship);
-    asteroid_start(&asteroid_origin);
-    asteroid_start(&asteroid_origin);
-    asteroid_start(&asteroid_origin);
-    asteroid_start(&asteroid_origin);
+    asteroid_start(&asteroid_origin, 3, 0);
+    asteroid_start(&asteroid_origin, 3, 0);
+    asteroid_start(&asteroid_origin, 3, 0);
+    asteroid_start(&asteroid_origin, 3, 0);
 }
 
 void loop (void)
@@ -155,11 +155,39 @@ void keyboard (ALLEGRO_EVENT key_event)
 
 void timer (void)
 {
+	//int cs, ca;
     switch (statusGame) {
         case 1://tela de start
 			//contador de tempo. Depois de x tempo decorrido nessa tela sem o jogador fazer nada - ir para tela de records
 		break;
         case 2://O jogo
+			//cs = ca = 0;
+			//verificacao de colisao dos tiros com os asteroids
+			if (blast_origin != NULL && asteroid_origin != NULL) {
+				Blast *tcs = blast_origin;//teste colisao shoot tcs
+				while (tcs != NULL) {
+					if (!tcs->gone) {
+						Asteroid *tca = asteroid_origin;//teste colisao asteroid tca
+						while (tca != NULL) {
+							if (!tca->gone) {
+								if (sqrt((tca->sx - tcs->sx)*(tca->sx - tcs->sx) + (tca->sy - tcs->sy)*(tca->sy - tcs->sy)) < (tca->scale*12.5 + 0.1)) {
+									tcs->gone = 1;
+									tca->gone = 1;
+									scoreGame++;
+									if (tca->scale > 1)
+										asteroid_start(&asteroid_origin, tca->scale-1, 90);
+										asteroid_start(&asteroid_origin, tca->scale-1, 270);
+
+								}
+							}
+
+							tca = tca->next;
+						}
+					}
+					tcs = tcs->next;
+				}
+			}
+
 			if (btn_fire) {
 				blast_shoot(&blast_origin, &ship);
 				btn_fire = false;
@@ -257,7 +285,7 @@ void draw (void)
  *
  * 	O objetivo do é conseguir o maximo de pontos possíveis destruindo os asteroids, sem deixar algum deles atingir sua nave.
  * 		Durante o jogo:
- * 			* Use a seta cima para acelerar 
+ * 			* Use a seta cima para acelerar
  * 			* Use a seta baixo para freiar
  * 			* use a setas esquerda ou direita para mudar a direção da nava
  * 			* use o botao espaco para atirar contra os asteroids

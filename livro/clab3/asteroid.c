@@ -15,7 +15,6 @@ void asteroid_anima (Asteroid *a)
 	a->sx += a->speed * sin(a->heading * M_PI/180);
 	a->sy -= a->speed * cos(a->heading * M_PI/180);
 	a->twist += a->rot_velocity;
-
 }
 
 void draw_asteroid (Asteroid **a)
@@ -23,6 +22,8 @@ void draw_asteroid (Asteroid **a)
 	if (*a != NULL) {
 		Asteroid *t = *a;
 		while (t != NULL) {
+
+			if (!t->gone) {
 			asteroid_anima(t);
 			ALLEGRO_TRANSFORM transform;
 			al_identity_transform(&transform);
@@ -30,7 +31,7 @@ void draw_asteroid (Asteroid **a)
 			al_translate_transform(&transform, t->sx, t->sy);
 			al_use_transform(&transform);
 
-			//al_draw_circle(0, 0, 12.5*a->scale, al_map_rgb(255, 255, 255), 0);
+			//al_draw_circle(0, 0, 12.5 * t->scale, al_map_rgb(255, 255, 255), 0);
 			al_draw_line(-10.0*t->scale, 10.0*t->scale,-12.5*t->scale, 02.5*t->scale, t->color, 2.0f);//a
 			al_draw_line(-12.5*t->scale, 02.5*t->scale,-12.5*t->scale,-05.0*t->scale, t->color, 2.0f);//b
 			al_draw_line(-12.5*t->scale,-05.0*t->scale,-02.5*t->scale,-05.0*t->scale, t->color, 2.0f);//c
@@ -46,29 +47,31 @@ void draw_asteroid (Asteroid **a)
 
 			al_identity_transform(&transform);
 			al_use_transform(&transform);
+			}
 			t = t->next;
 		}
 	}
 }
 
-void asteroid_start (Asteroid **a)
+void asteroid_start (Asteroid **a, float size, float heading)
 {
-	Asteroid *t = asteroid_create(*a);
+	Asteroid *t = asteroid_create(*a, size, heading);
 	t->next = *a;
 	*a = t;
 }
 
-Asteroid *asteroid_create (Asteroid *p)
+Asteroid *asteroid_create (Asteroid *p, float size, float heading)
 {
-	printf("%p", &p->sx);
+	printf("%p\n", &p->sx);
+	printf("%f\n\n", heading);
 
 	Asteroid *newAsteroid = malloc(sizeof(Asteroid));
 	newAsteroid->sx = rand()%WIDTH;
 	newAsteroid->sy = rand()%HEIGHT;
-	newAsteroid->heading = rand()%359;
+	newAsteroid->heading = heading;//rand()%359;
 	newAsteroid->twist = rand()%359;
 	newAsteroid->speed = (rand()%10)+0.1;
-	newAsteroid->scale = (rand()%3)+1;
+	newAsteroid->scale = size;
 	newAsteroid->gone = 0;
 	newAsteroid->color = al_map_rgb(0, 255, 0);
 

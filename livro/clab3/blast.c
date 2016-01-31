@@ -20,25 +20,26 @@ void blast_draw (Blast **b)
 {
     if (*b != NULL) {
         Blast *t = *b;
-
         while (t != NULL) {
-            ALLEGRO_TRANSFORM transform;
-            al_identity_transform(&transform);
-            al_rotate_transform(&transform, t->heading * M_PI/180);
-            al_translate_transform(&transform, t->sx, t->sy);
-            al_use_transform(&transform);
-			
-			//al_draw_circle(0,0,5,al_map_rgb(0, 255, 255), 0);
-            //al_draw_line( 5, 4, 5,-1, t->color, 1.0f);
-            al_draw_line( 0, 4, 0,-4, t->color, 1.0f);
-            //al_draw_line(-5, 4,-5,-1, t->color, 1.0f);
+			if (!t->gone) {
+				ALLEGRO_TRANSFORM transform;
+				al_identity_transform(&transform);
+				al_rotate_transform(&transform, t->heading * M_PI/180);
+				al_translate_transform(&transform, t->sx, t->sy);
+				al_use_transform(&transform);
+				//al_draw_circle(0,0,5,al_map_rgb(0, 255, 255), 0);
+				//al_draw_line( 5, 4, 5,-1, t->color, 1.0f);
 
-            al_identity_transform(&transform);
-            al_use_transform(&transform);
+				al_draw_line( 0, 4, 0,-4, t->color, 1.0f);
+				//al_draw_line(-5, 4,-5,-1, t->color, 1.0f);
 
-            blast_anime(t);
+				al_identity_transform(&transform);
+				al_use_transform(&transform);
+
+				blast_anime(t);
+			}
 			t = t->next;
-        }
+		}
 
 		Blast *u = *b;
 		Blast *aux_prev = NULL,  *aux_next = NULL;
