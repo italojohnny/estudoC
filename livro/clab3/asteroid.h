@@ -19,7 +19,7 @@ typedef struct Asteroid{
 
 void asteroid_anima (Asteroid *a);
 void draw_asteroid (Asteroid **a);
-void asteroid_start (Asteroid **a, float size, float heading);
+void asteroid_start (Asteroid **a, float size, float x, float y, float heading);
 Asteroid *asteroid_create (Asteroid *a, float size, float heading);
 
 #endif

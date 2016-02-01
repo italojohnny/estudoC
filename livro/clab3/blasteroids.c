@@ -49,10 +49,13 @@ void start_game (void)
     tmp = 0;
     scoreGame = 0;
 	ship_start(&ship);
-    asteroid_start(&asteroid_origin, 3, 0);
-    asteroid_start(&asteroid_origin, 3, 0);
-    asteroid_start(&asteroid_origin, 3, 0);
-    asteroid_start(&asteroid_origin, 3, 0);
+	ship.gone = 0;
+    asteroid_start(&asteroid_origin, 3, 150.0,-280.0, 3);
+    asteroid_start(&asteroid_origin, 3, 550.0,-150.0, 2);
+    asteroid_start(&asteroid_origin, 3, 50.0,-100.0, 1);
+    //asteroid_start(&asteroid_origin, 3, 20.0, 20.0, 0);
+    //asteroid_start(&asteroid_origin, 3, 30.0, 30.0, 0);
+    //asteroid_start(&asteroid_origin, 3, 40.0, 40.0, 0);
 }
 
 void loop (void)
@@ -169,28 +172,42 @@ void timer (void)
 					if (!tcs->gone) {
 						Asteroid *tca = asteroid_origin;//teste colisao asteroid tca
 						while (tca != NULL) {
-							if (!tca->gone) {
+							if (tca->gone == 0) {
 								if (sqrt((tca->sx - tcs->sx)*(tca->sx - tcs->sx) + (tca->sy - tcs->sy)*(tca->sy - tcs->sy)) < (tca->scale*12.5 + 0.1)) {
 									tcs->gone = 1;
 									tca->gone = 1;
 									scoreGame++;
 									if (tca->scale > 1)
-										asteroid_start(&asteroid_origin, tca->scale-1, 90);
-										asteroid_start(&asteroid_origin, tca->scale-1, 270);
-
+										asteroid_start(&asteroid_origin, tca->scale-1, tca->sx, tca->sy, tcs->heading + 60);
+										asteroid_start(&asteroid_origin, tca->scale-1, tca->sx, tca->sy, tcs->heading - 60);
 								}
 							}
-
 							tca = tca->next;
 						}
 					}
 					tcs = tcs->next;
 				}
 			}
+			//verificacao de colisao dos asteroids com a navinha
+			if (asteroid_origin !=NULL && !ship.gone) {
+				Asteroid *tca = asteroid_origin;//teste colisao asteroid tca
+				while (tca != NULL) {
+					if (tca->gone == 0) {
+						if (sqrt((tca->sx - ship.sx)*(tca->sx - ship.sx) + (tca->sy - ship.sy)*(tca->sy - ship.sy)) < (tca->scale*12.5 + 10)) {
+							printf("\n----colisao com nave------\n%i\n------------\n", tca->gone);
+							if (tca->gone == 0)
+								if (tca->gone == 0) 
+									//ship.gone = 1;
+									tca->gone = 1;
+						}
+					}
+					tca = tca->next;
+				}
+			}
 
 			if (btn_fire) {
 				blast_shoot(&blast_origin, &ship);
-				btn_fire = false;
+				//btn_fire = false;
 			}
 
 			if (ship.boost < 0.0) ship.boost = 0;
@@ -209,6 +226,7 @@ void timer (void)
 
 			if (btn_left) ship_spin(&ship, -1.0);
 			if (btn_right) ship_spin(&ship, 1.0);
+			if (ship.gone >= 16 ) statusGame = 3;
 
 		break;
         case 3: break;//GAME OVER

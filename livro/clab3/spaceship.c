@@ -35,7 +35,7 @@ void ship_start (Spaceship *s)
     s->heading = 0.0;
     s->speed = 3.0;
     s->boost = 0.0;
-	s->gone = 1;
+	s->gone = 0;
     s->color = al_map_rgb(255, 0, 0);
 }
 
@@ -70,7 +70,8 @@ void ship_draw (Spaceship* s)
 	} else if (s->gone == 13) { s->gone++; al_draw_circle(0, 0, 20, s->color, 2);
 	} else if (s->gone == 14) { s->gone++; al_draw_filled_circle(0, 0, 20, al_map_rgb(255, 255, 255));
 	} else if (s->gone == 15) { s->gone++; al_draw_circle(0, 0, 20, s->color, 1);
-		s->gone = 0;
+		s->gone = 16;
+		exit(1);
 	}
 
     al_identity_transform(&transform);

@@ -22,40 +22,47 @@ void draw_asteroid (Asteroid **a)
 	if (*a != NULL) {
 		Asteroid *t = *a;
 		while (t != NULL) {
+				asteroid_anima(t);
+				ALLEGRO_TRANSFORM transform;
+				al_identity_transform(&transform);
+				al_rotate_transform(&transform, t->twist * M_PI/180);
+				al_translate_transform(&transform, t->sx, t->sy);
+				al_use_transform(&transform);
+
 
 			if (!t->gone) {
-			asteroid_anima(t);
-			ALLEGRO_TRANSFORM transform;
-			al_identity_transform(&transform);
-			al_rotate_transform(&transform, t->twist * M_PI/180);
-			al_translate_transform(&transform, t->sx, t->sy);
-			al_use_transform(&transform);
+								//al_draw_circle(0, 0, 12.5 * t->scale, al_map_rgb(255, 255, 255), 0);
+				al_draw_line(-10.0*t->scale, 10.0*t->scale,-12.5*t->scale, 02.5*t->scale, t->color, 2.0f);//a
+				al_draw_line(-12.5*t->scale, 02.5*t->scale,-12.5*t->scale,-05.0*t->scale, t->color, 2.0f);//b
+				al_draw_line(-12.5*t->scale,-05.0*t->scale,-02.5*t->scale,-05.0*t->scale, t->color, 2.0f);//c
+				al_draw_line(-02.5*t->scale,-05.0*t->scale,-05.0*t->scale,-10.0*t->scale, t->color, 2.0f);//d
+				al_draw_line(-05.0*t->scale,-10.0*t->scale, 02.5*t->scale,-10.0*t->scale, t->color, 2.0f);//e
+				al_draw_line( 02.5*t->scale,-10.0*t->scale, 10.0*t->scale,-05.0*t->scale, t->color, 2.0f);//f
+				al_draw_line( 10.0*t->scale,-05.0*t->scale, 10.0*t->scale,-02.5*t->scale, t->color, 2.0f);//g
+				al_draw_line( 10.0*t->scale,-02.5*t->scale, 00.0*t->scale, 00.0*t->scale, t->color, 2.0f);//h
+				al_draw_line( 00.0*t->scale, 00.0*t->scale, 10.0*t->scale, 05.0*t->scale, t->color, 2.0f);//i
+				al_draw_line( 10.0*t->scale, 05.0*t->scale, 05.0*t->scale, 10.0*t->scale, t->color, 2.0f);//j
+				al_draw_line( 05.0*t->scale, 10.0*t->scale, 00.0*t->scale, 07.5*t->scale, t->color, 2.0f);//k
+				al_draw_line( 00.0*t->scale, 07.5*t->scale,-10.0*t->scale, 10.0*t->scale, t->color, 2.0f);//l
 
-			//al_draw_circle(0, 0, 12.5 * t->scale, al_map_rgb(255, 255, 255), 0);
-			al_draw_line(-10.0*t->scale, 10.0*t->scale,-12.5*t->scale, 02.5*t->scale, t->color, 2.0f);//a
-			al_draw_line(-12.5*t->scale, 02.5*t->scale,-12.5*t->scale,-05.0*t->scale, t->color, 2.0f);//b
-			al_draw_line(-12.5*t->scale,-05.0*t->scale,-02.5*t->scale,-05.0*t->scale, t->color, 2.0f);//c
-			al_draw_line(-02.5*t->scale,-05.0*t->scale,-05.0*t->scale,-10.0*t->scale, t->color, 2.0f);//d
-			al_draw_line(-05.0*t->scale,-10.0*t->scale, 02.5*t->scale,-10.0*t->scale, t->color, 2.0f);//e
-			al_draw_line( 02.5*t->scale,-10.0*t->scale, 10.0*t->scale,-05.0*t->scale, t->color, 2.0f);//f
-			al_draw_line( 10.0*t->scale,-05.0*t->scale, 10.0*t->scale,-02.5*t->scale, t->color, 2.0f);//g
-			al_draw_line( 10.0*t->scale,-02.5*t->scale, 00.0*t->scale, 00.0*t->scale, t->color, 2.0f);//h
-			al_draw_line( 00.0*t->scale, 00.0*t->scale, 10.0*t->scale, 05.0*t->scale, t->color, 2.0f);//i
-			al_draw_line( 10.0*t->scale, 05.0*t->scale, 05.0*t->scale, 10.0*t->scale, t->color, 2.0f);//j
-			al_draw_line( 05.0*t->scale, 10.0*t->scale, 00.0*t->scale, 07.5*t->scale, t->color, 2.0f);//k
-			al_draw_line( 00.0*t->scale, 07.5*t->scale,-10.0*t->scale, 10.0*t->scale, t->color, 2.0f);//l
-
-			al_identity_transform(&transform);
-			al_use_transform(&transform);
+			} else {
+				t->gone = 1;
+				al_draw_circle(0, 0, 12.5 * t->scale, al_map_rgb(255, 255, 255), 0);
 			}
+
+			al_identity_transform(&transform);
+			al_use_transform(&transform);
+
 			t = t->next;
 		}
 	}
 }
 
-void asteroid_start (Asteroid **a, float size, float heading)
+void asteroid_start (Asteroid **a, float size, float x, float y, float heading)
 {
 	Asteroid *t = asteroid_create(*a, size, heading);
+	t->sx = x;
+	t->sy = y;
 	t->next = *a;
 	*a = t;
 }
