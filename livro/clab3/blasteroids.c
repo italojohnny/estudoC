@@ -194,11 +194,12 @@ void timer (void)
 				while (tca != NULL) {
 					if (tca->gone == 0) {
 						if (sqrt((tca->sx - ship.sx)*(tca->sx - ship.sx) + (tca->sy - ship.sy)*(tca->sy - ship.sy)) < (tca->scale*12.5 + 10)) {
-							printf("\n----colisao com nave------\n%i\n------------\n", tca->gone);
+							printf("\n----colisao com nave------\n%i\n%f\n%f\n------------\n", tca->gone, tca->sx, tca->sy);
 							if (tca->gone == 0)
 								if (tca->gone == 0) 
-									//ship.gone = 1;
-									tca->gone = 1;
+									tca->color = al_map_rgb(255,255,255);
+									ship.gone = 1;
+									//tca->gone = 1;
 						}
 					}
 					tca = tca->next;
@@ -226,7 +227,7 @@ void timer (void)
 
 			if (btn_left) ship_spin(&ship, -1.0);
 			if (btn_right) ship_spin(&ship, 1.0);
-			if (ship.gone >= 16 ) statusGame = 3;
+			//if (ship.gone >= 16 ) statusGame = 3;
 
 		break;
         case 3: break;//GAME OVER

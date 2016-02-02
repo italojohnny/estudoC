@@ -71,7 +71,7 @@ void ship_draw (Spaceship* s)
 	} else if (s->gone == 14) { s->gone++; al_draw_filled_circle(0, 0, 20, al_map_rgb(255, 255, 255));
 	} else if (s->gone == 15) { s->gone++; al_draw_circle(0, 0, 20, s->color, 1);
 		s->gone = 16;
-		exit(1);
+		//exit(1);
 	}
 
     al_identity_transform(&transform);
