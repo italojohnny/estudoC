@@ -1,3 +1,8 @@
+/*
+ * gcc -lopencv_core -lopencv_highgui main.c
+ * gcc `pkg-config --cflags opencv` `pkg-config --libs opencv` main.c
+ * 
+ */ 
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -8,6 +13,7 @@ int
 main(int argc, char *argv[])
 {
     IplImage *img;
+	
 
     if (argc != 2) {
         puts("Usage: cinza file");

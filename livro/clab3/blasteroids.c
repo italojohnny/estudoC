@@ -177,9 +177,9 @@ void timer (void)
 									tcs->gone = 1;
 									tca->gone = 1;
 									scoreGame++;
-									if (tca->scale > 1)
-										asteroid_start(&asteroid_origin, tca->scale-1, tca->sx, tca->sy, tcs->heading + 60);
-										asteroid_start(&asteroid_origin, tca->scale-1, tca->sx, tca->sy, tcs->heading - 60);
+									//if (tca->scale > 1)
+									//	asteroid_start(&asteroid_origin, tca->scale-1, tca->sx, tca->sy, tcs->heading + 60);
+									//	asteroid_start(&asteroid_origin, tca->scale-1, tca->sx, tca->sy, tcs->heading - 60);
 								}
 							}
 							tca = tca->next;
@@ -198,7 +198,7 @@ void timer (void)
 							if (tca->gone == 0)
 								if (tca->gone == 0) 
 									tca->color = al_map_rgb(255,255,255);
-									ship.gone = 1;
+									//ship.gone = 1;
 									//tca->gone = 1;
 						}
 					}
@@ -287,21 +287,20 @@ void draw (void)
 */
         break;
         case 3://GAME OVER
-            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
+            al_draw_text(myFont, al_map_rgb(255, 0, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "GAME OVER");
         break;
         case 4://GRAVAR SEU RECORD
-            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INPUT NEW RECORD");
+            al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, 5, ALLEGRO_ALIGN_CENTRE, "INPUT NEW RECORD");
         break;
         case 5://TELA DE RECORD SCORE
-            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "RECORDS SCORE");
+            al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, 5, ALLEGRO_ALIGN_CENTRE, "RECORDS SCORE");
         break;
 		case 6://TELA DE INSTRUCOES
-            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, HEIGHT/2, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
+            al_draw_text(myFontTitle, al_map_rgb(255, 0, 0), WIDTH/2, 5, ALLEGRO_ALIGN_CENTRE, "INSTRUCTIONS");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 155, ALLEGRO_ALIGN_CENTRE, "Use the up and down keys to select a desired menu");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 175, ALLEGRO_ALIGN_CENTRE, "Use the enter key to access the selected menu");
+            al_draw_text(myFont, al_map_rgb(0, 255, 0), WIDTH/2, 195, ALLEGRO_ALIGN_CENTRE, "Use the esscape key to exit selected menu");
 /*
- * Use as setas cima e baixo para selecionar um menu desejado
- * Use a tecla enter para acessar o menu selecionado.
- * Use a tecla esc para sair do menu selecionado.
- *
  * 	O objetivo do é conseguir o maximo de pontos possíveis destruindo os asteroids, sem deixar algum deles atingir sua nave.
  * 		Durante o jogo:
  * 			* Use a seta cima para acelerar
@@ -309,7 +308,6 @@ void draw (void)
  * 			* use a setas esquerda ou direita para mudar a direção da nava
  * 			* use o botao espaco para atirar contra os asteroids
  * 			* use teclas esc para sair do jogo.
- *
  *
  * Use the up and down keys to select a desired menu
  * Use the enter key to access the selected menu

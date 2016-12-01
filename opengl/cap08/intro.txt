@@ -1,0 +1,65 @@
+CAPÍTULO 8 - DESENHOS BIDIMENSIONAIS
+
+Este capítulo mostra como fazer desenhos bidimensionais usando primitivas gráficas. As diferentes maneiras disponíveis em OpenGL para o desenho de tais primitivas também serão abordadas.
+
+8.1 PRIMITIVAS GRÁFICAS
+
+Primitivas gráficas consistem nos elementos básicos que compõem um desenho, tais como pontos, segmentos de retas e círculos. Em OpenGL, as primitivas são definidas em um sistema de coordenadas bidimensionais, por meio de um ou mais pares de coordenadas absolutas, chamadas de vértices. Por  exemplo, uma coordenada (xa, ya), indica uma posição em relação à origem (0, 0) do sistema de coordenadas. Apenas com algumas primitivas simples formadas por um ou mais vértices, tais como pontos linhas e polígonos, é possível criar estruturas mais complexas.
+
+Objetos e cenas criadas usando OpenGL consistem em um conjunto de primitivas gráficas simples que são combinadas para formar os modelos. Sendo assim, OpenGL fornece comandos para desenhar primitivas, como pontos, linhas e polígonos, compostas por um ou mais vértices. Nesse caso, é necessário passar uma lista de vértices entre duas chamadas de funções OpenGL que estão especificadas na Listagem 8.1
+
+	Listagem 8.1 - Comandos para a especificacao de primitivas gráficas.
+	glBegin(<argumento>);
+		// lista de vértices
+	glEnd();
+
+Na Listagem 8.1, o argumento passado para a função glBegin determina qual objeto será desenhado. Por exemplo, para desenhar um segmento de reta, deve-se usar GL_LINES como argumento e especificar dois vértices, conforme exemplifica a Listagem 8.2. Nesse exemplo, a função glVertex2f é usada para definir um vértice, isto é, um par de coordenadas x, y. Assim, são passados para essa função dois argumentos de ponto flutuante.
+
+	Listagem 8.2 - Exemplo de desenho de um segmento de reta que corresponde a uma diagonal.
+	glBegin(GL_LINES);
+		glVertex2f(12.0f, 12.0f);
+		glVertex2f(100.5f, 100.5f);
+	glEnd();
+
+Seguindo a padronização de nomes de funções OpenGL (Capítulo 5), existem variações da função glVertex que recebem um número maior de argumentos e que recebem diferentes tipos de dados. Nesse caso, por exemplo, o contador e o tipo dos argumentos poderiam ser substituídos, respectivamente, por 3 ou 4, e por s, i, d, sv, iv, fv ou dv. A Listagem 8.3 ilustra a utilizacao de vértices utilizando diferentes parâmetros.
+
+	Listagem 8.3 - Exemplos de especificação de vértices utilizando diferentes parâmetros.
+	GLint ponto2d[2] = {16, 32};
+	GLfloat ponto3d[3] = {-10.0f, -12.5f, -14.0f};
+	GLdouble ponto4d[4] = {-10.0, -10.0, 0.0, 2.0};
+	glVertex2s(1, 2); //(x, y), z = 0 e w = 1 por default
+	glVertex2i(100, 100);
+	glVertex2f(34.6f, 12.5f);
+	glVertex2d(0.1234567, 8.9);
+	glVertex2iv(ponto2d);
+	glVertex3s(2, 3, 4); //(x, y, z), w = 1 por default
+	glVertex3i(100, 100, 100);
+	glVertex3f(34.6f, 17.5f, 20.8f);
+	glVertex3fv(ponto3d);
+	glVertex3d(0.1234567, 8.9, 1.987654);
+	glVertex4i(2, 3, 4, 5); //(x, y, z, w)
+	glVertex4f(34.6f, 17.5f, 20.8f, 1.5f);
+	glVertex4d(0.1234567, 8.9, 1.987654, 0.55);
+	glVertex4dv(ponto4d);
+
+Pondem ser passadas como argumento para a função glBegin uma das constantes enumeradas na Tabela 8.1
+
+	Tabela 8.1 - Primitivas gráficas em OpenGL
+	+-------------------+------------------------------------------------------+
+	|      Valor        |        Descrição                                     |
+	+-------------------+------------------------------------------------------+
+	| GL_POINTS         | Para desenhar pontos.
+	| GL_LINES          | Para desenhar segmentos de linha.
+	| GL_LINE_STRIP     | Para desenhar segmentos de linhas conectados.
+	| GL_LINE_LOOP      | Para desenhar segmentos de linhas conectados, unindo o primeiro ao último.
+	| GL_POLYGON        | Para desenhar um polígno convexo.
+	| GL_TRIANGLES      | Para desenhar triângulos.
+	| GL_TRIANGLE_STRIP | Para desenhar triângulos conectados.
+	| GL_TRIANGLE_FAN   | Para desenhar triângulos a partir de um ponto central.
+	| GL_QUADS          | Para desenhar quadriláteros.
+	| GL_QUAD_STRIP     | Para desenhar quadriláteros conectados.
+	+-------------------+------------------------------------------------------+
+
+Para o desenho de pontos é usadada a constante GL_POINTS. Nesse caso, na posição de cada vértice especificado entre glBegin e glEnd é desenhado um ponto. O código da Listagem 8.4 ilustra a sua utilização, e o resultado da execução desse programa é apresentado na Figura 8.1.
+
+A biblioteca bibutil.h também é incluída por causa da constante M_PI, que pode não estar disponível em todos os compiladores. O apêndice C apresenta uma descrição detalhada dessa bilbioteca.
