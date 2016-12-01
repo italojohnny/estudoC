@@ -1,0 +1,38 @@
+CAPITULO 7 - DEFINICAO DO ESPACO DE TRABALHO
+
+Existem um conjunto de tecnicas em computacao grafica que permite transformar as
+informacoes a respeito de um modelo contidas em uma estrutura de dados, em uma
+imagem que pode ser exibida em um monitor. Neste, cado, estamo considerando que
+uma imagem consiste em uma matriz de pontos, enquanto um modelo e uma
+representacao computacional de um objeto, isto e, corresponde a uma estrutura de
+dados que tem a sua descricao geometrica. Este capitulo apresenta como funcionam
+e como sao abordadas em opengl algumas das etapas do processo de visualizacao bi
+e tridimensional para a geracao de uma imagem a partir de um modelo ou conjunto
+de modelos
+
+7.1 VISUALIZACAO BIDIMENSIONAL
+
+Para entender como funciona o processo de visualizacao bidimensional em opengl e
+importante conhecer o conceito de "universo", que pode ser definido como a
+regiao do plano (ou do espaco) utilizada em uma aplicacao. Como a descricao
+geometrica de um modelo normal envolve coordenadas geometricas, e preciso adotar
+um sistema de referencia que ira definir uma origem em relacao a qual todos os
+posicionamentos do universo sao descritos.
+
+Este Sistema de Referencia do Universo (SRU) em opengl consiste em um plano
+cartesiano com dois eixos (x e y) perpendiculares entre si e que se cruzam na
+origem. O eixo x e horizontal e orientado para a direita, e o eixo y e vertical
+e orientado para cima. Todos os modelos e comandos opengl sao definidos em
+relacao a este sistema de referencia.
+
+Entretanto, no monitor do computador e adotado o SRT (Sistema de Referencia de 
+Tela), que possui algumas diferencas em relacao ao SRU. No SRT a origem fica
+no canto supeior esquerdo do monitor. Portanto, para possibilitar a correta
+visualizacao na tela dos modelos definidos no SRU, e necessario fazer uma
+conversao ou mapeamento.
+
+Resumindo, todo o desenho deve ser feito no SRU, considerando um plano
+cartesiano
+
+7.2 VISUALIZAÇÃO TRIDIMENSIONAL
+
