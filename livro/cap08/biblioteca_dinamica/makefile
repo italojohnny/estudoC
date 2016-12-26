@@ -1,3 +1,5 @@
+all: hfcal.o elliptical.o libhfcal.a elliptical
+
 hfcal.o: hfcal.c
 	gcc -I./includes -c hfcal.c -o hfcal.o
 
