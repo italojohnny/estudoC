@@ -1,0 +1,626 @@
+CAPITULO 04 - MATRIZES E STRINGS
+
+Uma matriz e uma colecao de variaveis do mesmo tipo que e referenciadda por um
+nome comum. Um elemento especifico em uma matriz e acessado por meio de um
+indice. Em C, todas as matrizes consistem em posicoes contiguas na memoria. O
+endereco mais baixo corresponde ao primeiro elemento e o mais alto, ao ultimo
+elemento. Matrizes podem ter de uma a varias dimensoes. A matriz mais comum em C
+e a de string, que e simplesmente uma matriz de caracteres terminada por um
+nulo. Essa abordagem a strings da a C maior poder e eficiencia que as outras
+linguagens.
+
+Em C, matrizes e ponteiros estao intimamente relacionados; uma discussao sobre
+um deles normalmente refere-se ao outro. Este capitulo focaliza matrizes,
+enquanto o Capitulo 5 examina mais profundamente os ponteiros. Voce deve ler
+ambos para entender completamente essas construcoes importantes de C.
+
+
+--------------------------------------------------------------------------------
+MATRIZES UNIDIMENSIONAIS
+
+A forma geral para declarar uma matriz unidimensional e
+
+	tipo nome_var[tamanho];
+
+Como outras variaveis, as matrizes devem ser explicitamente declaradas para que
+o compilador possa alocar espaco para elas na memoria. Aqui, tipo declara o tipo
+de base da matriz, que e o tipo de cada elemento da matriz; tamanho define
+quantos elementos a matriz ira guardar. Por exemplo, para declarar um matriz de
+100 elementos, chamada balance, e do tipo double, use este comando:
+
+	double balance[100];
+
+Em C, toda matriz tem 0 como o indice do seu primeiro elemento. Portanto, quando
+voce escreve
+
+	char p[10];
+
+voce esta declarando uma matriz de caracteres que tem dez elementos, p[0] ate
+p[9]. Por exemplo, o seguinte programa carrega uma matriz inteira com os numeros
+de 0 a 99:
+
+	void main (void)
+	{
+		int x[100]; /* isto reserva 100 elementos inteiros */
+		int t;
+
+		for (t = 0; t < 100; ++t) x[t] = t;
+	}
+
+A quantidade de armazenamento necessario para guardar uma matriz esta
+diretamente relacionada com seu tamanho e seu tipo. Para uma matriz
+unidimensional, o tamanho total em bytes e calculado como mostrado aqui:
+
+	total em bytes = sizeof(tipo) * tamanho da matriz
+
+C Nao tem verificacao de limites em matrizes. Voce poderia ultrapassar o fim de
+uma matriz e escrever nos dados de alguma outra variavel ou mesmo no codigo do
+programa. Como programador, e seu trabalho prover verificacao dos limites onde
+for necessario. Por exemplo, este codigo compilara sem erros, mas e incorreto,
+porque o laco for fara com que a matriz count ultrapasse seus limites.
+
+	int count[10], i;
+	/* isto faz com que count seja ultrapassada */
+	for(i = 0; i < 100; i++) count[i] = i;
+
+Matrizes unidimensionais sao, essencialmente, listas de informacoes do mesmo
+tipo, que sao armazenadas em posicoes contiguas da memoria em uma ordem de
+indice. Por exemplo, a Figura 4.1 mostra como a matriz a apareceria na memoria se ela comecasse na posicao de memoria 1000 e fosse declarada como mostrado aqui:
+
+	char a[7];
+
+	Elemento a[0] a[1] a[2] a[3] a[4] a[5] a[6]
+	Endereco 1000 1001 1002 1003 1004 1005 1006
+	Figura 4.1 Uma matriz de sete elementos comecando na posicao 1000.
+
+
+--------------------------------------------------------------------------------
+GERANDO UM PONTEIRO PARA UMA MATRIZ
+
+Voce pode gerar um ponteiro para o primeiro elemento de uma matriz simplesmente
+especificndo o nome da matriz, sem nenhum indice. Por exemplo, dado
+
+	int  sample[10];
+
+voce pode gerar um ponteiro para o primeiro elemmento simplesmente usando o nome
+sample. Por exemplo, o seguinte fragmento atribui a p o endereco do primeiro
+elemento de sample.
+
+	int *p;
+	int sample[10];
+
+	p = sample;
+
+Voce tambem pode especificar o endereco do primeiro elemento de uma matriz
+usando o operador &. Por exemplo, sample e &sample[0] produzem os mesmo
+resultados. Porem, em codigos C escritos profissionamente, voce quase nunca vera
+algo como &sample[0].
+
+
+--------------------------------------------------------------------------------
+PASSANDO MATRIZES UNIDIMENSIONAIS PARA FUNCOES
+
+Em C, voce nao pode passar uma matriz inteira como um argumento para uma funcao.
+Voce pode, porem, passar um ponteiro para uma matriz para uma funcao,
+especificando o nome da matriz sem um indice. Por exemplo, o seguinte fragmento
+de programa passa o endereco de i para func1():
+
+	void main (void)
+	{
+		int i[10];
+		func1(1);
+		.
+		.
+		.
+	}
+
+Se uma funcao recebe uma matriz unidimensional, voce pode declarar o paramentro
+formal em uma entre tres formas: como um ponteiro, como uma matriz dimensional
+ou como uma matriz nao-dimensionada. Por exemplo, para receber i, uma funcao
+chamada func1() pode ser declaradda como
+
+	void func1 (int *x) /* ponteiro */
+	{
+		.
+		.
+		.
+	}
+
+ou
+
+	void func1 (int x[10]) /* matriz dimensionada */
+	{
+		.
+		.
+		.
+
+	}
+
+ou finalmente como
+
+	void func1 (int x[]) /* matriz nao-dimensionada */
+	{
+		.
+		.
+		.
+	}
+
+Todos os tres metodos de declaracao produzem resultados identicos, porque cada
+um diz ao compilador que um ponteiro inteiro vai ser recebido. A primeira
+declaracao usa, de fato, um ponteiro. A segunda emprega a declaracao de matriz
+padrao. Na ultima versao, uma versao modificada de uma declaracao de matriz
+simplesmente espcifica que uma matriz do tipo int, de algum tamanho, sera
+recebida. Como voce pode ver, o comprimento da matriz nao importaa funcao,
+porque C nao realiza verificacao de limites. De fato, ate onde diz respeito ao
+compilador,
+
+	void func1 (int x[32])
+	{
+		.
+		.
+		.
+	}
+
+tambem funciona, porque o compilador C gera um codigo que instrui func1() a
+receber um ponteiro - ele nao cria realmente uma matriz de 32 elementos.
+
+
+--------------------------------------------------------------------------------
+STRINGS
+
+O uso mais comum de matrizes unidimensionais e como string de caractees.
+Lembre-se de que, em C, uma string e definida como uma matriz de caracteres que
+e terminada por um nulo. Um nulo e especificado como '\0' e geralmente e zero.
+Por essa razao, voce precisa declarar matrizes de caracteres como sendo um
+caractere mais longo que a maior string que elas devem guardar. Por exemplo,
+para declarar uma matriz str que guarda uma string de 10 caractes, voce
+escreveria
+
+	char str[11];
+
+Isso reserva espaco para o nulo no final da string.
+
+Embora C nao tenha o tipo de dados string, ela permite constantes string. Uma
+constante string e uma lista de caracteres entre aspas. Por exemplo,
+
+	"algo aqui"
+
+Voce nao precisa adicionar o nulo no final das constantes string manualmente - o
+compilador C faz isso por voce automaticamente.
+
+C suporta uma ampla gama de funcoes de manipulacao de strings. As mais comuns
+sao:
+
+	Nome
+	strcpy(s1, s2)	Copia s2 em s1.
+	strcat(s1, s2)	Concatena s2 ao final de s1.
+	strlen(s1)		Retorna o tamanho de s1.
+	strcmp(s1, s2)	Retorna 0 se s1 e s2 sao iguais; menor que 0 se s1 < s2; maior que 0 se s1 > s2.
+	strchr(s1, ch)	Retorna um ponteiro para a primeira ocorrencia de ch em s1.
+	strstr(s1, s2)	Retorna um ponteiro para a primeira ocorrencia de s2 em s1.
+
+Essas funcoes usam o cabecalho padrao STRING.H (Essas e outra funcoes de string
+sao discutidas em detalhes na Parte 2.) O seguinte programa ilustra o uso dessas
+funcoes de string:
+
+	<example_00_string.c>
+
+Se voce rodar esse programa e digitar as strings "alo" e "alo", a saida sera
+
+	comprimentos: 3 3
+	As strings sao iguais
+	aloalo
+	Isso e um teste.
+	o esta em alo
+	ola encontrado
+
+Lembre-se de que strcmp() retorna falso se as strings sao iguais. Assegure-se de
+usar o operador ! para reverter a condicao, como mostrado, se voce estiver
+testando igualdade.
+
+
+--------------------------------------------------------------------------------
+MATRIZES BIDIMENSIONAIS
+
+C suporta matrizes multidimensionais. A forma mais simples de matriz
+multidimensional e a matriz bidimensional - uma matriz de matrizes
+unidimensionais. Para declarar uma matriz bidimensional de inteiros d de tamanho
+10, 20, voce escreveria
+
+	int d[10][20];
+
+Preste bastante atencao a declaraccao. Muitas linguagens de computador usam
+virgulas para separar as dimensoes da matriz; C, em contraste, coloca cada
+dimensao no seu proprio conjunto de colchetes.
+
+Similarmente, para acessar o ponto 1,2 da matriz d, voce usaria
+
+	d[1][2];
+
+O seguinte exemplo carrega uma matriz bidimensional com os numeros de 1 a 12 e
+escreve-os linha por linha.
+
+	<example_01_matriz_bidimensional.c>
+
+Neste exemplo, num[0][0] tem o valor 1, num[0][1], o valor 2, num[0][2], o valor
+3 e assim por diante. O valor de num[2][3] sera 12. Voce pode visualizar a
+matriz num como mostrada aqui:
+
+	num[t][i] -> 0    1    2    4
+	    |     +----+----+----+----+
+	    +-> 0 |  1 |  2 |  3 |  4 |
+	          +----+----+----+----+
+	        1 |  5 |  6 |  7 |  8 |
+	          +----+----+----+----+
+	        2 |  9 | 10 | 11 | 12 |
+	          +----+----+----+----+
+
+Matrizes bidimensionais sao armazenadas em uma matriz linha-coluna, onde o
+primeiro indice indica a linha e o segundo, a coluna. Isso significa que o
+indice mais a direita varia mais rapidamente do que o mais a esquerda quando
+acessamos os elmentos da matriz na ordem em que eles estao realmente armazenados
+na memoria. Veja a Figura 4.2 para uma representacao grafica de uma matriz
+bidimensional na memoria. Voce pode pensar no primeiro indice como um "ponteiro"
+para a linha correta.
+
+No caso de uma matriz bidimensional, a seguinte formula fornece o numero de
+bytes de memoria necessarios para armazena-la:
+
+	bytes = tamanho do 1 indice * tamanho do 2 indice * sizeof(tipo base)
+
+Portanto, assumindo inteiros de dois bytes, uma matriz de inteiros com dimensoes
+10,5 teria
+
+	10 * 5 * 2
+
+ou 100 bytes alocados.
+
+Quando uma matriz bidimensional e usada como um argumento para uma funcao,
+apenas um ponteiro para o primeiro elemento e realmente passado. Porem, uma
+funcao que recebe uma matriz bidimensional como um parametro deve definir pelo
+menos o comprimento da segunda dimensao. Isso ocorre porque o compilador C
+precisa saber o comprimento de cada linha para indexar a matriz corretamente.
+Por exemplo, uma funcao que reebe uma matriz bidimensional de inteiros com
+dimensoes 10,10 e declarada desta forma:
+
+	void func1 (int x[][10])
+	{
+		.
+		.
+		.
+	}
+
+	<figura 4.2 Uma matriz bidimensional na memoria>
+
+Voce pode especicficar a primeira dimensao, se quiser, mas nao e necessario. O
+compilador C precisa saber a segunda dimensao para trabalhar em sentencas como
+
+	x[2][4]
+
+dentro da funcao. Se o comprimento das linhas nao e conhecido, o compilador nao
+pode determinar onde a terceira linha comeca.
+
+O seguinte programa usa uma matriz bidimensional para armazenar as notas
+numericas de cada aluno de uma sala de aula. O programa assume que o professor
+tem tres turmas e um maximo de 30 alunos por turma. Note a maneira como a matriz
+grade e acessada em cada uma das funcoes.
+
+	<example_02_matriz_bidimensional.c>
+
+
+--------------------------------------------------------------------------------
+MATRIZES DE STRINGS
+
+Nao e incomum, em programacao, usar uma matriz de strings. Por exemplo, o
+processador de entrada de um banco de dados pode verificar os comandos do
+usuario com base em uma matriz de comandos validos. Para criar uma matriz de
+strings, use uma matriz bidimensional de caracteres. O tamanho do indice
+esquerdo indica o numero de strings e o tamanho do indice ao lado direito
+especifica o comprimento mazimo de cada string. O codigo seguinte declara uma
+matriz de 30 strings, cada qual com um comprimento maximo de 79 caracteres:
+
+	char str_array[30][80];
+
+E facil acessar uma string individual: voce simplesmente especifia apeas o
+indice esquerdo. Por exemplo, o seguinte comando chama gets() com a terceira
+string em str_array.
+
+	gets(str_array[2]);
+
+O comando anterior e funcionalmente equivalente a
+
+	gets(&str_array[2][0]);
+
+Mas a primeira das duas formas e muito mais comum em codigos C escritos
+proficionalmente.
+
+Para entender melhor como matrizesde string funcionam, estude o programa
+seguinte, que usa uma matriz de string como base para um editor de texto muito
+simples:
+
+	<example_03_matriz_de_strings.c>
+
+Este programa recebe linhas de texto ate que uma linha em branco seja inserida.
+Entao, ele mostra novamente cada linha, um caractere por vez.
+
+
+--------------------------------------------------------------------------------
+MATRIZES MULTIDIMENSIONAIS
+
+C permite matrizes com mais de duas dimensoes. O limite exato, se existe, e
+determinado por seu compilador. A forma geral de declaracao de uma matriz
+multidimensional e
+
+	tipo nome[Tamanho1][Tamanho2][Tamanho3]...[TamanhoN];
+
+Matrizes de tres ou mais dimensoes nao sao frequentemente usadas devido a
+quantidade de memoria de que elas necessitam. Por exemplo, uma matriz de quatro
+dimensoes do tipo caractere e com tamanhos 10,6,9,4 requer
+
+	10 * 6 * 9 * 4
+
+ou 2.160 bytes. Se a matriz guardasse inteiros de 2 bytes, 4.320 bytes seriam
+necessarios. Se a matriz guardasse double (assumindo 8 bytes por double), 17.280
+bytes seriam necessarios. O armazenamento necessario cresce exponencialmente com
+o numero de dimensoes. Grandes matrizes multidimensionais sao geralmente
+alocadas dinamicamente, uma parte por vez, com as funcoes de alocacao dinamica
+de C e ponteiros. Essa abordagem e chamada de matriz esparsa e e discutida no
+Capitulo 21.
+
+Em matrizes multidimensionais, toma-se tempo do computador para calcular cada
+indice. Isso significa que acessar um elemento em uma amtriz multidimensional e
+mais lento do que acessar um elemento em uma matriz unidimensional.
+
+Quando passar matrizes multidimensionais para funcoes, voce deve declarar todas
+menos a primeira dimensao. Por exemplo, se voce declarar a matriz m como
+
+	int m[4][3][6][5];
+
+uma funcao, func1(), que recebe m, se pareceria com isto:
+
+	void func1(int d[][3][6][5])
+	{
+		.
+		.
+		.	
+	}
+
+Obviamente, voce pode incluir a primeira dimensao, se quiser.
+
+
+--------------------------------------------------------------------------------
+INDEXANDOO PONTEIROS
+
+Em C, ponteiros e matrizes estao intimamente relacionados. Como voce sabe, um
+nome de matriz sem um indice e um ponteiro para o primeiro elemento da matriz.
+Por exemplo, considere a seguinte matriz.
+
+	char p[10];
+
+As seguintes sentencas sao iguais:
+
+	p
+	&p[0]
+
+Colocando de outra forma,
+
+	p == &p[0]
+
+e avaliado como verdadeiro, porque o endereco do primeiro elemento de uma matriz
+e o mesmo que o da matriz.
+
+Reciprocamente, qualquer ponteiro pode ser indexado como se uma matriz fosse
+declarada. Por exemplo, considere este fragmenteo de programa:
+
+	int *p, i[10];
+	p = i;
+	p[5] = 100; /* atribui usando o indice */
+	*(p+5) = 100; /* atribui usando aritmetica de ponteiros */
+
+Os dois comandos de atribuicao colocam o valor 100 no sexto elemento de i. O
+primeiro elemento indexa p; o segundo usa aritmetica de ponteiro. De qualquer
+forma, o resultado e o mesmo. (O Capitulo 5 discute ponteiros e aritmetica de
+ponteiros.)
+
+Esse processo tambem pode ser aplicado a matrizes de duas ou mais dimensoes. Por
+exemplo, assumindo que a e uma matriz de inteiros 10 por 10, estas duas
+sentencas sao equivalentes:
+
+	a
+	&a[0][0]
+
+Alem disso, o elmento 0,4 de a pode ser referenciado de duas formas: por
+indexacao de matriz, a[0][4], ou por ponteiro, *(a+4). Similarmente, o elemento
+1,2 e a[1][2] ou *(a+12). em geral, para qualquer matriz bidimensional
+
+	a[j][k] e equivalente a *(a+(j*comprimento das linhas)+k)
+
+As vezes, ponteiros sao usados para acessar matrizes porque a aritmetica de
+ponteiros e geralmente mais rapida para a indexacao de matrizes.
+
+De certa forma, uma matriz bdimensional e semelhante a uma matriz de ponteiro
+que apontam para matrizes de linhas. Por isso, usar uma variavel de ponteiro
+separada torna-se uma maneira facil de utilizar ponteiros para acessar os
+elementos de uma amtriz bidimensional. A funcao seguinte imprimira o conteudo da
+linha especificada da matriz global inteira num:
+
+	int num[10][10];
+	.
+	.
+	.
+	void pr_row(int j)
+	{
+		int *p, t;
+		p = &num[j][0]; /* obtem o endereco do primeiro elemento da linha j */
+		for (t = 0; t < 10; ++t) printf("%d ", *(p+t));
+	}
+
+Voce pode generalizar essa rotina usando como argumentos de chamada a linha, o
+comprimento das linhas e um ponteiro para o primeiro elemento da matriz, como
+mostrado aqui:
+
+	void pr_row (int j, int row_dimension, int *p)
+	{
+		int t;
+		p = p+(j * row_dimension);
+		for (t = 0; t < row_dimension; ++t)
+			printf("%d ", *(p+t));
+	}
+
+Matrizes de dimensoes mariores que dois pode ser reduzidas de forma semelhante.
+Por exemplo, uma matriz tridimensional pode ser reduzida a um ponteiro para uma
+matriz bidimensional, que pode ser reduzida a um ponteiro para uma matriz
+unidimensional. Genericamente, um matriz n-dimensional pode ser reduzida a um
+ponteiro para uma matriz (n-1)-dimensional. Essa nova matriz pode ser reduzida
+novamente com o mesmo metodo. O processo termina quando uma matriz
+unidimentional e produzida.
+
+
+-------------------------------------------------------------------------------
+INICIALIZACAO DE MATRIZ
+
+C permite a inicializacao de matrizes no momento da declaracao. A forma geral de
+uma inicializacao de matriz e semelhante a de outras variaveis, como mostrado
+aqui:
+
+	especificador_de_tipo nome_da_matriz[tamanho1]...[tamanhoN] = {lista_valores};
+
+A lista_valores e uma lista separada por virgulas de constantes cujo tipo e
+compativel com especificador_de_tipo. A primeira constante e colocada na
+primeira posicao, da matriz, a segunda, na segunda posicao e assim por diante.
+Observe o ponto-e-virgula que sege o }.
+
+No exemplo a seguinte, uma matriz inteira de dex elementos e inicializada com os
+numeros de 1 a 10:
+
+	int i[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+Isso significa que i[0] tera o valor 1 e i[9] tera o valor 10.
+
+Matrizes de caracteres que contem strings permitem uma inicializacao abreviada
+que toma a forma:
+
+	char nome_da_matriz[tamanho] = "string";
+
+Por exemplo, este fragmento de codigo inicializa str com a frase
+"Eu gosto de C".
+
+	char str[14] = "Eu gosto de C";
+
+Isso e o mesmo que escrever
+
+	char str[14] = {'E','u',' ','g','o','s','t','o',' ','d','e',' ','C','\n'};
+
+Como todas as strings em C terminam com um nulo, voce deve ter certea de que a
+matriz a ser declarada e longa o bastante para incluir o nulo. Isso explica
+porque str tem compimento de 14 carcteres, muito embora "Eu gosto de C" tenha
+apenas 13. Quando voce usa uma constante string, o compilador automaticamente
+fornece o terminado nulo.
+
+Matrizes multidimensionais sao inicializadas da mesma forma que matrizes
+unidimensionais. Por exemplo, o codigo seguinte inicializa sqrs com os numero de
+1 a 10 e seus quadrados.
+
+	int sqrs[10][2] = {
+		1,1,
+		2,4,
+		3,9,
+		4,16,
+		5,25,
+		6,36,
+		7,49,
+		8,64,
+		9,81,
+		10,100
+	};
+
+
+--------------------------------------------------------------------------------
+INICIALIZACAO DE MATRIZES NAO-DIMENSIONADAS
+
+Imagine que voce esteja usando inicializacao de matrizes para construir uma
+tabela de mensagens de erro, como mostrado aqui:
+
+	char e1[17] = "erro de leitura\n";
+	char e2[17] = "erro de escrita\n";
+	char e3[29] = "arquivo nao pode ser aberto\n";
+
+Como voce poeria supor, e tedioso contar os caracteres em cada mensagem,
+manualmente, para determinar a dimensao correta da matriz. Voce pode deixar C
+calcular automaticmente as dimensoes da matriz, usando matrizes nao
+dimensionadas. Se, em um comando de inicializacao de matriz,, o tamanho da
+matriz nao e especificado, o compilador C cria uma mariz grande o bastante para
+conter todos os inicializadores presentes. Isso e chamado de matriz
+nao-dimensionada. Usando essa abordagem, a tabela de mensagens torna-se
+
+	char e1[] = "Erro de leitura\n";
+	char e2[] = "Erro de escrita\n";
+	char e3[] = "Arquivo nao pode ser aberto\n";
+
+Dadas essas inicializacoes, este comando
+
+	printf("%s tem comprimento %d\n", e2, sizeof(e2));
+
+mostrara
+
+	Erro de escrita tem comprimento 17
+
+Alem de ser menos tediosa, a inicializacao de matrizes nao-dimensionadas permite
+a voce alterar qualquer mensagem sem se preocupar em usar uma matriz de
+dimensoes incorreta.
+
+Inicializacoes de matrizes nao-dimensionadas nao estao restritas a matrizes
+unidimensionais. Para matrizes multidimensionais, voce deve especificar todas,
+exceto a dimensaoo mais a esquerda, para que o compilador possa indexar a matriz
+de forma apropriada. Desta forma, voce pode consruir tabelas de comprimentos
+variaveis e o compilador aloca automaticamente armazenamento suficiente para
+guarda-las. Por exemplo, a declaracao de sqrs como uma matriz nao-dimensionada e
+mostrada aqui:
+
+	int sqrs[][2] = {
+		1,1,
+		2,4,
+		3,9,
+		4,16,
+		5,25,
+		6,36,
+		7,49,
+		8,64,
+		9,81,
+		10,100
+	};
+
+A vantagem dessa declaracao sobre a versao que especifica o tamanho e que voce
+pode aumentar ou diminuir a tabela sem alterar as dimensoes da matriz.
+
+
+--------------------------------------------------------------------------------
+UM EXEMPLO COM O JOGO-DA-VELHA
+
+O exemplo que segue ilustra muitas das maneiras pelas quais voce pode manipular
+matrizes em C. Matrizes multidimensionais sao comumente usadas para simular as
+matrizes de jogos de tabuleiro. Essa secao desenvolve um programa simples de
+jogo da velha.
+
+O computador joga de forma simples. Quando e a vez do computador, ele usa
+get_computer_move() para varrer a matriz, procurarndo por uma celula desocupada.
+Quando encontra uma, ele poem um O nesta posiccao. Se ele nao pode encontrar uma
+celula vazia, ele indica um jogo empatado e termina. A funcao get_player_move()
+pergunta-lhe onde voce quer colocar um X. O canto esquerdo superior e a posicao
+1,1; o canto direito inferior e a posicao 3,3.
+
+A matriz do tabuleiro e inicializada para conter espacos. Isso torna mais facil
+apresentar a matriz na tela.
+
+Toda vez que e feito um movimento, o programa chama a funcao check(). Essa
+funcao devolve um espaco se ainda nao ha vencedor, um X se voce ganhou ou um O
+se o computador ganhou. Ela varre as linhas, as colunas e, em seguida, as
+diagonais, procurando uma que contenha tudo X's ou tudo O's.
+
+A funcao disp_matrix() apresenta o estado atual do jogo. Observe como a
+inicializacao com espacos simplifica essa funcao.
+
+Todas as rotinas, neste exemplo, acessam a matriz matriz de forma diferente.
+Estude-as para ter certeza de que voce compreendeu cada operacao com matriz.
+
+	<example_04_jogo_da_velha.c>

@@ -1,0 +1,67 @@
+CAPITULO 02 - EXPRESSOES EM C
+
+Este capitulo examina o elemento mais fundamental da linguagem C: a expressao.
+Como voce vera, as expressoes em C sao substancialmente mais gerais e poderosas
+que na maioria das outras linaugens de programacao. As expressoes sao formadas
+pelos elementos mais basicos de C: dados e operadores. Os dados podem ser
+representados por variaveis ou constantes. C, como a maioria das outras
+linguagens, suporta uma certa quantidade de tipos diferentes de dados. Tambem
+prove uma ampla variedade de operadores.
+
+
+--------------------------------------------------------------------------------
+OS CINCO TIPOS BASICOS DE DADOS
+
+Ha cinco tipos basicos de dados em C: caractere, inteiro, ponto flutuante, ponto
+flutuante de precisao dupla e sem valor (char, int, float, double e void,
+respectivamente). Como voce vera, todos os outros tipos de dados em C sao
+baseados em um desses tipos. O tamanho e a faixa desses tipos de dados variam de
+acordo com o tipo de processador e com a implementacao do compilador C. Um
+caractere ocupa geralmente 1 byte e um inteiro tem normalmente 2 bytes, mas voce
+nao pode fazer esta suposicao se quiser que seus programas sejam portaveis a uma
+gama mais ampla de computadores. O padrao ANSI estipula apenas a faixa minima de
+cada tipo de dado, nao o seu tamanho em bytes.
+
+O formato exato de valores em ponto flutuante depende de como eles sao
+implementados. Inteiros geralmente correspondem ao tamanho natual de uma palavra
+do computador host. Valores do tipo char sao normalmente usados para conter
+valores difinidos pelo cojunto de caracteres ASCII. Valores fora dessa faixa
+podem ser manipulados diferentemente entre as implementacoes de C.
+
+A faica dos tipos float e double e dada em digitos de precisao. As grandezas dos
+tipos float e double dependem do metodo usado para representar os numeros em
+ponto flutuante. Qualquer que seja o metodo, o numero e muito grande. O padrao
+ANSI especifica que a faixa minima de um valor em ponto flutuante e de 1E-37 e
+1E+37. O numero minimo de digitos de precisao e exibido na Tabela 2.1 para cada
+tipo de pnto flutuante.
+
+Tabela 2.1 Todos os tipos de dados definidos no padrao ANSI.
+
+	+--------------------+----+--------------------------
+	|               TIPO |BITS| FAIXA MINIMA
+	+--------------------+----+--------------------------
+	|               char |  8 |        -127 a 127
+	|      unsigned char |  8 |           0 a 255
+	|        signed char |  8 |        -127 a 127
+	|                int | 16 |      -32767 a 32767
+	|       unsigned int | 16 |           0 a 65535
+	|         signed int | 16 |      -32767 a 32767
+	|          short int | 16 |      -32767 a 32767
+	| unsigned short int | 16 |           0 a 65535
+	|   signed short int | 16 |      -32767 a 32767
+	|           long int | 32 | -2147483647 a 2147483647
+	|    signed long int | 32 | -2147483647 a 2147483647
+	|  unsigned long int | 32 |           0 a 4294967295
+	|              float | 32 | Seis digitos de precisao
+	|             double | 64 |  Dez digitos de precisao
+	|        long double | 80 |  Dez digitos de precisao
+	+--------------------+----+--------------------------
+
+
+--------------------------------------------------------------------------------
+MODIFICANDO OS TIPOS BASICOS
+
+Exceto o void, os tipos de dados basicos podem ter varios modificadores
+precedendo-os. Um modificador e usado para alterar o significado de um tipo
+basico para adapta-lo mais precisamente as necessidades de diversas situacoes. A
+lista de modificadores e mostrada aqui:

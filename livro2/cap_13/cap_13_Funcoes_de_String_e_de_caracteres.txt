@@ -1,0 +1,758 @@
+CAPITULO 13 - FUNCOES DE STRING E DE CARACTERES
+
+A biblioteca C padrao tem um conjunto rico e variado de funcoes para manipulacao
+de string e de caracteres. Em C, uma string e uma matriz de caracteres terminada
+com um nulo. E uma implementacao padrao, as funcoes de string exigem o arquivo
+de cabecalho STRING.H para fornecer seus prototipos. As funcoes de caracteres
+usam CTYPE.H como arquivo de cabecalho. Todas as funcoes descritas neste
+capitulo sao definidas pelo padrao C ANSI.
+
+Como C nao tem verificacao de limites em operacoes com matrizes, e
+responsabilidade do programador evitar o estouro da matriz. De acordo com o
+padrao C ANSI, se ocorre um estouro em uma matriz, seu "comportamento e
+indeterminador" - uma maneira sutil de dizer que sseu programa esta para
+quebrar!
+
+Em C, um caractere que pode ser impresso e aquele que pode ser mostrado em um
+terminal. Normalmente sao os caracteres entre 0 e 0x1F alem do DEL (0x7F).
+
+Os argumentos para as funcoes de caracteres sao tradicionamente inteiros. No
+entanto, apenas o byte menos significativo e usado; a funcao de caractere
+converte automaticamente o argumento em unsigned char. Apesar disso, voce pode
+chamar essas funcoes com argumentos de tipo caractere, porque caracteres sao
+automaticamente promovidos a inteiros no momento da chamada.
+
+O arquivo de cabecalho STRING.H define o tipo size_t, que e essencialmente o
+mesmo que um unsigned.
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISALNUM (INT CH);
+
+A funcao isalnum() devolve um valor diferente de zero se o argumento fo uma
+letra ou um digito. Se o caractere nao for alfanumerico, isalnum() devolvera
+zero.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os
+caracteres alfanumericos:
+
+	<example_00_isalnum.c>
+
+FUNCOES RELACIONADAS
+isalpha(), iscntrl, isdigit(), isgraph(), isprint(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISALPHA (INT CH);
+
+A funcao isalpha() devolvera um valor diferente de zero se ch for uma letra do
+alfabeto; caso contrario, devolvera zero. O que constitui uma letra pode variar
+de lingua para lingua - em ingles, sao letras as maiusculas e minusculas de A a
+Z.
+
+EXEMPLO
+Este programa verifica cada caractere lido do stdin e apresenta todas as letras.
+
+	<example_01_isalpha.c>
+
+FUNCOES RELACIONADAS
+isalnum(), iscntrl(), isdigit(), isgraph(), isprint(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.C>
+INT ISCNTRL (INT CH);
+
+A funcao iscntrl() devolve um valor diferente de zero se ch esta entre 0 e 0x1F
+ou e igual a 0x7F (DEL); caso contrario, devolve zero.
+
+EXEMPLO
+Essa funcao verifica cada caractere lido de stdin e apresenta todos os
+caracteres:
+
+	<example_02_iscntrl.c>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), isdigit(), isgraph(), isprint(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISDIGIT (INT CH);
+
+A funcao isdigit() devolve um valor diferente de zero se ch for um digito (isto
+e, de zero a 9). Caso contrario, devolve zero.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os
+digitos:
+
+	<example_03_isdigit.c>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), iscntrl(), isgraph(), isprint(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISGRAPH (INT CH);
+
+A funcao isgraph() devolve um valor diferente de zero se ch e qualquer caractere
+que pode ser impresso, com excecao do espaco; caso contrario, devolve zero.
+Embora isso dependa da implementacao, os caracteres que podem ser impressos
+estao geralmente na faixa de 0x21 a 0x7E.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os
+caracteres que podem ser impressos:
+
+	<example_04_isgraph.c>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), iscntrl(), isdigit(), isprint(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISLOWER(INT CH);
+
+A funcao islower() devolve um valor diferente de zero se ch e uma letra
+minuscula; caso contrario, devolve zero.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todas as letras
+minusculas.
+
+	<example_05_islower.c>
+
+FUNCOES RELACIONADAS
+isupper()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISPRINT (INT CH);
+
+A funcao isprint() devolve um valor diferente de zero, se ch e um caractere que
+pode ser impresso, incluindo um espaco; caso contrario, devolve zero. Embora
+dependentes da implementacao, os caracteres que podem ser impressos geralmente
+estao na faica de 0x20 a 0x7E.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os
+caracteres que podem ser impressos:
+
+	<example_06_isprint.c>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), iscntrl(), isdigit(), isgraph(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISPUNCT (INT CH);
+
+A funcao ispunct() devolve um valor diferente de zero se ch e um caractere de
+pontuacao; caso contrario, devolve zero. O termo pontuacao, como definido pela
+funcao, inclui todos os caracteres que podem ser impressos e nao sejam
+alfanumericos nem espaco.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os
+caracteres de pontuacao:
+
+	<example_07_ispunct.c>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), iscntrl(), isdigit(), isgraph(), isprint(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISSPACE (INT CH);
+
+A funcao isspace() devolvera um valor diferente de zero se ch for um espacco,
+tabulacao horizontal, tabulacao vertical, alimentacao de formulario, retorno de
+carro ou caractere de nova linha; caso contrario, devolvera zero.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os
+caracteres de espaco em branco:
+
+	<example_08_isspace.h>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), iscntrl(), isdigit(), isgraph(), isprint(), ispunct()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISUPPER (INT CH);
+
+A funcao isupper() devolvera um valor diferente de zero se ch for uma letra
+maiuscula; caso contrario, devolvera zero.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todas as letras
+maiusculas:
+
+	<example_09_isupper.c>
+
+FUNCOES RELACIONADAS
+islower()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <CTYPE.H>
+INT ISXDIGIT(INT CH);
+
+Afuncao isxdigit() devolve um valor diferente de zero se ch e um digito
+hexadecimal; caso contrario, devolve zero. Um digitio hexadecimal esta na faixa
+de de "A" a "F", de "a" a "f" ou de 0 a 9.
+
+EXEMPLO
+Este programa verifica cada caractere lido de stdin e apresenta todos os digitos
+hexadecimais:
+
+	<example_10_isxdigit.c>
+
+FUNCOES RELACIONADAS
+isalnum(), isalpha(), iscntrl(), isdigit(), isgraph(), ispunct(), isspace()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+VOID *MEMCHR(CONST VOID *BUFFER, INT CH, SIZE_T COUNT);
+
+A funcao memchr() procura, na matriz apontada por buffer, pela primeira
+ocorrencia de ch nos primeiros count caracteres.
+
+A funcao memchr() devolve um ponteiro para a primeira ocorrencia de ch em buffer
+ou um ponteiro nulo se ch nao for encontrado.
+
+EXEMPLO
+Este programa escreve isto e um teste na tela:
+
+	<example_11_memchr.c>
+
+FUNCOES RELACIONADAS
+memcpy(), memmove()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+INT MEMCMP (CONST VOID *BUF1, CONST VOID *BUF2, SIZE_T COUNT);
+
+A funcao memcmp() compara os primeiros count caracteres das matrizes apostadas
+por buf1 e buf2. A comparaccao e feita lexicograficamente.
+
+A funcao memcmp() devolve um inteiro, que e interpretado como indicado a seguir:
+
+	VALOR          | SIGNIFICADO
+	---------------+-----------------------
+	Menor que zero | buf1 e menor que buf2
+	Zero           | buf1 e igual a buf2
+	Maior que zero | buf1 e maior que buf2
+
+EXEMPLO
+Este programa mostra o resultado de uma comparacao entre seus dois argumentos
+de linha de comando:
+
+	<example_12_memcmp.c>
+
+FUNCOES RELACIONADAS
+memchr(), memcpy(), strcmp()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+VOID *MEMCPY (VOID *TO, CONST VOID *FROM, SIZE_T COUNT);
+
+A funcao memcpy() copia count caracteres da matriz apontada por from para a
+matriz apontada por to. Se as matrizes se sobrepoem e indefinido, o
+comportamento de memcpy().
+
+A funcao memcpy() devolve um ponteiro para to.
+
+EXEMPLO
+Este programa copia o conteudo de buf1 em buf2 e mostra o resultado:
+
+	<example_13_memcpy.c>
+
+FUNCOES RELACIONADAS
+memmove()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+VOID *MEMMOVE (VOID *TO, CONST VOID *FROM, SIZE_T COUNT);
+
+A funcao memmove() copia count caracteres da matriz apontada por from para a
+matriz apontada por to. Se as matrizes se sobrepoem, a copia ocorrera
+corretamente, colocando o conteudo correto em to, porem from sera modificado.
+
+A funcao memmove() devolve um ponteiro para to.
+
+EXEMPLO
+Este programa copia o conteudo de str1 em str2 e mostra o resultado:
+
+	<example_14_memmove.c>
+
+FUNCOES RELACIONADAS
+memcpy()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+VOID *MEMSET (VOID *BUF, INT CH, SIZE_T COUNT);
+
+A funcao memset() copia o byte menos significativo de ch nos primeiros count
+caracteres da natruz apontada por buf. Ela devolve buf.
+
+O uso mais comum de memset() e na inicializacao de uma regiao de memoria com
+algum valor conhecido.
+
+EXEMPLO
+Este fragmento inicializa com nulo os 100 primeiros bytes da matriz apontada por
+buf. em seguida, coloca X nos 10 primeiros bytes e mostra a string XXXXXXXXXX.
+
+	memset (buf, '\0', 100);
+	memset (buf, 'X', 10);
+	printf(buf);
+
+	<example_15_memset.c>
+
+FUNCOES RELACIONADAS
+memcmp(), memcpy(), memmove()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRCAT (CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strcat() concatena uma copia de str2 em str1 e termina str1 com um
+nulo. O terminador nulo, que originalmente finalizava str1 e sobreposto pelo
+primeiro caracere de str2. A string str2 permanece inalterada na opracao. Se as
+matrizes se sobrepoem, o comportamento de strcat() e indefinido.
+
+A funcao strcat() devolve str1.
+
+Lembre-se de que nao ocorre nenhuma verificacao de limites. E de sua
+responsabilidade garantir que str1 seja suficientemente grande para armazenar
+seu conteudo original e o de str2.
+
+EXEMPLO
+Este programa acrescenta a primeira string lida de stdin a segunda. Por exemplo,
+assumindo que o usuario tenha digitado alo e aqui, o programa escreve aquialo.
+
+	<example_16_strcat.c>
+
+FUNCOES RELACIONADAS
+strchr(), strcmp(), strcpy()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRCHR (CONST CHAR *STR, INT CH);
+
+A funcao strchr() devolve um ponteiro a primeira ocorrencia do byte menos
+significaivo de ch na string apontada por str. Se nao for encontrrada nenhuma
+coincidencia, sera devolvido um ponteiro nulo.
+
+EXEMPLO
+Este programa escreve a string isto e um teste:
+
+	<example_17_strchr.c>
+
+FUNCOES RELACIONADAS
+strbrk(), strspn(), strstr(), strtok()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+INT STRCOLL (CONST CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strcoll() compara a string apontada por str1 com aquela apontada por
+str2. A comparacao e efetuada de acordo com a localidade especificada, usando-se
+a funcao setlocale(). (Veja setlocale() para detalhes.)
+
+A funcao strcoll() devolve um inteiro, que e interpretado como indicado a
+seguir:
+
+	VALOR          | SIGNIFICADO
+	---------------+----------------------
+	Menor que zero | str1 e menor que str2
+	Zero           | str1 e igual a str2
+	Maior que zero | str1 e maior que str2
+
+EXEMPLO
+Este fragmento de codigo escreve igual na tela:
+
+	if (strcoll("oi", "oi")) printf("igual");
+
+	<example_18_strcoll.c>
+
+FUNCOES RELACIONADAS
+memcmp(), strcmp()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRCMP (CONST CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strcmp() compara lexicograficamente duas strings e devolve um inteiro
+baseado no resultado, como mostrado aqui:
+
+	VALOR          | SIGNIFICADO
+	---------------+----------------------
+	Menor que zero | str1 e menor que str2
+	Zero           | str1 e igual a str2
+	Maior que zero | str1 e maior que str2
+
+EXEMPLO
+Vode pode usar a funcao seguinte como uma rotina de verificacao de senha. Ela
+devolve zero em caso de falha e 1 em caso de sucesso.
+
+	<example_19_strcmp.c>
+
+FUNCOES RELACIONADAS
+strch(), strcpy(), strncmp())
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRCPY(CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strcpy() copia o conteudo de str2 em str1. str2 deve ser um ponteiro
+para uma string terminada com um nulo. A funcao strcpy() devolve um ponteiro
+para str1.
+
+Se str1 e str2 se sobrepoem, o comportamento de strcpy() e indefinido.
+
+Ainda, a area de memoria apontada por str1 deve ser grande o suficiente para
+conter a string apontada por str2.
+
+EXEMPLO
+O fragmento de codigo seguinte copia alo na string str:
+
+	char str[80];
+	strcpy(str, "alo");
+
+FUNCOES RELACIONADAS
+memcpy(), strchr(), strcomp(), strncmp()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STDIO.H>
+SIZE_T STRCSPN (CONST CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strcspn() devolve o comprimento da substring inicial da string apontada
+por str1, que e formada apenas pelos caracteres nao contidos na string apontada
+por str2. Exmpondo de forma diferente, strcspn() devolve o indice do primeiro
+caractere da string apontada por str1 que coincide com qualquer um dos
+caracteres da string apontada por str2.
+
+EXEMPLO
+Este programa escreve o numero 7.
+
+	<example_20_strcspn.c>
+
+FUNCOES RELACIONADAS
+strbrk(), strrchr(), strstr(), strtok()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRERROR (INT ERRNUM);
+
+A funcao strerror() devolve um ponteiro para uma string definida pela
+implementacao, que e associada ao valor de errnum. Sob nenhuma circustancia voce
+deve modificar a string.
+
+EXEMPLO
+Este fragmento de codigo escreve na tela uma mensagem de erro definida pela
+implementacao.
+
+	printf(strerror(10));
+
+	<example_21_strerror.c>
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+SIZE_T STRLEN (CONST CHAR *STR);
+
+A funcao strlen() devolve o comprimento da string terminada por um nulo apontada
+por str. O nulo nao e contado.
+
+EXEMPLO
+O fragmento de codigo seguinte escreve 3 na tela:
+
+	printf("%d\n", strlen("alo"));
+
+	<example_22_strlen.c>
+
+FUNCOES RELACIONADAS
+memcpy(), strchr(), strcmp(), strncmp()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRNCAT (CHAR *STR1, CONST CHAR *STR2, SIZE_T COUNT);
+
+A funcao strncat() concatena nao mais que count caracteres da string apontada
+por str2 a string apontada por str1 e termina str1 com um nulo. O terminador
+nulo que originalmente finalizava str1 e sobreposta pelo primeiro caractere de
+str2. A string str2 permanece inalterada com a operacao. Se as strings se
+sobrepoem, o comportamento de strncat() e indefinido.
+
+A funcao strncat() devolve str1.
+
+Lembre-se de que nao ocorre nenhuma verificacao de limite, portanto e de sua
+responsabilidade assegurar que str1 seja suficientemente grande para armazenar
+seu conteudo original como tambem o de str2.
+
+EXEMPLO
+Este programa acrescenta a primeira string a segunda e evita que ocorra o
+estouro da matriz s1. Por exemplo, assumindo que o usuario digite alo e aqui, o
+programa escreve aquialo.
+
+	<example_23_strncat.c>
+
+FUNCOES RELACIONADAS
+strcat(), strnchr(), strncmp(), strncpy()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+INT STRNCMP (CONST CHAR *STR1, CONST CHAR *STR2, SIZE_T COUNT);
+
+A funcao strncmp() compara lexicograficamente nao mais que count caracteres das
+duas strings terminadas com nulo e devolve um inteiro baseado no resultado, como
+mostrado aqui:
+
+	VALOR          | SIGNIFICADO
+	---------------+----------------------
+	Menor que zero | str1 e menor que str2
+	Zero           | str1 e igual a str2
+	Maior que zero | str1 e maior que str2
+
+Se ha menos do que count caracteres em uma das strings, a comparacao termina
+quando o primeiro nulo for encontrado.
+
+EXEMPLO
+A funcao seguinte compara os oito primeiros caracteres de dois argumentos da
+linha de comando e indica se sao iguais:
+
+	<example_24_strncomp.c>
+
+FUNCOES RELACIONADAS
+strcmp(), strnchr(), strncpy()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRNCPY (CHAR *STR1, CONST CHAR *STR2, SIZE_T COUNT);
+
+A funcao strncpy() copia ate count caracteres da string apontada por str2 na
+string apontada por str1. str2 deve ser um ponteiro para uma string terminada
+com um nulo.
+
+Se str1 e str2 se sobrepoem, o comportamento de strncpy() e indefinido.
+
+Se a string apontada por str2 tiver menos que count caracteres, serao acrescidos
+nulos a str1 ate que um total de count caracteres tenham sido copiados.
+
+Alternativamente, se a string apontada por str2 for maior que count caracteres,
+entao a string resultante, apontada por str1, nao e terminada em nulo.
+
+A funcao strncpy() devolve um ponteiro para str1.
+
+EXEMPLO
+O fragmento de codigo seguinte copia no maximo 79 caracteres de str1 em str2,
+garantindo, assim, que nao ocorrera nenhum estouro de limite de matriz.
+
+	char str[128], str2[80];
+
+	gets(str1);
+	strncpy(str2, str1, 79);
+
+FUNCOES RELACIONADAS
+memcpy(), strchr(), strncat(), ctrncmp()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRPBRK (CONST CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strbrk() devolve um ponteiro para o primeiro caractere da string
+apontada por str1 que coincide com qualquer caractere da string apontada por
+str2. Os terminadores nulos nao sao incluidos. Se nao ha nenhuma coincidencia, e
+devolvido um ponteiro nulo.
+
+EXEMPLO
+Este programa escreve a mensagem o e um teste na tela:
+
+	<example_26_strpbrk.c>
+
+FUNCOES RELACIONADAS
+strrchr(), strspn(), strstr(), strtok()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRRCHR (CONST CHAR *STR, INT CH);
+
+A funcao strrchr() devolve um ponteiro para a ultima ocorrencia do byte menos
+significativo de ch na string apontada por str. Se nao for encontrada nenhuma
+coincidencia, um ponteiro nulo sera devolvido.
+
+EXEMPLO
+Este programa escreve a mensagem o e um teste.
+
+	<example_27_strrchr.c>
+
+FUNCOES RELACIONADAS
+strpbrk(), strspn(), strstr(), strtok()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+SIZE_T STRSPN (CONST CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strspn() devolve o comprimento da substring inicial da string apontada
+por str1, que consiste apenas em caracteres contidos na string apontada por
+str2. Exposto de forma diferente, strspn() devolve um indice para o primeiro
+caractere na string apontada por str1 que nao coincide com nenhum dos caracteres
+da string apontada por str2.
+
+EXEMPLO
+Este programa escreve 8:
+
+	<example_28_strspn.c>
+
+FUNCOES RELACIONADAS
+strpbrk(), strrchr(), strstr(), strtok()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRSTR (CONST CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strstr() devolve um ponteiro para a primeira ocorrencia da string
+apontada por str2 na string apontada por str1. Ela devolve um ponteiro nulo se
+nao for encontrado nenhuma coincidencia.
+
+EXEMPLO
+Este programa mostra a mensagem to e um teste.
+
+	<example_29_strstr.c>
+
+FUNCOES RELACIONADAS
+strchr(), strcspn(), strpbrk(), strrchr(), strspn(), strtok()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+CHAR *STRTOK (CHAR *STR1, CONST CHAR *STR2);
+
+A funcao strtok() retorna um ponteiro para a proxima palavra na string apontada
+por str1. Os caracteres que compoem a string str2 definem os delimitadores que
+separam cada palavra da seguinte. Por exemplo, dada a string:
+
+Um, dois e tres
+
+As palavras sao um, dois, e, e tres. Os delimitadores sao os espacos, a virgula
+e o ponto.
+
+strtok() retorna um ponteiro nulo quando nao ha mais palavras em str1.
+
+Na primeira vez em que strtok() e chamada, str1 e realmente utilizada na
+chamada. Chamadas subsequentes devem usar um ponteiro nulo como primeiro
+argumento.
+
+E importante observar que a funcao strtok() modifica a string apontada por st1.
+Toda vez que uma palavra e encontrada, e colocada um nulo onde o delimitador foi
+encontrado. Dessa forma, strtok() pode continuar a avancar pela string.
+
+Voce pode usar um conjunto diferente de delimitadores para cada chamada a
+strtok().
+
+EXEMPLO
+Este programa separa as palavras da string "O soldado de verao, o patriota da
+luz do dia", com espacos e virgulas como delimitadores. O resultado e
+
+	"O|soldado|de|verao|o|patriota|da|luz|do|dia"
+
+	<example_30_strtok.c>
+
+FUNCOES RELACIONADAS
+strchr(), strcspn(), strpbrk(), strrchr(), strspn()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+SIZE_T STRXFRM (CHAR *STR1, CONST CHAR *STR2, SIZE_T COUNT);
+
+A funcao strxfrm() transforma os primeiros count caracteres da string apontada
+por str2 de forma que ela possa ser usada pela funcao strcmp(). strxfrm()
+coloca, em seguida, o resultado na string apontada por str1. Apos a
+transformacao, o resultado de um strcmp(), usando str1, e de um strcoll(),
+usando a string original, apontada por str2 sera igual. O principal uso da
+funcao strxfrm() e em ambientes de lingua strangeira, que nao usam a sequencia
+ASCII.
+
+A funcao strxfrm devolve o comprimento da matriz transformada.
+
+EXEMPLO
+A linha seguinte transforma os dez primeiros caracteres da string apontada por
+s2 e coloca o resultado na string apontada por s1.
+
+	strxfrm(s1, s2, 10);
+	
+	<example_31_strxfrm.c>
+
+FUNCOES RELACIONADAS
+strcoll()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+INT TOLOWER (INT CH);
+
+A funcao tolower() devolve o equivalente minusculo de ch se ch e uma letra; caso
+contrario, ch e devolvido sem alteracao.
+
+EXEMPLO
+Este fragmento de codigo mostra q.
+
+	putchar(tolower('Q'));
+
+	<example_32_tolower.c>
+
+FUNCOES RELACIONADAS
+toupper()
+
+
+--------------------------------------------------------------------------------
+#INCLUDE <STRING.H>
+INT TOUPPER (INT CH);
+
+A funcao toupper() devolve o equivalente maiusculo de ch se ch e uma letra; caso
+contrario, ch e devolvido sem alteracao.
+
+EXEMPLO
+Este codigo mostra A.
+
+	putchar(toupper('a'));
+
+	<example_33_toupper.c>
+
+FUNCOES RELACIONADAS
+tolower()
+
+
+--------------------------------------------------------------------------------
